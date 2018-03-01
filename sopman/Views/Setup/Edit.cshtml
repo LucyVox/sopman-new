@@ -1,0 +1,46 @@
+﻿@model sopman.Models.SetupViewModels.EditUser
+@{
+    ViewBag.Title = "Edit user";
+}
+<div class="container people-div">
+    @using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+        <div class="form-horizontal row">
+            <div class="col-12">
+                <h2>Edit User Info</h2>
+                 @Html.HiddenFor(model => model.Id)
+            </div>
+            <div class="col-12 col-md-8 pad-top">
+                @Html.LabelFor(model => model.Email)
+            </div>
+            <div class="col-12 col-md-8 input-8">
+                @Html.EditorFor(model => model.Email)
+            </div>
+            <div class="col-12 col-md-4">
+               <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Edit the info for the user. You can change any of the info, but remember to let them know as it may affect their login!">
+                   <i class="material-icons">help</i>
+                </button> 
+            </div>
+            <div class="col-12 col-md-8 pad-top">
+                @Html.LabelFor(model => model.FirstName)
+            </div>
+            <div class="col-12 col-md-8 input-8">
+                @Html.EditorFor(model => model.FirstName)
+            </div>
+            <div class="col-12 col-md-4">
+               
+            </div>
+            <div class="col-12 col-md-8 pad-top">
+                @Html.LabelFor(model => model.SecondName)
+            </div>
+            <div class="col-12 col-md-8 input-8">
+                @Html.EditorFor(model => model.SecondName)
+            </div>
+            <div class="form-group bottom-row col-12 submit-row">
+                    <input type="submit" class="btn btn-default" value="Update" />
+            </div>
+        </div>
+    }
+</div>
+
+

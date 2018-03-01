@@ -1,0 +1,27 @@
+﻿@model sopman.Models.SetupViewModels.RACIInformed
+@using HtmlHelpers.BeginCollectionItemCore
+@using (Html.BeginCollectionItem("RACIInformed"))
+{
+    <div class="single-line-row row">
+         @Html.HiddenFor(m => m.RACIInfID, new { @class="id" })
+         <div class="col-12 col-md-12 sin-textbox">
+            <div class="inf-hide">
+                @Html.TextBoxFor(m => m.valuematch, new {@class = "form-control"})
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    @Html.DropDownListFor(m => m.DepartmentId,
+                         new SelectList(Model.Departments, "DepartmentId", "DepartmentName"), "Select Department", new { @class = "form-control" })
+                </div>
+                <div class="col-12 col-md-6">
+                    @Html.DropDownListFor(m => m.JobTitleId,
+                                     new SelectList(Model.JobTitles, "JobTitleId", "JobTitle"), "Select Job Title", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

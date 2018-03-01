@@ -1,0 +1,5 @@
+﻿@model IEnumerable<sopman.Models.ManageViewModels.SOPOverView> 
+
+@foreach(var item in Model){
+    @Html.DisplayFor(modelItem => item.SectionId)
+}

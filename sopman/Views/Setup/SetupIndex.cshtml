@@ -1,0 +1,91 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model SetupIndexViewModel
+@{
+    ViewData["Title"] = "SOP Manager Setup";
+}
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<div class="container company-setup">
+    <div class="row text-center">
+        <div class="col-12 sop-setup-intro">
+            <h2>Welcome to SOP Manager</h2>
+            <p>Before you can create and manage your SOPs you need to complete the first time setup. You can also find these options in your settings.</p>
+        </div>
+    </div>
+    <div class="row progress-steps">
+        <div class="col-12 progress-one">
+            <div class="row">
+                <div class="col-12 col-md-1 tick-img @ViewBag.Class">
+                    <img src="~/images/grey-tick.png" class="the-tick"/>
+                </div>
+                <div class="col-12 col-md-8 text-row">
+                    <a asp-area="" asp-controller="Setup" asp-action="CompanySetup">
+                        <h3>Setup your organisation</h3>
+                        <p>Add your logo and complete your basic company information</p>
+                    </a>
+                </div>
+                <div class="col-12 col-md-3 button-row">
+                    <a class="blue-btn" asp-area="" asp-controller="Setup" asp-action="CompanySetup">
+                       COMPLETE NOW
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 progress-one">
+            <div class="row">
+                <div class="col-12 col-md-1 tick-img">
+                    <img src="~/images/grey-tick.png" class="the-tick"/>
+                </div>
+                <div class="col-12 col-md-8 text-row">
+                    <a asp-area="" asp-controller="Setup" asp-action="OrgStructure">
+                        <h3>Define your organisational structure</h3>
+                        <p>Add your departments, job titles and users</p>
+                    </a>
+                </div>
+                <div class="col-12 col-md-3 button-row">
+                    <a class="blue-btn" asp-area="" asp-controller="Setup" asp-action="OrgStructure">
+                       UPLOAD CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 progress-one">
+            <div class="row">
+                <div class="col-12 col-md-1 tick-img @ViewBag.ClassThree">
+                    <img src="~/images/grey-tick.png" class="the-tick"/>
+                </div>
+                <div class="col-12 col-md-8 text-row">
+                    <a asp-area="" asp-controller="Setup" asp-action="SOPTopTemplateBuilder">
+                        <h3>Create your SOP template</h3>
+                        <p>Define the parameters of your SOPs with your master template</p>
+                    </a>
+                </div>
+                <div class="col-12 col-md-3 button-row">
+                    <a class="blue-btn" asp-area="" asp-controller="Setup" asp-action="SOPTopTemplateBuilder">
+                       START NOW
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 progress-one">
+            <div class="row">
+                <div class="col-12 col-md-1 tick-img @ViewBag.Classtwo">
+                    <img src="~/images/grey-tick.png" class="the-tick"/>
+                </div>
+                <div class="col-12 col-md-8 text-row">
+                    <a asp-area="" asp-controller="Setup" asp-action="People">
+                        <h3>Define who can create SOPs</h3>
+                        <p>Create SOP administrators who can add and manage your SOPs</p>
+                    </a>
+                </div>
+                <div class="col-12 col-md-3 button-row">
+                    <a class="blue-btn" asp-area="" asp-controller="Setup" asp-action="People">
+                       GO TO PEOPLE
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    

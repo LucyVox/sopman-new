@@ -1,0 +1,83 @@
+﻿@model RegisterSopCreatorViewModel
+@{
+    ViewData["Title"] = "Register a SOPCreator";
+}
+<div class="register-user">
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                @using (Html.BeginForm("RegisterSOPCreator", "Account", FormMethod.Post, 
+                new { @class = "form-horizontal row", role = "form" }))
+                {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+                <div class="col-12">
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-12" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.SecondName, new { @class = "col-md-12" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.SecondName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-md-12" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <button type="button" class="btn btn-secondary small-tooltip builder-tooltip" data-toggle="tooltip" data-placement="right" title="Enter Email Address of user (this is used for their login)">
+                                <i class="material-icons">help</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-12" })
+                        <div class="col-md-8">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <button type="button" class="btn btn-secondary small-tooltip builder-tooltip" data-toggle="tooltip" data-placement="right" title="Enter Password: Must have at least 6 characters, 1 uppercase, 1 number & one symbol">
+                                <i class="material-icons">help</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-12" })
+                        <div class="col-md-8">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.DepartmentId,
+                                     new SelectList(Model.Departments, "DepartmentId", "DepartmentName"), "Select Department", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.JobTitleId,
+                                     new SelectList(Model.JobTitles, "JobTitleId", "JobTitle"), "Select Job Title", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-12 col-md-12">
+                            <input type="submit" class="btn btn-default" value="Register" />
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

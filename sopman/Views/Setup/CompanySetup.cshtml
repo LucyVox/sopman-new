@@ -1,0 +1,104 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model CompanySetupViewModel
+@{
+    ViewData["Title"] = "Company Setup";
+    List<SelectListItem> items = new List<SelectListItem>();
+     items.Add(new SelectListItem { Text = "3 Digits", Value = "3Digits", Selected = true});
+     items.Add(new SelectListItem { Text = "5 Digits", Value = "5Digits" });
+     items.Add(new SelectListItem { Text = "6 Digits", Value = "6Digits" });
+}
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<div class="container tabs-div">
+    <div class="row">
+        <div class=""></div>
+    </div>
+</div>
+<div class="container register-div">
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+    @using (Html.BeginForm("CompanySetup", "Setup", FormMethod.Post, 
+    new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-12 col-md-12">
+                <h4>Some more info about you</h4>
+            </div>
+            <div class="col-12 col-md-6">
+                @Html.LabelFor(m => m.FirstName, new { @class = "col-md-12 control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+            </div>
+            <div class="col-12 col-md-6">
+                @Html.LabelFor(m => m.SecondName, new { @class = "col-md-12 control-label" })    
+                @Html.TextBoxFor(m => m.SecondName, new { @class = "form-control" })
+            </div>
+            <div class="col-12">
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-8 pad-top">
+                <h4>@Html.LabelFor(m => m.Name, new { @class = "col-md-12 control-label" })</h4>
+            </div>
+            <div class="col-12 col-md-6">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+            <div class="col-12 col-md-4">
+                <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="The company name">
+                   <i class="material-icons">help</i>
+                </button>   
+            </div>
+            <div class="col-12">
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-8 pad-top">
+                <h4>@Html.LabelFor(m => m.Logo, new { @class = "col-md-12 control-label" })</h4>
+            </div>
+            <div class="col-12 col-md-6">
+                @Html.TextBoxFor(m => m.Logo, new { type = "file" })
+            </div>
+            <div class="col-12 col-md-4">
+                <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Upload your company logo, try to use a png with a transparent background as the logo will be used at the top of the page.">
+                   <i class="material-icons">help</i>
+                </button>
+            </div>
+
+            <div class="col-12">
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h4>SOP Numbering</h4>
+            </div>
+            <div class="col-12 col-md-12">
+                <div class="row pad-top">
+                    <div class="col-12 col-md-4">
+                        @Html.LabelFor(m => m.SOPNumberFormat, new { @class = "col-md-12 control-label" })
+                        @Html.DropDownListFor(m => m.SOPNumberFormat, items, new { @class = "form-control" })
+                    </div>
+                    <div class="col-12 col-md-3">
+                        @Html.LabelFor(m => m.SOPStartNumber, new { @class = "col-md-12 control-label" })
+                        @Html.TextBoxFor(m => m.SOPStartNumber, new { @class = "form-control" })
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <button type="button" class="btn btn-secondary padding-top-help builder-tooltip" data-toggle="tooltip" data-placement="right" title="Upload your company logo, try to use a png with a transparent background as the logo will be used at the top of the page.">
+                            <i class="material-icons">help</i>
+                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="UserId" />
+        <div class="row">
+            <div class="col-12 float-to-right">
+                <input type="submit" class="btn btn-default" value="Register" />
+            </div>
+        </div>
+    }
+</div>
+
+

@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model ProjectViewModel
+@{
+    ViewData["Title"] = "View Project";
+}
+<div class="container people-div">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <h2>@ViewBag.projname</h2>
+        </div>
+        <div class="col-12">
+              <table class="table list-table">
+                    <thead>
+                        <tr>
+                            <th>SOP Name</th>
+                            <th>SOP Instance</th>
+                            <th>Expire Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach(var item in (@ViewBag.newtemps)){
+                        foreach(var sub in (@ViewBag.getexe)){
+                            foreach(var ist in (@ViewBag.getinst)){
+                                 if(ist.SOPTemplateID == item.SOPTemplateID){
+                                    if(sub.SectionId == ist.InstanceId){
+                                        <tr>
+                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@item.TempName</a></th>
+                                            <th>@ist.InstanceRef - @item.SOPCode</th>
+                                            <th>@ist.InstanceExpire</th>
+                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12">
+            <a href="/Manage/Projects">Back to project list</a>
+        </div>
+    </div>
+</div>
+
+
+
+

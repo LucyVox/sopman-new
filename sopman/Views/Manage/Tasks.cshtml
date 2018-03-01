@@ -1,0 +1,174 @@
+﻿@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "My Tasks";
+}
+<div class="container people-div">
+    <div class="row">
+        <div class="col-12">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="col-12">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    
+                </div>
+                <div class="col-12">
+                    <table class="table list-table">
+                        <thead>
+                            <tr>
+                                <th>Instance</th>
+                                <th>Project</th>
+                                <th>Process Step</th>
+                                <th>Due Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            @foreach(var item in (@ViewBag.newtemps)){
+                                foreach(var sub in (@ViewBag.getexe)){
+                                    foreach(var ist in (@ViewBag.getinst)){
+                                        if(ist.SOPTemplateID == item.SOPTemplateID){
+                                            if(sub.SectionId == ist.InstanceId){   
+                                                foreach(var res in (ViewBag.resiuser)){
+                                                    if(res.UserId == ViewBag.claimid){
+                                                        <tr>
+                                                            <th>@ist.InstanceRef - @item.SOPCode</th>
+                                                            @foreach(var proj in (ViewBag.theprojects)){
+                                                               if(ist.ProjectId == proj.ProjectId){
+                                                                 <th>@proj.ProjectName</th>
+                                                                }
+                                                            }
+                                                            @foreach(var step in (ViewBag.procdate)){
+                                                                foreach(var pro in (ViewBag.process)){
+                                                                    if((step.SOPTemplateID == res.soptoptempid) && (res.RACIResID == step.valuematch) && (pro.valuematch == step.valuematch)){
+                                                                    <th>@pro.ProcessName</th>
+                                                                    }
+                                                                }
+                                                            } 
+                                                            @foreach(var step in (ViewBag.procdate)){
+                                                                if((step.SOPTemplateID == res.soptoptempid) && (res.RACIResID == step.valuematch)){
+                                                                    <th>@step.DueDate</th>
+                                                                }
+                                                            }
+                                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
+                                                        </tr>
+                                                    }
+                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            @foreach(var item in (@ViewBag.newtemps)){
+                                foreach(var sub in (@ViewBag.getexe)){
+                                    foreach(var ist in (@ViewBag.getinst)){
+                                        if(ist.SOPTemplateID == item.SOPTemplateID){
+                                            if(sub.SectionId == ist.InstanceId){   
+                                                foreach(var res in (ViewBag.resiaccuser)){
+                                                    if(res.UserId == ViewBag.claimid){
+                                                        <tr>
+                                                            <th>@ist.InstanceRef - @item.SOPCode</th>
+                                                            @foreach(var proj in (ViewBag.theprojects)){
+                                                               if(ist.ProjectId == proj.ProjectId){
+                                                                 <th>@proj.ProjectName</th>
+                                                                }
+                                                            }
+                                                            @foreach(var step in (ViewBag.procdate)){
+                                                                foreach(var pro in (ViewBag.process)){
+                                                                    if((step.SOPTemplateID == res.soptoptempid) && (res.RACIAccID == step.valuematch) && (pro.valuematch == step.valuematch)){
+                                                                    <th>@pro.ProcessName</th>
+                                                                    }
+                                                                }
+                                                            } 
+                                                            @foreach(var step in (ViewBag.procdate)){
+                                                                if((step.SOPTemplateID == res.soptoptempid) && (res.RACIAccID == step.valuematch)){
+                                                                    <th>@step.DueDate</th>
+                                                                }
+                                                            }
+                                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
+                                                        </tr>
+                                                    }
+                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            @foreach(var item in (@ViewBag.newtemps)){
+                                foreach(var sub in (@ViewBag.getexe)){
+                                    foreach(var ist in (@ViewBag.getinst)){
+                                        if(ist.SOPTemplateID == item.SOPTemplateID){
+                                            if(sub.SectionId == ist.InstanceId){   
+                                                foreach(var res in (ViewBag.resiconuser)){
+                                                    if(res.UserId == ViewBag.claimid){
+                                                        <tr>
+                                                            <th>@ist.InstanceRef - @item.SOPCode</th>
+                                                            @foreach(var proj in (ViewBag.theprojects)){
+                                                               if(ist.ProjectId == proj.ProjectId){
+                                                                 <th>@proj.ProjectName</th>
+                                                                }
+                                                            }
+                                                            @foreach(var step in (ViewBag.procdate)){
+                                                                foreach(var pro in (ViewBag.process)){
+                                                                    if((step.SOPTemplateID == res.soptoptempid) && (res.RACIConID == step.valuematch) && (pro.valuematch == step.valuematch)){
+                                                                    <th>@pro.ProcessName</th>
+                                                                    }
+                                                                }
+                                                            } 
+                                                            @foreach(var step in (ViewBag.procdate)){
+                                                                if((step.SOPTemplateID == res.soptoptempid) && (res.RACIConID == step.valuematch)){
+                                                                    <th>@step.DueDate</th>
+                                                                }
+                                                            } 
+
+                                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
+                                                        </tr>
+                                                    }
+                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+                            }@foreach(var item in (@ViewBag.newtemps)){
+                                foreach(var sub in (@ViewBag.getexe)){
+                                    foreach(var ist in (@ViewBag.getinst)){
+                                        if(ist.SOPTemplateID == item.SOPTemplateID){
+                                            if(sub.SectionId == ist.InstanceId){   
+                                                foreach(var res in (ViewBag.resiinfuser)){
+                                                    if(res.UserId == ViewBag.claimid){
+                                                        <tr>
+                                                            <th>@ist.InstanceRef - @item.SOPCode</th>
+                                                            @foreach(var proj in (ViewBag.theprojects)){
+                                                               if(ist.ProjectId == proj.ProjectId){
+                                                                 <th>@proj.ProjectName</th>
+                                                                }
+                                                            }
+                                                            @foreach(var step in (ViewBag.procdate)){
+                                                                foreach(var pro in (ViewBag.process)){
+                                                                    if((step.SOPTemplateID == res.soptoptempid) && (res.RACIInfID == step.valuematch) && (pro.valuematch == step.valuematch)){
+                                                                    <th>@pro.ProcessName</th>
+                                                                    }
+                                                                }
+                                                            } 
+                                                            @foreach(var step in (ViewBag.procdate)){
+                                                                if((step.SOPTemplateID == res.soptoptempid) && (res.RACIInfID == step.valuematch)){
+                                                                    <th>@step.DueDate</th>
+                                                                }
+                                                            }
+                                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
+                                                        </tr>
+                                                    }
+                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

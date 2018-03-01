@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model SOPTopTemplateViewModel
+
+@{
+    ViewData["Title"] = "SOP Template";
+}
+
+<div class="container sop-top-temp">
+    <div class="row header">
+        <div class="col-12">
+            <h1>@ViewData["Title"]</h1>
+        </div>
+    </div>
+    <div class="row the-form">
+        <div class="col-12">
+            <h3>Warning</h3>
+            <p>Changing these settings will affect all existing SOPs within your organisation</p>
+            <hr />
+        </div>
+        @using (Html.BeginForm("SOPTopTemplate", "Setup", FormMethod.Post, 
+        new { @class = "form-horizontal form-sop col-12", role = "form", enctype = "multipart/form-data" }))
+        {
+            <div class="form-group inline-row row">
+                <div class="col-12">
+                    <h4>SOP Name</h4>
+                </div>
+            </div>
+            <div class="form-group inline-row row">
+                <div class="col-12 col-md-3">
+                    <input type="radio" name="radiolimit" value=""  id="radiolimit"/>@Html.LabelFor(m => m.SOPNameLimit, new { @for = "radiolimit", @class="radio-label"})
+                </div>
+                <div class="col-12 col-md-2">
+                    @Html.TextBoxFor(m => m.SOPNameLimit, new { @class = "form-control limit-form", @disabled = "disabled" })
+                </div>
+            </div>
+            <hr />
+            <div class="form-group inline-row row">
+                <div class="col-12">
+                    <h4>SOP Code</h4>
+                </div>
+            </div>
+            <div class="form-group inline-row row">
+                <div class="col-12 col-md-6">
+                    <input type="radio" name="auto-gen" value=""  id="auto-gen"/><label class="gen-radio" for="auto-gen">Use auto-generated SOP numbers</label>
+                </div>
+            </div>
+            <div class="form-group inline-row row row-pad-left fade-bg">
+                <div class="col-12 col-md-4 offset-md-1">
+                    <input type="radio" name="auto-gen-pre" value=""  id="auto-gen-pre"/><label class="gen-radio-pre" for="auto-gen-pre">Use auto-generated SOP numbers</label>
+                </div>
+                <div class="col-12 col-md-2">
+                    @Html.TextBoxFor(m => m.SOPCodePrefix, new { @class = "form-control prefix-form", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="form-group inline-row row row-pad-left fade-bg suffix-row">
+                <div class="col-12 col-md-4 offset-md-1">
+                    <input type="radio" name="auto-gen-suff" value=""  id="auto-gen-suff"/><label class="gen-radio-suff" for="auto-gen-suff">Use auto-generated SOP numbers</label>
+                </div>
+                <div class="col-12 col-md-2">
+                    @Html.TextBoxFor(m => m.SOPCodeSuffix, new { @class = "form-control suffix-form", @disabled = "disabled" })
+                </div>
+            </div>  
+            <div class="form-group inline-row row pad-top-20">
+                <div class="col-12 col-md-6">
+                    <input type="radio" name="auto-gen" value=""  id="auto-gen-lim"/><label class="gen-radio" for="auto-gen">Use auto-generated SOP numbers</label>
+                </div>
+            </div>
+            <div class="form-group inline-row row">
+                <div class="col-12 col-md-4 offset-md-1">
+                    <input type="radio" name="radioallowlimitcode" value=""  id="radioallowlimitcode"/>@Html.LabelFor(m => m.SOPAllowCodeLimit, new { @for = "radiolimit", @class="radio-label"})
+                </div>
+                <div class="col-12 col-md-2">
+                    @Html.TextBoxFor(m => m.SOPAllowCodeLimit, new { @class = "form-control limit-form-lim", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="form-group submit-row">
+                <div class="col-12 float-to-right">
+                    <input type="submit" class="btn btn-default" value="continue" />
+                </div>
+            </div>
+        
+        }   
+    </div>
+</div>

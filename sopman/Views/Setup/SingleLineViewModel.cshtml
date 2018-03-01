@@ -1,0 +1,21 @@
+﻿@model sopman.Models.SetupViewModels.SingleLineViewModel
+@using HtmlHelpers.BeginCollectionItemCore
+@using (Html.BeginCollectionItem("SingleLine"))
+{
+    <div class="single-line-row row">
+         <div class="sin-hide">
+            @Html.TextBoxFor(m => m.valuematch, new {@class = "form-control"})
+         </div>
+         <div class="col-12 col-md-6 sin-textbox">
+             @Html.HiddenFor(m => m.SingleLinkTextID, new { @class="id" })
+             @Html.TextBoxFor(m => m.SingleLinkTextBlock, new { @class = "form-control limit-form", @placeholder="Title/Subtitle"})
+         </div>
+         <div class="col-12 col-md-6 tool-left ">
+             <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="This can just have a small description of the text needed here. The actual title/subtitle will be added when creating a new SOP">
+                  <i class="material-icons">help</i>
+             </button> 
+         </div>
+    </div>
+ }
+
+

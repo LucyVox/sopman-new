@@ -1,0 +1,50 @@
+﻿@model RegisterDepartmentViewModel
+@{
+    ViewData["Title"] = "Register a Department";
+}
+<div class="container register-div">
+    <div class="row">
+        <div class="col-12">
+            <h1>@ViewData["Title"]</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            @using (Html.BeginForm("RegisterDepartment", "Account", FormMethod.Post, 
+            new { @class = "form-horizontal dep-form col-12 col-md-8", role = "form" }))
+            {
+            @Html.AntiForgeryToken()
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="row">
+                         <div class="col-12">
+                         @Html.LabelFor(m => m.DepartmentName, new { @class = "col-md-12 control-label" })
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.DepartmentName, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <button type="button" class="btn btn-secondary small-tooltip builder-tooltip" data-toggle="tooltip" data-placement="right" title="Enter the department name">
+                                <i class="material-icons">help</i>
+                            </button>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+            <div class="form-group">
+                <div class="col-12 col-md-12">
+                    <input type="submit" class="btn btn-default" value="Add" />
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+

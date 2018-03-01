@@ -1,0 +1,33 @@
+﻿@model CompanySetupViewModel
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "My Projects";
+}
+<div class="container people-div">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="col-12 col-md-4 text-right">
+            <a asp-controller="Manage" asp-action="CreateNewProject">Create New Project</a>
+        </div>
+        <div class="col-12">
+            <table class="table list-table">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    @foreach(var item in (ViewBag.theprojects)){
+                        <tr>
+                            <th>@item.ProjectName</th>
+                            <th><a href="/Manage/ViewProject?=@item.ProjectId">Go to project</a></th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

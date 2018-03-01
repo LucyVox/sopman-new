@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model ProjectViewModel
+@{
+    ViewData["Title"] = "New Project";
+}
+<div class="container people-div">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="col-12">
+            @using (Html.BeginForm()) {
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        @Html.TextBoxFor(m => m.ProjectName, new { @class = "form-control" })
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Add your project name">
+                           <i class="material-icons">help</i>
+                        </button>   
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-default" value="Create" />
+            }
+            
+        </div>
+    </div>
+</div>
+
+
+
+

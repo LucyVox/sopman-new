@@ -1,0 +1,8 @@
+﻿@model sopman.Models.SetupViewModels.AddTableRow
+@using HtmlHelpers.BeginCollectionItemCore
+@using (Html.BeginCollectionItem("AddTableRow"))
+{   
+    <div class="a-row">
+        @Html.TextBoxFor(m => m.RowText, new {@class = "form-control", @placeholder="Add text"})
+    </div>
+}

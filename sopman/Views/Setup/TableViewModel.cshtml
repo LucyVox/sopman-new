@@ -1,0 +1,21 @@
+﻿@model sopman.Models.SetupViewModels.TableViewModel
+@using HtmlHelpers.BeginCollectionItemCore
+
+@using (Html.BeginCollectionItem("Table"))
+{
+    <div class="single-line-row row" data-containerPrefix="@ViewData["ContainerPrefix"]">
+        <div class="table-hide">
+            @Html.TextBoxFor(m => m.valuematch, new {@class = "form-control"})
+         </div>
+        <div class="col-12 col-md-6 sin-textbox">
+            @Html.HiddenFor(m => m.TableSecID, new { @class="id" })
+            @Html.TextBoxFor(m => m.TableHTML, new { @class = "form-control single-line limit-form", @placeholder = "Table Name"})
+        </div>
+        <div class="col-12 col-md-6 tool-left ">
+            <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="This is just the title for the table, you will define the table in the SOP Setup">
+                 <i class="material-icons">help</i>
+            </button> 
+        </div>
+    </div>
+}
+

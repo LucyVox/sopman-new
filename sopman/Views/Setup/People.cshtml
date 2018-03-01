@@ -1,0 +1,69 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<sopman.Models.AccountViewModels.RegisterSOPUserViewModel> 
+@{
+    ViewData["Title"] = "People";
+}
+<div class="container people-div">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <a class="people-btn" asp-area="" asp-controller="Account" asp-action="RegisterDepartment">Create Department</a>
+            <a class="people-btn" asp-area="" asp-controller="Account" asp-action="RegisterJobTitle">Create Job Title</a>
+            <button type="button" class="btn btn-secondary padding-left-tooltip builder-tooltip" data-toggle="tooltip" data-placement="right" title="Add Departments and jobs to your company">
+                <i class="material-icons">help</i>
+            </button>    
+        </div>
+        <div class="col-12 col-md-6">
+            <a class="people-btn" asp-area="" asp-controller="Account" asp-action="RegisterSOPCreator">Create SOPCreator</a>
+            <a class="people-btn" asp-area="" asp-controller="Account" asp-action="RegisterSOPUser">Create SOPUser</a>
+            <button type="button" class="btn btn-secondary padding-left-tooltip builder-tooltip" data-toggle="tooltip" data-placement="left" title="Create your different user levels here">
+                <i class="material-icons">help</i>
+            </button> 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="padding-top:40px; padding-left:20px;">
+            <ul class="col-12 people-list">
+                @foreach(var item in (ViewBag.getthepeople)){
+                    foreach(var user in (ViewBag.userinfo)){
+                        if(item.UserId == user.Id){
+                            <li class="row">
+                                <div class="col-12">
+                                    <div class="row  people-row">
+                                        <div class="col-12 col-md-6 people-text">
+                                            <h3>@item.FirstName @item.SecondName</h3>
+                                            <p>@user.Email</p>
+                                            <p>
+                                                @foreach(var dep in (ViewBag.deppartments)){
+                                                    if(dep.DepartmentId == item.DepartmentId){
+                                                        @dep.DepartmentName
+                                                    }
+                                                }
+                                                @foreach(var job in (ViewBag.jobtitle)){
+                                                    if(job.JobTitleId == item.JobTitleId){
+                                                        @job.JobTitle
+                                                    }
+                                                }
+                                            </p>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 people-text">
+                                    <hr />
+                                </div>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="row back-to-row">
+        <div class="col-12 col-md-6">
+            <a class="people-btn" asp-area="" asp-controller="Setup" asp-action="SetupIndex">Back to Setup</a>
+        </div>
+    </div>
+</div>
+

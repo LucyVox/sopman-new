@@ -1,0 +1,88 @@
+﻿@model sopman.Models.SetupViewModels.Section
+@using HtmlHelpers.BeginCollectionItemCore
+<div class="new-section form-row">
+    @using (Html.BeginCollectionItem("Section"))
+    {
+    <div class="top-line">
+        <div class="col-12 col-md-11">
+             @Html.HiddenFor(m => m.SectionId, new { @class="id" })
+             @Html.EditorFor(m => m.SectionText, new { @class = "form-control limit-form", @placeholder="Section Title*"})
+             <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Add a section title this is required">
+                  <i class="material-icons">help</i>
+             </button>   
+         </div>
+        <div class="col-12 col-md-1">
+        </div>
+        <div class="name-@ViewData["ContainerNoNum"]">
+            <input type="text" name="Section[@ViewData["ContainerNoNum"]].valuematch" class="hidden-div hide-@ViewData["ContainerNoNum"]" value="@ViewData["ContainerNoNum"]">
+        </div>
+    </div>
+    <div class="main-row">
+        <div class="buttons-div">
+            <button id="add-single-line" class="sinline-@ViewData["ContainerNoNum"]" type="button" data-containerPrefix="@ViewData["ContainerPrefix"]">Add Single Text</button>
+            <button id="add-multi-text" class="muline-@ViewData["ContainerNoNum"]" type="button" data-containerPrefix="@ViewData["ContainerNoNum"]">Add Multiline Text</button>
+            <button id="add-table" class="table-@ViewData["ContainerNoNum"]" type="button" data-containerPrefix="@ViewData["ContainerNoNum"]">Add Table</button>
+             <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Choose an option to add items in the section">
+                  <i class="material-icons">help</i>
+             </button>  
+        </div>
+    </div>
+    <div class="main-row container-row-@ViewData["ContainerNoNum"]">
+        
+    </div>
+    }
+</div>
+<script> 
+    $(document).ready(function(){
+        var url = '@Url.Action("GetNewSingleLine")';
+        var urlmul = '@Url.Action("GetNewMulti")';
+        var urltable = '@Url.Action("GetTable")';
+        var form = $('form');
+        var recipients = $('.container-row-@ViewData["ContainerNoNum"]');
+
+        $(".sinline-@ViewData["ContainerNoNum"]").click(function(){
+            $.post(url, function(response) {
+                recipients.append(response);  
+                form.data('validator', null);
+                $.validator.unobtrusive.parse(form);
+                var $clone = $('.hide-@ViewData["ContainerNoNum"]').clone();
+                $(".container-row-@ViewData["ContainerNoNum"] .single-line-row .sin-hide input").each(function(i) {
+                    $(this).attr('value', "@ViewData["ContainerNoNum"]");
+                }); 
+            }); 
+        });
+    
+        $(".muline-@ViewData["ContainerNoNum"]").click(function(){
+            $.post(urlmul, function(response) {
+                recipients.append(response);  
+                form.data('validator', null);
+                $.validator.unobtrusive.parse(form);
+                var $clone = $('.hide-@ViewData["ContainerNoNum"]').clone();
+                $(".container-row-@ViewData["ContainerNoNum"] .multi-line .mult-hide input").each(function(i) {
+                    $(this).attr('value', "@ViewData["ContainerNoNum"]");
+                }); 
+            });  
+        });
+    
+        $(".table-@ViewData["ContainerNoNum"]").click(function(){
+            $.post(urltable, function(response) {
+                recipients.append(response);  
+                form.data('validator', null);
+                $.validator.unobtrusive.parse(form);
+                var $clone = $('.hide-@ViewData["ContainerNoNum"]').clone();
+                $(".container-row-@ViewData["ContainerNoNum"] .single-line-row .table-hide input").each(function(i) {
+                    $(this).attr('value', "@ViewData["ContainerNoNum"]");
+                });
+            });  
+        });
+
+        var thesevalue = "@ViewData["ContainerNoNum"]";
+        var updateValidation = function () {
+            $('form').data('validator', null);
+            $('form').data('unobtrusiveValidation', null);
+            $.validator.unobtrusive.parse($('form'));
+
+        };
+    });   
+</script>
+

@@ -1,0 +1,37 @@
+﻿@model sopman.Models.SetupViewModels.SopTemplate
+<div class="row">
+    <div class="col-12 label">
+       @Html.LabelFor(m => m.TempName, new { @class = "col-md-12 control-label" })
+    </div>
+    <div class="col-12 col-md-6">
+        @Html.TextBoxFor(m => m.TempName, new { @class = "form-control limit-form"})
+    </div>
+    <div class="col-12 col-md-6 tool-left">
+        <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Enter the name of this SOP">
+            <i class="material-icons">help</i>
+        </button>
+    </div>
+    <div class="col-12 label">
+       @Html.LabelFor(m => m.SOPCode, new { @class = "col-md-12 control-label" })
+    </div>
+    <div class="col-12 col-md-6">
+        @Html.TextBoxFor(m => m.SOPCode, new { @class = "form-control limit-form"})
+    </div>
+    <div class="col-12 col-md-6 tool-left">
+        <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Enter the code for this SOP">
+            <i class="material-icons">help</i>
+        </button>
+     </div>
+    <div class="col-12 label">
+       @Html.LabelFor(m => m.ExpireDate, new { @class = "col-md-12 control-label" })
+    </div>
+    <div class="col-12 col-md-6">
+        @Html.EditorFor(m => m.ExpireDate, new { @class = "form-control limit-form"})
+    </div>
+    <div class="col-12 col-md-6 tool-left">
+        <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Enter the Expiry date for the SOP">
+            <i class="material-icons">help</i>
+        </button>
+    </div>
+</div>
+

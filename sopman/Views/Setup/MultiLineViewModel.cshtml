@@ -1,0 +1,20 @@
+﻿@model sopman.Models.SetupViewModels.MultilineViewModel
+@using HtmlHelpers.BeginCollectionItemCore
+
+@using (Html.BeginCollectionItem("MultilineTextBlock"))
+{
+    <div class="multi-line row" data-containerPrefix="@ViewData["ContainerPrefix"]">
+        <div class="mult-hide">
+            @Html.TextBoxFor(m => m.valuematch, new {@class = "form-control"})
+         </div>
+        <div class="col-12 col-md-6 mult-textbox">
+            @Html.HiddenFor(m => m.MultilineTextID, new { @class="id" })
+           @Html.TextAreaFor(m => m.MultilineTextBlock, new { @class = "form-control multi-text limit-form", @placeholder="Small Description"})
+        </div>
+        <div class="col-12 col-md-6 tool-left">
+            <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="This can just have a small description of the text needed here. The actual description text when creating a new SOP">
+                 <i class="material-icons">help</i>
+            </button> 
+        </div>
+    </div>
+}

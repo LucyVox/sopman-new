@@ -1,0 +1,257 @@
+﻿@model IEnumerable<sopman.Models.ManageViewModels.SOPOverView> 
+@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "The SOP";
+}
+<div class="container body-content">
+    <div class="container sop-builder">
+        <div class="row header-black">
+            <div class="col-12 col-md-10">
+                <h1>@ViewBag.code</h1>
+            </div>
+            <div class="col-12 col-md-2 text-right">
+                @using (Html.BeginForm()) {
+                    <input type="submit" class="btn" value="EXECUTE" />
+                }
+            </div>
+            <div class="col-12">
+                <h2>@ViewBag.temp</h2>
+            </div>
+            <div class="col-12">
+                <ul class="nav nav-temp nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">SOP Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#process" role="tab">Process Steps</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#docs" role="tab">Documents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#history" role="tab">Version History</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row white-row">
+            <div class="col-12">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="overview" role="tabpanel">
+                        @foreach(var subitem in (ViewBag.thesecs)){
+                            <div class="row">
+                                <div class="col-12 col-md-1 header-left">
+                                    <div class="number"><h3></h3></div>
+                                </div>
+                                <div class="col-12 col-md-11 header-right">
+                                    <h2>@subitem.SectionText</h2>
+                                </div>
+                                <div class="col-12 the-secs">
+                                    @foreach(var item in (ViewBag.thesin)){
+                                        if(item.valuematch == subitem.valuematch){
+                                            if(item.NewTempId == @ViewBag.instId){
+                                                <h3>@item.SingleLinkTextBlock</h3>
+                                            }
+                                        }
+                                    }
+                                    @foreach(var item in (ViewBag.gettabs)){
+                                        if(item.valuematch == subitem.valuematch){
+                                            if(item.NewTempId == @ViewBag.instId){
+                                                <h3>@item.TableHTML</h3>
+                                                <div class="col-12">
+                                                    <div class="table sop-table">
+                                                        <div class="col-count">
+                                                        @foreach(var col in (ViewBag.gettabscols)){
+                                                            if((col.tableval == subitem.valuematch) && (col.NewTempId == ViewBag.gettopid)){
+                                                                <div class="inner-cols">
+                                                                    <h3>@col.ColText</h3>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        </div>
+                                                        <div class="row-count">
+                                                        @foreach(var col in (ViewBag.gettabsrows)){
+                                                            if((col.tableval == subitem.valuematch) && (col.NewTempId == ViewBag.gettopid)){
+                                                                <div class="inner-rows">
+                                                                    <h3>@col.RowText</h3>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                }
+                                           }
+                                    }
+
+                                    @foreach(var item in (ViewBag.getmul)){
+                                        if(item.valuematch == subitem.valuematch){
+                                            if(item.NewTempId == @ViewBag.instId){
+                                                <p>@item.MultilineTextBlock</p>
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="process" role="tabpanel">
+                        <div id="accordion" role="tablist">
+                            @foreach(var item in (ViewBag.processtmps)){
+                                var nameshort = item.ProcessName.Replace(" ", "");
+                                var protype = item.ProcessType;
+                                var value = item.valuematch;
+                                <div class="card container @protype process-@value">
+                                    <div class="card-header row" role="tab" id="headingOne">
+                                            <div class="col-12 col-md-1 count-col">
+                                               <div class="number"><h3></h3></div>
+                                            </div>
+                                            <div class="col-12 col-md-11 padding-left-zero">
+                                                <div class="row header-row">
+                                                    <div class="col-12 col-md-10">
+                                                         <h3>@item.ProcessName</h3>
+                                                    </div>
+                                                    <div class="col-12 col-md-2 text-right">
+                                                        <a data-toggle="collapse" class="" href="#collapse-@nameshort" role="button" aria-expanded="false" aria-controls="collapseOne">
+                                                            ADD DETAIL
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-@nameshort" class="container collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body row">
+                                            <div class="col-12 col-md-12">
+                                                <p>@item.ProcessDesc</p>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Responsible</h4>
+                                                    </div>
+                                                    @foreach(var sub in (ViewBag.resiuser)){
+                                                        if(sub.RACIResID ==  item.valuematch){
+                                                            foreach(var name in (ViewBag.allusers)){
+                                                                if(sub.soptoptempid == ViewBag.getid){
+                                                                    if(name.ClaimId == sub.UserId){
+                                                                        <div class="col-12 col-md-12">
+                                                                            <h4>@name.FirstName</h4>
+                                                                        </div>
+                                                                    }
+                                                                } 
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Accountable</h4>
+                                                    </div>
+                                                    @foreach(var sub in (ViewBag.resiaccuser)){
+                                                        if(sub.RACIAccID ==  item.valuematch){
+                                                            foreach(var name in (ViewBag.allusers)){
+                                                                 if(sub.soptoptempid == ViewBag.getid){
+                                                                    if(name.ClaimId == sub.UserId){
+                                                                        <div class="col-12 col-md-12">
+                                                                            <h4>@name.FirstName</h4>
+                                                                        </div>
+                                                                    }
+                                                                } 
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Consulted</h4>
+                                                    </div>
+                                                    @foreach(var sub in (ViewBag.resiconuser)){
+                                                        if(sub.RACIConID ==  item.valuematch){
+                                                            foreach(var name in (ViewBag.allusers)){
+                                                                if(sub.soptoptempid == ViewBag.getid){
+                                                                    if(name.ClaimId == sub.UserId){
+                                                                        <div class="col-12 col-md-12">
+                                                                            <h4>@name.FirstName</h4>
+                                                                        </div>
+                                                                    }
+                                                                } 
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Informed</h4>
+                                                    </div>
+                                                    @foreach(var sub in (ViewBag.resiinfuser)){
+                                                        if(sub.RACIInfID ==  item.valuematch){
+                                                            foreach(var name in (ViewBag.allusers)){
+                                                                if(sub.soptoptempid == ViewBag.getid){
+                                                                    if(name.ClaimId == sub.UserId){
+                                                                        <div class="col-12 col-md-12">
+                                                                            <h4>@name.FirstName</h4>
+                                                                        </div>
+                                                                    }
+                                                                } 
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                
+                                            </div>
+                                          </div>
+                                    </div>
+                               </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="docs" role="tabpanel">
+                        <p>Documents will go here</p>
+                    </div>
+                    <div class="tab-pane" id="history" role="tabpanel">
+                        <h3>There is currently no version history</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var url = '@Url.Action("TheSOP")';
+        var form = $('form');
+        var recipients = $('#overview');    
+        $.get(url, function(response) {
+            recipients.append(response);
+            form.data('validator', null);
+            $.validator.unobtrusive.parse(form);
+        });
+    });
+    $(document).ready(function () {
+        var divname = "cols-";
+        var count = $(".table .inner-cols").length;
+        console.log(divname); 
+        console.log(count);
+        var content = divname+count;
+        console.log(content);
+        $(".inner-cols").addClass(content);
+        $(".inner-rows").addClass(content);
+    });
+    var div = 0;
+    $(document).ready(function () {
+        $(".number").each(function(i) {
+            $(this).find("h3").text(++i);
+        });
+    });
+</script>
+
+

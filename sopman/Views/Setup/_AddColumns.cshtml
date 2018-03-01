@@ -1,0 +1,9 @@
+﻿@model sopman.Models.SetupViewModels.AddTable
+@using HtmlHelpers.BeginCollectionItemCore
+@using (Html.BeginCollectionItem("NewColumn"))
+{  
+    <div class="a-col">
+        @Html.TextBoxFor(m => m.RowText, new {@class = "form-control", @placeholder="Add text"})
+    </div>
+}
+

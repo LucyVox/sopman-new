@@ -1,0 +1,40 @@
+﻿@model IEnumerable<sopman.Models.ManageViewModels.SOPTemplateList> 
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "SOP Templates";
+}
+<div class="container body-content">
+    <div class="container sop-builder">
+        <div class="row header-white">
+            <div class="col-12 col-md-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-12 col-md-6 text-right">
+                <a asp-area="" asp-controller="Setup" asp-action="NewTemplate">New Template</a>
+            </div>
+            <div class="col-12">
+                <table class="table list-table">
+                    <thead>
+                        <tr>
+                            <th>SOP Name</th>
+                            <th>Code</th>
+                            <th>Expire Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach(var item in Model){
+                        <tr>
+                            <th>@Html.DisplayFor(modelItem => item.TempName)</th>
+                            <th>@Html.DisplayFor(modelItem => item.SOPCode)</th>
+                            <th>@Html.DisplayFor(modelItem => item.ExpireDate)</th>
+                            <th><a href="/Manage/CreateInstance?=@item.SOPTemplateID">Create instance</a></th>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

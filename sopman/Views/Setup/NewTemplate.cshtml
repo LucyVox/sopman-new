@@ -1,0 +1,113 @@
+﻿@model IEnumerable<sopman.Models.SetupViewModels.SopTemplate>
+@using HtmlHelpers.BeginCollectionItemCore
+@{
+    ViewData["Title"] = "New Template";
+
+}
+@using (Html.BeginForm("NewTemplate", "Setup", FormMethod.Post)){
+<div class="container sop-builder">
+    <div class="row header-white">
+        <div class="col-12">
+            <h1>Stage 1 - add information</h1>
+        </div>
+        <div class="col-12 rest-of-form">
+            
+        </div>
+        <div class="col-12">
+            <hr>
+        </div>
+    </div>
+    <div class="row white-bg">
+        <div class="col-12 no-pad">
+            <div class="row inner-form">
+                @foreach(var item in Model){
+                    <div class="col-12 col-md-8 section-row">
+                        <h4>@Html.DisplayFor(modelItem => item.SectionText)</h4>
+                        @foreach(var subitem in (ViewBag.GetTabs)){
+                            if(subitem.valuematch == item.valuematch){
+                               var text = @subitem.TableHTML.Replace(" ", "");
+                               <input class="form-control limit-form" type="text" name="TableHTML-@text" value="@subitem.TableHTML" >                              
+                               <div class="row">
+                                   <div class="col-12 col-md-10 new-table">
+                                        <div class="table table-@text">
+                                            <div class="columns-row">
+                                            </div>
+                                            <div class="new-row">
+                                            </div>
+                                        </div>
+                                   </div>
+                                   <div class="col-12 col-md-2">
+                                        <button id="add-table" class="add-@text add-a-col" type="button">Add Column</button>
+                                   </div>
+                                   <div class="col-12 col-md-12">
+                                        <button id="add-table" class="add-row-@text" type="button">Add Row</button>
+                                   </div>
+                                </div>
+                                <script>
+                                    $(document).ready(function () {
+                                        var url = '@Url.Action("AddColumns")';
+                                        var urltwo = '@Url.Action("AddTable")';
+                                        var form = $('form');
+                                        var recipients = $('.table-@text .columns-row'); 
+                                        var recipientstwo = $('.table-@text .new-row'); 
+                                        $(".add-@text").click(function(){
+                                            $.post(url, function(response) {
+                                                recipients.append(response);  
+                                                form.data('validator', null);
+                                                $.validator.unobtrusive.parse(form); 
+                                            }); 
+                                        });
+                                        $(".add-row-@text").click(function(){  
+                                            var clone = $('.table-@text .columns-row .a-col').length;
+                                            console.log(clone);
+                                            for (var i = 0; i < clone; i++){
+                                                $.post(urltwo, function(response) {
+                                                    recipientstwo.append(response);  
+                                                    form.data('validator', null);
+                                                    $.validator.unobtrusive.parse(form); 
+                                                }); 
+                                            }; 
+                                        }); 
+                                    });
+                                </script>
+                            }
+                        }
+                        @foreach(var subitem in (ViewBag.GetSin)){
+                            if(subitem.valuematch == item.valuematch){
+                                var text = @subitem.SingleLinkTextBlock.Replace(" ", "");
+                                <input class="form-control limit-form" type="text" name="SingleLinkTextBlock-@text" value="@subitem.SingleLinkTextBlock" >
+                            }
+                        } 
+                        @foreach(var subitem in (ViewBag.GetMul)){
+                            if(subitem.valuematch == item.valuematch){
+                                var text = @subitem.MultilineTextBlock.Replace(" ", "");
+                                <textarea name="MultilineTextBlock-@text" class="form-control limit-form">@subitem.MultilineTextBlock</textarea>   
+                            }
+                        }  
+                    </div>
+                }
+                <div class="form-group bottom-row submit-row">
+                    <div class="col-12 float-to-right">
+                        <input type="submit" class="btn btn-default" value="save and continue" />
+                    </div>
+                </div>
+            </div>
+          </div>
+    </div>
+</div>
+  }
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        var urltop = '@Url.Action("AddTemp")';
+        var form = $('form');
+        var recipientstop = $('.rest-of-form'); 
+        $.post(urltop, function(response) {
+            recipientstop.append(response);  
+            form.data('validator', null);
+            $.validator.unobtrusive.parse(form); 
+        }); 
+    });
+</script>
+}

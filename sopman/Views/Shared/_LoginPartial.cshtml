@@ -1,0 +1,29 @@
+@using Microsoft.AspNetCore.Identity
+@using sopman.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
+        <div class="loggedin-user">
+            <p class="faded">You are logged in</p>
+            <div class="user-section">
+                <h3 class="logged-in-as"><a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">@UserManager.GetUserName(User)</a></h3>
+                <h3 class="log-out"> | </h3>
+                <button type="submit" class="btn log-out btn-link navbar-btn navbar-link">Log out</button>
+             </div>
+        </div>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
+        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
+    </ul>
+}
+
+
+        

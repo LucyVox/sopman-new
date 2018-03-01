@@ -1,0 +1,18 @@
+﻿@model ProcessOutput
+@using HtmlHelpers.BeginCollectionItemCore
+@using (Html.BeginCollectionItem("SectionInfo"))
+{
+    <div class="col-12 value-top pad-top">
+        <input class="hidden-value" value="" name="SectionInfo[@ViewData["ContainerNoNum"]].valuematch">
+        <h3>Due Date</h3>
+        @Html.EditorFor(m => m.DueDate)
+    </div>
+    <div class="col-12 pad-top">
+        <h3>Add files</h3>
+        @Html.TextBoxFor(m => m.FilesString, new { type = "file", multiple = "multiple" })
+    </div>
+    <div class="col-12 pad-top">
+        <h3>External Document Link</h3>
+        @Html.TextBoxFor(m => m.ExternalDocument)
+    </div>
+}

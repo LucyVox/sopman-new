@@ -1,0 +1,192 @@
+﻿@model IEnumerable<sopman.Models.ManageViewModels.ProcessOutput> 
+@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Instance Process";
+    var sub = "TheSOP?="+@ViewBag.theid;
+}
+<div class="container body-content">
+    <div class="container sop-builder">
+         <div class="row header-white">
+            <div class="col-12">
+                <h1>@ViewBag.temp</h1>
+            </div>
+            <div class="col-12 col-md-3">
+                <p><span class="faded">Ref: </span>@ViewBag.intref</p>
+            </div>
+            <div class="col-12 col-md-3">
+                <p><span class="faded">Project: </span>@ViewBag.projname</p>
+            </div>
+            <div class="col-12 no-pad-mobile">
+                <p>Process Step Setup</p>
+                <div id="theform">
+                    <div id="accordion" role="tablist">
+                        @using (Html.BeginForm()) {
+                            <input type="hidden" value="@ViewBag.theid" name="SOPID">
+                            foreach(var item in Model){
+                                var nameshort = item.ProcessName.Replace(" ", "");
+                                var protype = item.ProcessType;
+                                var value = item.valuematch;
+                                <div class="card container @protype process-@value">
+                                    <div class="card-header row" role="tab" id="headingOne">
+                                        <div class="col-12 col-md-1 count-col">
+                                            
+                                        </div>
+                                        <div class="col-12 col-md-11 padding-left-zero">
+                                            <div class="row header-row">
+                                                <div class="col-12 col-md-10">
+                                                    <h3>@Html.DisplayFor(modelItem => item.ProcessName)</h3>
+                                                </div>
+                                                <div class="col-12 col-md-2 text-right">
+                                                    <a data-toggle="collapse" class="" href="#collapse-@nameshort" role="button" aria-expanded="false" aria-controls="collapseOne">
+                                                        ADD DETAIL
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="collapse-@nameshort" class="container collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body row">
+                                            <div class="col-12 col-md-6">
+                                                <h3>Description</h3>
+                                                <p>@Html.DisplayFor(modelItem => item.ProcessDesc)</p>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <input class="hidden-value hidden-value-@item.valuematch" value="@item.valuematch"  name="hidden-value-@item.valuematch">
+                                                <div class="row partial-load-@value">
+                                                   
+                                                </div>
+                                            </div>
+                                            <div class="col-12 no-pad raci-info-@value">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Responsible</h4>
+                                                        @foreach(var data in (ViewBag.tempdata)){
+                                                            var dropname = item.valuematch + "-RES";
+                                                            if(data.valuematch == item.valuematch){
+                                                                <div class="row">
+                                                                    <div class="col-12 col-md-12 pick-person">
+                                                                        <div class="row">
+                                                                            <div class="col-12 col-md-6">
+                                                                                  @Html.DropDownList(@dropname,ViewBag.selectlist as SelectList, new { @class = "form-control" })
+                                                                            </div>
+                                                                            <div class="col-12 col-md-6">
+                                                                                <p><strong>@data.DepartmentName</strong>
+                                                                                <br>@data.JobTitle</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        }   
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 no-pad raci-info-@value">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Accountable</h4>
+                                                            @foreach(var data in (ViewBag.tempdata)){
+                                                                var dropname = item.valuematch + "-ACC";
+                                                                if(data.valuematch == item.valuematch){
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-md-12 pick-person">
+                                                                            <div class="row">
+                                                                                <div class="col-12 col-md-6">
+                                                                                    @Html.DropDownList(@dropname,ViewBag.selectlist as SelectList, new { @class = "form-control" })
+                                                                                </div>
+                                                                                <div class="col-12 col-md-6">
+                                                                                    <p><strong>@data.DepartmentName</strong>
+                                                                                    <br>@data.JobTitle</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 no-pad raci-info">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Consulted</h4>
+                                                            @foreach(var data in (ViewBag.racicons)){
+                                                                var dropname = item.valuematch + "-CON";
+                                                                if(data.valuematch == item.valuematch){
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-md-12 pick-person">
+                                                                            <div class="row">
+                                                                                <div class="col-12 col-md-6">
+                                                                                    @Html.DropDownList(@dropname,ViewBag.selectlist as SelectList, new { @class = "form-control" })
+                                                                                </div>
+                                                                                <div class="col-12 col-md-6">
+                                                                                    <p><strong>@data.DepartmentName</strong>
+                                                                                    <br>@data.JobTitle</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 no-pad raci-info">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Informed</h4>
+                                                            @foreach(var data in (ViewBag.raciinf)){
+                                                                var dropname = item.valuematch + "-INF";
+                                                                if(data.valuematch == item.valuematch){
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-md-12 pick-person">
+                                                                            <div class="row">
+                                                                                <div class="col-12 col-md-6">
+                                                                                    @Html.DropDownList(@dropname,ViewBag.selectlist as SelectList, new { @class = "form-control" })
+                                                                                </div>
+                                                                                <div class="col-12 col-md-6">
+                                                                                    <p><strong>@data.DepartmentName</strong>
+                                                                                    <br>@data.JobTitle</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    $(document).ready(function () {
+                                        if($(".card").hasClass("process-@value")){
+                                            var url = '@Url.Action("DueDate")';
+                                            var urltwo = '@Url.Action("RACIInf")';
+                                            var form = $('form');
+                                            var recipients = $('.partial-load-@value');
+                                            var recipientstwo = $('.raci-info-@value');
+                                            $.get(url, function(response) {
+                                                recipients.append(response);
+                                                form.data('validator', null);
+                                                $.validator.unobtrusive.parse(form);
+                                                $(".partial-load-@value .value-top input.hidden-value").each(function(i) {
+                                                    $(this).attr('value', "@value");
+                                                });
+                                            });
+                                         };
+                                     });
+                                 </script>
+                           }
+                            <div class="col-12 float-to-right ex-row">
+                                <input type="submit" class="btn" value="EXECUTE" />
+                            </div>
+                        }
+                </div>
+            </div>
+       </div>
+    </div>
+</div>
+

@@ -1,0 +1,146 @@
+﻿@model sopman.Models.SetupViewModels.SubProcess
+@using HtmlHelpers.BeginCollectionItemCore
+@using (Html.BeginCollectionItem("SubProcess"))
+{
+    <div class="card container">
+        <div class="card-header row" role="tab" id="headingOne">
+            <div class="col-12">
+                <a data-toggle="collapse" class="" href="#collapse-@ViewData["ContainerNoNum"]" role="button" aria-expanded="true" aria-controls="collapseOne">
+                  <label>Process Step Name</label>
+                </a>
+            </div>
+            <div class="col-12 col-md-11 name-@ViewData["ContainerNoNum"]">
+                @Html.TextBoxFor(m => m.ProcessName, new { @class = "form-control limit-form"})
+                <input type="text" name="SubProcess[@ViewData["ContainerNoNum"]].valuematch" class="hidden-div hide-@ViewData["ContainerNoNum"]" value="@ViewData["ContainerNoNum"]">
+            </div>
+            <div class="col-12 col-md-1">
+                <button type="button" class="btn btn-secondary float-right builder-tooltip" data-toggle="tooltip" data-placement="left" title="Enter the name of the process">
+                    <i class="material-icons">help</i>
+                </button>
+            </div>
+        </div>
+        <div id="collapse-@ViewData["ContainerNoNum"]" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="row">
+                            <div class="col-12">
+                                <label>Description</label>
+                                <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Enter the description of the process">
+                                    <i class="material-icons">help</i>
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                @Html.TextAreaFor(m => m.ProcessDesc, new { @class = "form-control limit-form"})
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-12 col-md-6">
+                         <div class="row">
+                            <div class="col-12 col-md-1">
+                                <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Upload any files relating to this process step">
+                                    <i class="material-icons">help</i>
+                                </button>
+                            </div>
+                            <div class="col-12 col-md-11">
+                                @Html.TextBoxFor(m => m.FilesString, new { type = "file", @multiple = "multiple"  })
+                            </div>
+                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label class="none-bold label-header">RACI Tasks</label><br />
+                        <label>Responsible</label>
+                        <button id="add-res-user" class="sinline-@ViewData["ContainerNoNum"]" type="button" data-containerPrefix="@ViewData["ContainerPrefix"]">Add Responsible User</button>
+                        <div class="response-row res-row-@ViewData["ContainerNoNum"]">
+                            
+                        </div>
+                        <br/> <br/> 
+                        <label>Accountable</label>
+                        <button id="add-res-user" class="acc-@ViewData["ContainerNoNum"]" type="button" data-containerPrefix="@ViewData["ContainerPrefix"]">Add Accountable User</button>
+                        <div class="accountable-row acc-row-@ViewData["ContainerNoNum"]">
+                            
+                        </div>
+                        <br/> <br/> 
+                        <label>Consulted</label>
+                        <button id="add-con-user" class="con-@ViewData["ContainerNoNum"]" type="button" data-containerPrefix="@ViewData["ContainerPrefix"]">Add Consulted User</button>
+                        <div class="accountable-row con-row-@ViewData["ContainerNoNum"]">
+                            
+                        </div>
+                        <br/> <br/> 
+                        <label>Informed</label>
+                        <button id="add-con-user" class="inf-@ViewData["ContainerNoNum"]" type="button" data-containerPrefix="@ViewData["ContainerPrefix"]">Add Informed User</button>
+                        <div class="accountable-row inf-row-@ViewData["ContainerNoNum"]">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+}
+<script> 
+    $(document).ready(function(){
+
+        var url = '@Url.Action("AddRACIResponsible")';
+        var urlacc = '@Url.Action("AddRACIAccountable")';
+        var urlinf = '@Url.Action("AddRACIInformed")';
+        var urlcon = '@Url.Action("AddRACIConsulted")';
+        var form = $('form');
+        var recipients = $('.res-row-@ViewData["ContainerNoNum"]');
+        var recipientsacc = $('.acc-row-@ViewData["ContainerNoNum"]');
+        var recipientscon = $('.con-row-@ViewData["ContainerNoNum"]');
+        var recipientsinf = $('.inf-row-@ViewData["ContainerNoNum"]');
+        var proname = $('.name-@ViewData["ContainerNoNum"]').val();
+
+        $(".sinline-@ViewData["ContainerNoNum"]").click(function(){
+            $.post(url, function(response) {
+                recipients.append(response);  
+                form.data('validator', null);
+                $.validator.unobtrusive.parse(form);
+                var $clone = $('.hide-@ViewData["ContainerNoNum"]').clone();
+                $(".res-row-@ViewData["ContainerNoNum"] .single-line-row .res-hide input").each(function(i) {
+                    $(this).attr('value', "@ViewData["ContainerNoNum"]");
+                }); 
+            }); 
+        });
+    
+        $(".acc-@ViewData["ContainerNoNum"]").click(function(){
+            $.post(urlacc, function(response) {
+                recipientsacc.append(response);  
+                form.data('validator', null);
+                $.validator.unobtrusive.parse(form);
+                var $clone = $('.hide-@ViewData["ContainerNoNum"]').clone();
+                $(".acc-row-@ViewData["ContainerNoNum"] .single-line-row .acc-hide input").each(function(i) {
+                    $(this).attr('value', "@ViewData["ContainerNoNum"]");
+                }); 
+            }); 
+        });
+    
+        $(".inf-@ViewData["ContainerNoNum"]").click(function(){
+            $.post(urlinf, function(response) {
+                recipientsinf.append(response);  
+                form.data('validator', null);
+                $.validator.unobtrusive.parse(form);
+                var $clone = $('.hide-@ViewData["ContainerNoNum"]').clone();
+                $(".inf-row-@ViewData["ContainerNoNum"] .single-line-row .inf-hide input").each(function(i) {
+                    $(this).attr('value', "@ViewData["ContainerNoNum"]");
+                }); 
+            }); 
+        });
+
+        $(".con-@ViewData["ContainerNoNum"]").click(function(){
+            $.post(urlcon, function(response) {
+                recipientscon.append(response);  
+                form.data('validator', null);
+                $.validator.unobtrusive.parse(form);
+                var $clone = $('.hide-@ViewData["ContainerNoNum"]').clone();
+                $(".con-row-@ViewData["ContainerNoNum"] .single-line-row .con-hide input").each(function(i) {
+                    $(this).attr('value', "@ViewData["ContainerNoNum"]");
+                }); 
+            }); 
+        });
+    });
+</script>
+

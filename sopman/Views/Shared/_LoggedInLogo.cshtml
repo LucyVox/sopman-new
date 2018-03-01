@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model UserLoggedInViewModels
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>@ViewBag.Logged</p>    
+}
+else
+{
+    <img class="img-fluid" src="http://via.placeholder.com/250x150">
+}        
+        
