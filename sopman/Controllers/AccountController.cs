@@ -385,48 +385,50 @@ namespace sopman.Controllers
         [Authorize(Roles = "SOPAdmin")]
         public async Task<IActionResult> RegisterSOPCreator(RegisterSopCreatorViewModel model,[Bind("ClaimId,FirstName,SecondName,CompanyId")] ApplicationDbContext.ClaimComp compclaim)
         {
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+            var orderVM = new RegisterSopCreatorViewModel();
+            var getuser = _userManager.GetUserId(User);
+
+            var compid = (from i in _context.TheCompanyInfo
+                          where i.UserId == getuser
+                          select i.CompanyId).Single();
+
+            var getdep = (from m in _context.Departments
+                          where m.CompanyId == compid
+                          select new { m.DepartmentId, m.DepartmentName }).ToList();
+
+            var getjobs = (from m in _context.JobTitles
+                           where m.CompanyId == compid
+                           select new { m.JobTitleId, m.JobTitle }).ToList();
+
+
+            orderVM.Departments = new List<RegisterDepartmentViewModel>();
+            foreach (var items in getdep)
+            {
+                var itemname = @items.DepartmentName;
+                var itemId = @items.DepartmentId;
+                orderVM.Departments.Add(new RegisterDepartmentViewModel { Value = @itemId, DepartmentId = @itemId, DepartmentName = @itemname });
+            };
+
+
+            orderVM.JobTitles = new List<RegisterJobTitleViewModel>();
+            foreach (var items in getjobs)
+            {
+                var jobname = @items.JobTitle;
+                var jobid = @items.JobTitleId;
+                orderVM.JobTitles.Add(new RegisterJobTitleViewModel { Value = @jobid, JobTitleId = @jobid, JobTitle = @jobname });
+            }
+            var currentuser = await _userManager.GetUserAsync(User);
+            var user_id = currentuser.Id;
+
+            var modules = (from i in _context.TheCompanyInfo
+                           where i.UserId == user_id
+                           select i.CompanyId).Single();
+
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-                var orderVM = new RegisterSopCreatorViewModel();
-                var getuser = _userManager.GetUserId(User);
-
-                var compid = (from i in _context.TheCompanyInfo
-                              where i.UserId == getuser
-                              select i.CompanyId).Single();
-
-                var getdep = (from m in _context.Departments
-                              where m.CompanyId == compid
-                              select new { m.DepartmentId, m.DepartmentName }).ToList();
-
-                var getjobs = (from m in _context.JobTitles
-                               where m.CompanyId == compid
-                               select new { m.JobTitleId, m.JobTitle }).ToList();
-
-                orderVM.Departments = new List<RegisterDepartmentViewModel>();
-                foreach (var items in getdep)
-                {
-                    var itemname = @items.DepartmentName;
-                    var itemId = @items.DepartmentId;
-                    orderVM.Departments.Add(new RegisterDepartmentViewModel { Value = @itemId, DepartmentId = @itemId, DepartmentName = @itemname });
-                };
-
-                orderVM.JobTitles = new List<RegisterJobTitleViewModel>();
-                foreach (var items in getjobs)
-                {
-                    var jobname = @items.JobTitle;
-                    var jobid = @items.JobTitleId;
-                    orderVM.JobTitles.Add(new RegisterJobTitleViewModel { Value = @jobid, JobTitleId = @jobid, JobTitle = @jobname });
-                }
-                var currentuser = await _userManager.GetUserAsync(User);
-                var user_id = currentuser.Id;
-
-                var modules = (from i in _context.TheCompanyInfo
-                               where i.UserId == user_id
-                               select i.CompanyId).Single();
-
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "SOPCreator");
@@ -461,7 +463,7 @@ namespace sopman.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return View();
+            return View(orderVM);
 
         }
 
