@@ -13,5 +13,6 @@ namespace sopman.Models.ManageViewModels
         public string ProjectId { get; set; }
         public int CompId { get; set; }
         public string ProjectName { get; set; }
+
     }
 }

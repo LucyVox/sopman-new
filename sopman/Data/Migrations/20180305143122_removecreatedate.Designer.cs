@@ -11,9 +11,10 @@ using System;
 namespace sopman.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180305143122_removecreatedate")]
+    partial class removecreatedate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -382,8 +383,6 @@ namespace sopman.Data.Migrations
                     b.Property<int>("CompId");
 
                     b.Property<string>("ProjectName");
-
-                    b.Property<DateTime>("creationdate");
 
                     b.HasKey("ProjectId");
 

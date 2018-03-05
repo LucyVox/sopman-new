@@ -316,6 +316,8 @@ namespace sopman.Data
 
             public int CompId { get; set; }
             public string ProjectName { get; set; }
+
+            public DateTime creationdate { get; set; }
         }
         public DbSet<Project> Projects { get; set; }
 

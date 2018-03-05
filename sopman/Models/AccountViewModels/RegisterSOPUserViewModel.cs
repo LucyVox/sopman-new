@@ -43,5 +43,7 @@ namespace sopman.Models.AccountViewModels
         public int ClaimId { get; set; }
         public int CompanyId { get; set; }
         public string Id { get; set; }
+
+        public string ProjectName { get; set;}
     }
 }

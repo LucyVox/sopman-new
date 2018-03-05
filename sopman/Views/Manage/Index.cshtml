@@ -15,14 +15,13 @@
                         @foreach(var item in (@ViewBag.newtemps)){
                             foreach(var sub in (@ViewBag.getexe)){
                                 foreach(var ist in (@ViewBag.getinst)){
-                                    if(ist.SOPTemplateID == item.SOPTemplateID){
-                                        if(sub.SectionId == ist.InstanceId){   
-                                            foreach(var res in (ViewBag.resiuser)){
-                                                if(res.UserId == ViewBag.claimid){
-                                                    <p class="hide res-claim">hello</p>
-                                                }
+                                    if((ist.SOPTemplateID == item.SOPTemplateID) && (sub.SectionId == ist.InstanceId)){
+                                        foreach(var res in (ViewBag.resiuser)){
+                                            if(res.UserId == ViewBag.claimid){
+                                                <p class="hide res-claim">hello</p>
                                             }
                                         }
+                                        
                                     }
                                 }
                             }
@@ -189,11 +188,11 @@
             <h2>My SOP Instances</h2>
         </div>
         <div class="col-12 col-md-4 template-link">
-           <a asp-controller="Manage" asp-action="SOPTemplates">View Templates</a>
+           <a asp-controller="Manage" asp-action="SOPInstacnes">VIEW ALL</a>
 
         </div>
         <div class="col-12">
-            <table class="table list-table">
+            <table id="sop_table" class="table list-table">
                     <thead>
                         <tr>
                             <th>SOP Name</th>
@@ -236,11 +235,11 @@
         <div class="col-12 col-md-8">
             <h2>My Tasks</h2>
         </div>
-        <div class="col-12 col-md-4">
-            
+        <div class="col-12 col-md-4 template-link">
+            <a asp-controller="Manage" asp-action="Tasks">VIEW ALL</a>
         </div>
         <div class="col-12">
-            <table class="table list-table">
+            <table id="task_table" class="table list-table">
                 <thead>
                     <tr>
                         <th>Instance</th>
@@ -402,25 +401,20 @@
             <h2>My Projects</h2>
         </div>
         <div class="col-12 col-md-4 template-link">
-            <a asp-controller="Manage" asp-action="Projects">View All Projects</a>
+            <a asp-controller="Manage" asp-action="Projects">VIEW ALL</a>
         </div>
         <div class="col-12">
-            <table class="table list-table">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody> 
-                    @foreach(var item in (ViewBag.theprojects)){
-                        <tr>
-                            <th scope="row">@item.ProjectName</th>
-                            <th><a href="/Manage/ViewProject?=@item.ProjectId">Go to project</a></th>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <table id="fullprojlist" class="table list-table">
+            <thead>
+                <tr>
+                    <th><a href="#fullprojlist" class="" >Project Name</a></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="proj_table"> 
+                @Html.Partial("projectTable")
+            </tbody>
+        </table>
         </div>
     </div>
 </div>
@@ -453,6 +447,38 @@
         var rescliaminf = $( ".res-claim-inf" ).length;
         $( ".res-claim-inf-clount" ).text(rescliaminf);
     });
+
+    $(document).ready(function() {
+        $('#fullprojlist').DataTable( {
+            "order": [[ 0, "desc" ]],
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "columnDefs": [
+                { "orderable": false, "targets": 1 }
+            ]
+        });
+        $('#task_table').DataTable( {
+            "order": [[ 0, "desc" ]],
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "columnDefs": [
+                { "orderable": false, "targets": 4 }
+            ]
+        });
+        $('#sop_table').DataTable( {
+            "order": [[ 0, "desc" ]],
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "columnDefs": [
+                { "orderable": false, "targets": 4 }
+            ]
+        });
+    });
+
+    
 </script>
 
 

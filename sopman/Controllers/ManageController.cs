@@ -62,7 +62,46 @@ namespace sopman.Controllers
         public string StatusMessage { get; set; }
 
         [HttpGet]
-        public ActionResult Index()
+        public PartialViewResult ProjectTable(string sortOrder)
+        {
+            var getu = _userManager.GetUserId(User);
+
+            ViewBag.loggedinuser = getu;
+
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getu
+                        select i.CompanyId).Single();
+
+
+            var theprojects = (from x in _context.Projects
+                               where x.CompId == comp
+                               select new SOPTemplateList { ProjectId = x.ProjectId, ProjectName = x.ProjectName }).ToList();
+            
+
+
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            var theprojectslist = (from x in _context.Projects
+                                   where x.CompId == comp
+                                   select new SOPTemplateList { ProjectId = x.ProjectId, ProjectName = x.ProjectName });
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    theprojectslist = theprojectslist.OrderByDescending(x => x.ProjectName);
+                    break;
+                default:
+                    theprojectslist = theprojectslist.OrderBy(x => x.ProjectName);
+                    break;
+            }
+
+            ViewBag.theprojects = theprojectslist.ToList();
+
+            return PartialView("projectTable");
+        }
+
+
+        [HttpGet]
+        public ActionResult Index(string sortOrder)
         {
             var getu = _userManager.GetUserId(User);
 
@@ -103,10 +142,27 @@ namespace sopman.Controllers
             ViewBag.getexe = getexe;
 
             var theprojects = (from x in _context.Projects
-                               where x.CompId == comp
-                               select new SOPTemplateList { ProjectId = x.ProjectId, ProjectName = x.ProjectName }).ToList();
+                              where x.CompId == comp
+                              select new SOPTemplateList { ProjectId = x.ProjectId, ProjectName = x.ProjectName }).ToList();
 
-            ViewBag.theprojects = theprojects;
+
+
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            var theprojectslist = (from x in _context.Projects
+                                   where x.CompId == comp
+                                   select new SOPTemplateList { ProjectId = x.ProjectId, ProjectName = x.ProjectName });
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    theprojectslist = theprojectslist.OrderByDescending(x => x.ProjectName);
+                    break;
+                default:
+                    theprojectslist = theprojectslist.OrderBy(x => x.ProjectName);
+                    break;
+            }
+
+            ViewBag.theprojects = theprojectslist.ToList();
 
             var resiuser = (from u in _context.RACIResUser
                             select new SOPOverView { RACIResID = u.RACIResID, UserId = u.UserId, soptoptempid = u.soptoptempid }).ToList();
@@ -1944,18 +2000,53 @@ namespace sopman.Controllers
 
             ViewBag.theprojects = theprojects;
 
-            return View();
+            var getinst = (from y in _context.NewInstance
+                           select new SOPTemplateList { SOPTemplateID = y.SOPTemplateID, InstanceExpire = y.InstanceExpire, ProjectId = y.ProjectId, InstanceRef = y.InstanceRef, InstanceId = y.InstanceId }).ToList();
+
+            var getexe = (from y in _context.ExecutedSop
+                          select new SOPTemplateList { ExecuteSopID = y.ExecuteSopID, SectionId = y.SectionId, UserId = y.UserId }).ToList();
+
+            ViewBag.getexe = getexe;
+            ViewBag.getinst = getinst;
+
+
+            foreach(var proj in theprojects){
+                var id = proj.ProjectId;
+
+            }
+
+            var projlist = (from i in _context.Projects
+                            where i.CompId == compid
+                            select new SOPTemplateList { 
+                                    ProjectName = i.ProjectName,
+                                    ProjectId = i.ProjectId,
+                                    creationdate = i.creationdate,
+                                     countnum =  _context.NewInstance.Where(x => x.ProjectId == i.ProjectId).Count()    
+                            }).ToList();
+
+
+            foreach(var item in projlist){
+                Console.WriteLine(item.ProjectName );
+                Console.WriteLine(item.countnum);
+
+               
+            }
+
+
+            return View(projlist);
         }
 
         [HttpGet]
         public ActionResult CreateNewProject()
         {
-            
+
+
+
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateNewProject([Bind("ProjectId,CompId,ProjectName")] ApplicationDbContext.Project project)
+        public ActionResult CreateNewProject([Bind("ProjectId,CompId,ProjectName,CreationDate")] ApplicationDbContext.Project project)
         {
             var getuser = _userManager.GetUserId(User);
 
@@ -1967,6 +2058,8 @@ namespace sopman.Controllers
             if (ModelState.IsValid)
             {
                 project.CompId = compid;
+
+                project.creationdate = DateTime.Now;
 
                 _context.Add(project);
                 _context.SaveChanges();
@@ -2021,6 +2114,15 @@ namespace sopman.Controllers
                             select new SOPTemplateList { SOPTemplateID = t.SOPTemplateID, TempName = t.TempName, SOPCode = t.SOPCode, ExpireDate = t.ExpireDate }).ToList();
 
             ViewBag.newtemps = newtemps;
+
+            var thepeople = (from m in _context.CompanyClaim
+                             join p in _context.Users on m.UserId equals p.Id
+                             join d in _context.Departments on m.DepartmentId equals d.DepartmentId
+                             join j in _context.JobTitles on m.JobTitleId equals j.JobTitleId
+                             where p.Id == m.UserId
+                             select new RegisterSOPUserViewModel { UserId = p.Id, Email = p.Email, FirstName = m.FirstName, SecondName = m.SecondName, DepartmentName = d.DepartmentName, JobTitle = j.JobTitle }).ToList();
+
+
 
             return View();
         }

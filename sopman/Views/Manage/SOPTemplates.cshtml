@@ -13,7 +13,7 @@
                 <a asp-area="" asp-controller="Setup" asp-action="NewTemplate">New Template</a>
             </div>
             <div class="col-12">
-                <table class="table list-table">
+                <table id="temp-table" class="table list-table">
                     <thead>
                         <tr>
                             <th>SOP Name</th>
@@ -37,4 +37,16 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('#temp-table').DataTable( {
+            "order": [[ 0, "desc" ]],
+            "paging": false,
+            "info": false,
+            "columnDefs": [
+                { "orderable": false, "targets": 3 }
+            ]
+        });
+     });
+</script>
 

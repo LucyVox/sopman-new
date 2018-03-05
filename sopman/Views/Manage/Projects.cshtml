@@ -1,4 +1,4 @@
-﻿@model CompanySetupViewModel
+﻿@model IEnumerable<sopman.Models.ManageViewModels.SOPTemplateList> 
 @using Microsoft.AspNetCore.Identity
 @{
     ViewData["Title"] = "My Projects";
@@ -12,18 +12,22 @@
             <a asp-controller="Manage" asp-action="CreateNewProject">Create New Project</a>
         </div>
         <div class="col-12">
-            <table class="table list-table">
+            <table id="fullprojlist" class="table list-table">
                 <thead>
                     <tr>
                         <th>Project Name</th>
+                        <th>Sop Instances</th>  
+                        <th>Create Date</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody> 
-                    @foreach(var item in (ViewBag.theprojects)){
+                    @foreach(var item in Model){
                         <tr>
-                            <th>@item.ProjectName</th>
-                            <th><a href="/Manage/ViewProject?=@item.ProjectId">Go to project</a></th>
+                            <td>@item.ProjectName</td>
+                            <td>@item.countnum</td>
+                            <td>@item.creationdate.ToString("dd MMM yyyy")</td>
+                            <td><a href="/Manage/ViewProject?=@item.ProjectId">Go to project</a></td>
                         </tr>
                     }
                 </tbody>
@@ -31,3 +35,17 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function() {
+        $('#fullprojlist').DataTable( {
+            "order": [[ 0, "desc" ]],
+            "paging": false,
+            "info": false,
+            "columnDefs": [
+                { "orderable": false, "targets": 3 }
+            ]
+        });
+     });
+</script>
