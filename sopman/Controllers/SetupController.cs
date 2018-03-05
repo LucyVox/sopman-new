@@ -139,19 +139,7 @@ namespace sopman.Controllers
                 var sopfrom = Request.Form["SOPNumberFormat"];
                 company.SOPNumberFormat = sopfrom;
 
-                var files = HttpContext.Request.Form.Files;
-                foreach (var Image in files)
-                {
-                    var uploads = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads/CompanyLogos");
-                    var fileName = ContentDispositionHeaderValue.Parse
-                        (Image.ContentDisposition).FileName.ToString().Replace("\"", "");
 
-                    company.Logo = fileName;
-                    using (var fileStream = new FileStream(Path.Combine(uploads, company.Name + fileName), FileMode.Create))
-                    {
-                        await Image.CopyToAsync(fileStream);
-                    }
-                }
                 _context.Add(company);
                 await _context.SaveChangesAsync();
                 var getid = (from i in _context.TheCompanyInfo
@@ -161,11 +149,9 @@ namespace sopman.Controllers
                 _context.CompanyClaim.Select(u => u.CompanyId);
                 claim.CompanyId = getid;
 
-
-
                 _context.Add(claim);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(CompanySetup));
+                return RedirectToAction("SetupIndex", "Setup");
             }
             return View(company);
         }
@@ -204,7 +190,7 @@ namespace sopman.Controllers
 
                 _context.Add(toptemp);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(SOPTopTemplate));
+                return RedirectToAction("SOPTopTemplateBuilder", "Setup");
             }
             return View(toptemp);
         }
@@ -321,7 +307,7 @@ namespace sopman.Controllers
                     _context.Add(newtable);
                 }
                 _context.SaveChanges();
-
+                return RedirectToAction("SetupIndex", "Setup");
             }
             return View(soptop);
         }
@@ -909,28 +895,14 @@ namespace sopman.Controllers
                 Console.WriteLine(name);
                 Console.WriteLine(desc);
 
-                var filestwo = HttpContext.Request.Form.Files;
-                filestwo.Count();
-                Console.WriteLine("Filenum");
-                Console.WriteLine(filestwo.Count());
-                foreach (var Image in filestwo)
-                {
-                    var uploads = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads/");
-                    var fileName = ContentDispositionHeaderValue.Parse
-                        (Image.ContentDisposition).FileName.ToString().Replace("\"", "");
-
-
-                }
-
-
                 _context.Add(soppro);
             }
             _context.SaveChanges();
 
-            string url1 = Url.Content("Manage/SOPTemplates");
+            string url1 = Url.Content("/Manage/SOPTemplates");
             string newurl = url1.Replace("%3F%3D", "?=");
             Console.WriteLine(newurl);
-            return View();
+            return new RedirectResult(newurl);
         }
 
 

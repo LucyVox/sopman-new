@@ -102,13 +102,7 @@ namespace sopman
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseStaticFiles();
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Uploads")),
-                RequestPath = new PathString("/Uploads")
-            });
 
             CreateRoles(serviceProvider).Wait();
         }

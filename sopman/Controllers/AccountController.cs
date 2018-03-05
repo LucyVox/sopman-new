@@ -92,7 +92,7 @@ namespace sopman.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Manage");
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -261,6 +261,7 @@ namespace sopman.Controllers
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
+                    await _context.SaveChangesAsync();
                     return RedirectToLocal(returnUrl);
                 }
                 AddErrors(result);
@@ -282,7 +283,41 @@ namespace sopman.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterMainUser(RegisterViewModel model, string returnUrl = null)
+        public async Task<IActionResult> RegisterMainUser(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User created a new account with password.");
+                    await _userManager.AddToRoleAsync(user, "SOPAdmin");
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    _logger.LogInformation("User created a new account with password.");
+                    await _context.SaveChangesAsync();
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult RegisterUser(string returnUrl = null)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterUser(RegisterViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
@@ -299,11 +334,9 @@ namespace sopman.Controllers
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
                 }
-                AddErrors(result);
+                return RedirectToAction("SetupIndex", "Setup");
             }
-
             // If we got this far, something failed, redisplay form
             return View(model);
         }
