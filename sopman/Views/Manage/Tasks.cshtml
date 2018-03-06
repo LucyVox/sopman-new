@@ -20,7 +20,7 @@
                                 <th>Project</th>
                                 <th>Process Step</th>
                                 <th>Due Date</th>
-                                <th></th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody> 
@@ -50,8 +50,30 @@
                                                                     <th>@step.DueDate</th>
                                                                 }
                                                             }
-                                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
-                                                        </tr>
+                                                            <th class="td-res-@ist.InstanceId-@res.RACIResChosenID">
+                                                        @foreach(var comp in (ViewBag.rescomp)){
+                                                            if(comp.RACIResChosenID == res.RACIResChosenID){
+                                                                <p class="complete">Complete</p>
+                                                            }
+                                                        }
+                                                        @foreach(var comp in (ViewBag.resres)){
+                                                            if(comp.RACIResChosenID == res.RACIResChosenID){
+                                                                <p class="recusal">Recusal</p>
+                                                            }
+                                                        }
+                                                        <p class="pending">Pending</p>
+                                                    </th>
+                                                </tr>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        if($(".td-res-@ist.InstanceId-@res.RACIResChosenID p").hasClass('complete')){
+                                                            $(".td-res-@ist.InstanceId-@res.RACIResChosenID p.pending").remove();
+                                                        };
+                                                        if($(".td-res-@ist.InstanceId-@res.RACIResChosenID p").hasClass('recusal')){
+                                                            $(".td-res-@ist.InstanceId-@res.RACIResChosenID p.pending").remove();
+                                                        };
+                                                    });
+                                                </script>
                                                     }
                                                  }
                                             }
@@ -85,8 +107,30 @@
                                                                     <th>@step.DueDate</th>
                                                                 }
                                                             }
-                                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
-                                                        </tr>
+                                                            <th class="td-acc-@ist.InstanceId-@res.RACIAccChosenID">
+                                                        @foreach(var comp in (ViewBag.acccomp)){
+                                                            if(comp.RACIAccChosenID == res.RACIAccChosenID){
+                                                                <p class="complete">Complete</p>
+                                                            }
+                                                        }
+                                                        @foreach(var comp in (ViewBag.accres)){
+                                                            if(comp.RACIAccChosenID == res.RACIAccChosenID){
+                                                                <p class="recusal">Recusal</p>
+                                                            }
+                                                        }
+                                                        <p class="pending">Pending</p>
+                                                    </th>
+                                                </tr>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        if($(".td-acc-@ist.InstanceId-@res.RACIAccChosenID p").hasClass('complete')){
+                                                            $(".td-acc-@ist.InstanceId-@res.RACIAccChosenID p.pending").remove();
+                                                        };
+                                                        if($(".td-acc-@ist.InstanceId-@res.RACIAccChosenID p").hasClass('recusal')){
+                                                            $(".td-acc-@ist.InstanceId-@res.RACIAccChosenID p.pending").remove();
+                                                        };
+                                                    });
+                                                </script>
                                                     }
                                                  }
                                             }
@@ -120,9 +164,30 @@
                                                                     <th>@step.DueDate</th>
                                                                 }
                                                             } 
-
-                                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
-                                                        </tr>
+                                                             <th class="td-con-@ist.InstanceId-@res.RACIConChosenID">
+                                                        @foreach(var comp in (ViewBag.concomp)){
+                                                            if(comp.RACIConChosenID == res.RACIConChosenID){
+                                                                <p class="complete">Complete</p>
+                                                            }
+                                                        }
+                                                        @foreach(var comp in (ViewBag.conres)){
+                                                            if(comp.RACIConChosenID == res.RACIConChosenID){
+                                                                <p class="recusal">Recusal</p>
+                                                            }
+                                                        }
+                                                        <p class="pending">Pending</p>
+                                                    </th>
+                                                    </tr>
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            if($(".td-con-@ist.InstanceId-@res.RACIConChosenID p").hasClass('complete')){
+                                                                $(".td-con-@ist.InstanceId-@res.RACIConChosenID p.pending").remove();
+                                                            };
+                                                            if($(".td-con-@ist.InstanceId-@res.RACIConChosenID p").hasClass('recusal')){
+                                                                $(".td-con-@ist.InstanceId-@res.RACIConChosenID p.pending").remove();
+                                                            };
+                                                        });
+                                                    </script>
                                                     }
                                                  }
                                             }
@@ -155,8 +220,29 @@
                                                                     <th>@step.DueDate</th>
                                                                 }
                                                             }
-                                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
-                                                        </tr>
+                                                            <th class="td-inf-@ist.InstanceId-@res.RACIInfChosenID">
+                                                                @foreach(var comp in (ViewBag.infcomp)){
+                                                                    if(comp.RACIInfChosenID == res.RACIInfChosenID){
+                                                                        <p class="complete">Complete</p>
+                                                                    }
+                                                                }
+                                                                @foreach(var comp in (ViewBag.infirec)){
+                                                                    <p class="recusal">Recusal</p>
+                                                                }
+                                    
+                                                                <p class="pending">Pending</p>
+                                                        </th>
+                                                    </tr>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        if($(".td-inf-@ist.InstanceId-@res.RACIInfChosenID p").hasClass('complete')){
+                                                            $(".td-inf-@ist.InstanceId-@res.RACIInfChosenID p.pending").remove();
+                                                        };
+                                                        if($(".td-inf-@ist.InstanceId-@res.RACIInfChosenID p").hasClass('recusal')){
+                                                            $(".td-inf-@ist.InstanceId-@res.RACIInfChosenID p.pending").remove();
+                                                        };
+                                                    });
+                                                </script>
                                                     }
                                                  }
                                             }

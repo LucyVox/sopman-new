@@ -165,7 +165,7 @@ namespace sopman.Controllers
             ViewBag.theprojects = theprojectslist.ToList();
 
             var resiuser = (from u in _context.RACIResUser
-                            select new SOPOverView { RACIResID = u.RACIResID, UserId = u.UserId, soptoptempid = u.soptoptempid }).ToList();
+                            select new SOPOverView { RACIResID = u.RACIResID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIResChosenID = u.RACIResChosenID }).ToList();
             var resiaccuser = (from u in _context.RACIAccUser
                                select new SOPOverView { RACIAccID = u.RACIAccID, UserId = u.UserId, soptoptempid = u.soptoptempid }).ToList();
 
@@ -194,8 +194,40 @@ namespace sopman.Controllers
             if (getu == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }    
+            }
 
+            var rescomp = (from i in _context.RACIResComplete
+                           select new SOPOverView { RACIResChosenID = i.RACIResChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
+
+            var resres = (from i in _context.RACIResRecusal
+                          select new SOPOverView { RACIResChosenID = i.RACIResChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
+
+            var acccomp = (from i in _context.RACIAccComplete
+                           select new SOPOverView { RACIAccChosenID = i.RACIAccChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
+
+            var accres = (from i in _context.RACIAccRecusal
+                          select new SOPOverView { RACIAccChosenID = i.RACIAccChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
+
+            var concomp = (from i in _context.RACIConComplete
+                           select new SOPOverView { RACIConChosenID = i.RACIConChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
+
+            var conres = (from i in _context.RACIConRecusal
+                          select new SOPOverView { RACIConChosenID = i.RACIConChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
+            var infcomp = (from i in _context.RACIInfComplete
+                           select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
+
+            var infres = (from i in _context.RACIInfRecusal
+                          select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
+
+
+            ViewBag.rescomp = rescomp;
+            ViewBag.resres = resres;
+            ViewBag.acccomp = acccomp;
+            ViewBag.accres = accres;
+            ViewBag.concomp = concomp;
+            ViewBag.conres = conres;
+            ViewBag.infcomp = infcomp;
+            ViewBag.infres = infres;
 
             return View();
         }
@@ -205,8 +237,6 @@ namespace sopman.Controllers
         {
             var getu = _userManager.GetUserId(User);
 
-            Console.WriteLine("User:");
-            Console.WriteLine(getu);
             ViewBag.loggedinuser = getu;
 
             var comp = (from i in _context.CompanyClaim
@@ -216,9 +246,6 @@ namespace sopman.Controllers
             var top = (from i in _context.SOPTopTemplates
                        where i.CompanyId == comp
                        select i.TopTempId).Single();
-
-            Console.WriteLine("top:");
-            Console.WriteLine(top);
 
             var claimid = (from t in _context.CompanyClaim
                            where t.UserId == getu
@@ -275,8 +302,38 @@ namespace sopman.Controllers
             ViewBag.procdate = procdate;
             ViewBag.process = process;
 
+            var rescomp = (from i in _context.RACIResComplete
+                           select new SOPOverView { RACIResChosenID = i.RACIResChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
 
+            var resres = (from i in _context.RACIResRecusal
+                          select new SOPOverView { RACIResChosenID = i.RACIResChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
 
+            var acccomp = (from i in _context.RACIAccComplete
+                           select new SOPOverView { RACIAccChosenID = i.RACIAccChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
+
+            var accres = (from i in _context.RACIAccRecusal
+                          select new SOPOverView { RACIAccChosenID = i.RACIAccChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
+
+            var concomp = (from i in _context.RACIConComplete
+                           select new SOPOverView { RACIConChosenID = i.RACIConChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
+
+            var conres = (from i in _context.RACIConRecusal
+                          select new SOPOverView { RACIConChosenID = i.RACIConChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
+
+            var infcomp = (from i in _context.RACIInfComplete
+                           select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
+
+            var infirec = (from i in _context.RACIInfRecusal
+                           select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID }).ToList();
+            
+            ViewBag.rescomp = rescomp;
+            ViewBag.resres = resres;
+            ViewBag.acccomp = acccomp;
+            ViewBag.accres = accres;
+            ViewBag.concomp = concomp;
+            ViewBag.conres = conres;
+            ViewBag.infcomp = infcomp;
+            ViewBag.infirec = infirec;
 
 
             if (getu == null)

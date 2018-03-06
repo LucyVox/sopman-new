@@ -474,7 +474,7 @@ namespace sopman.Controllers
             var orderVM = new RegisterSOPUserViewModel();
             var getuser = _userManager.GetUserId(User);
 
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
@@ -513,14 +513,14 @@ namespace sopman.Controllers
             var currentuser = await _userManager.GetUserAsync(User);
             var user_id = currentuser.Id;
 
-            var modules = (from i in _context.TheCompanyInfo
+            var modules = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
 
             var orderVM = new RegisterSOPUserViewModel();
             var getuser = _userManager.GetUserId(User);
 
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
