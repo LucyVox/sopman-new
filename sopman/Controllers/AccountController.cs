@@ -10,12 +10,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using sopman.Data;
 using sopman.Models;
 using sopman.Models.AccountViewModels;
 using sopman.Services;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace sopman.Controllers
 {
@@ -28,19 +31,22 @@ namespace sopman.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _context = context;
+            _configuration = configuration;
         }
 
         [TempData]
@@ -385,6 +391,8 @@ namespace sopman.Controllers
         [Authorize(Roles = "SOPAdmin")]
         public async Task<IActionResult> RegisterSOPCreator(RegisterSopCreatorViewModel model,[Bind("ClaimId,FirstName,SecondName,CompanyId")] ApplicationDbContext.ClaimComp compclaim)
         {
+            Console.WriteLine("\nRegister SOP Creator Started.\n");
+
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -454,6 +462,33 @@ namespace sopman.Controllers
                     _context.Add(compclaim);
 
                     _logger.LogInformation("User created a new account with password.");
+
+                    // If we got this far, the process succeeded
+                    var apiKey = _configuration.GetSection("SENDGRID_API_KEY").Value;
+                    Console.WriteLine(apiKey);
+
+                    var client = new SendGridClient(apiKey);
+
+
+                    var loggedInEmail = _userManager.GetUserName(User);
+                    var newUserEmail = model.Email;
+                    var newUserPassword = model.Password;
+                    var firstName = Request.Form["FirstName"];
+                    var secondName = Request.Form["SecondName"];
+
+                    var msg = new SendGridMessage()
+                    {
+                        From = new EmailAddress(loggedInEmail, "SOPMan"),
+                        Subject = "You have been registered as a SOPMan Creator",
+                        PlainTextContent = "Hello, " + firstName + " " + secondName,
+                        HtmlContent = "Hello, " + firstName + " " + secondName + ",<br>Your username is: " + newUserEmail + "<br>Your password is: " + newUserPassword
+                    };
+                    Console.WriteLine(msg);
+                    msg.AddTo(new EmailAddress(newUserEmail, firstName + " " + secondName));
+                    var response = await client.SendEmailAsync(msg);
+                    Console.WriteLine(response);
+
+
                     await _context.SaveChangesAsync();
                     AddErrors(result);
                     return RedirectToAction("People", "Setup");
@@ -509,6 +544,7 @@ namespace sopman.Controllers
         [Authorize(Roles = "SOPAdmin")]
         public async Task<IActionResult> RegisterSOPUser(RegisterSOPUserViewModel model, [Bind("ClaimId,FirstName,SecondName,CompanyId")] ApplicationDbContext.ClaimComp compclaim)
         {
+            Console.WriteLine("\nRegister SOP User Started.\n");
             var currentuser = await _userManager.GetUserAsync(User);
             var user_id = currentuser.Id;
 
@@ -579,8 +615,36 @@ namespace sopman.Controllers
                     _context.Add(compclaim);
 
                     _logger.LogInformation("User created a new account with password.");
+
+
                     await _context.SaveChangesAsync();
                     AddErrors(result);
+
+                    // If we got this far, the process succeeded
+                    var apiKey = _configuration.GetSection("SENDGRID_API_KEY").Value;
+                    Console.WriteLine(apiKey);
+
+                    var client = new SendGridClient(apiKey);
+
+
+                    var loggedInEmail = _userManager.GetUserName(User);
+                    var newUserEmail = model.Email;
+                    var newUserPassword = model.Password;
+                    var firstName = Request.Form["FirstName"];
+                    var secondName = Request.Form["SecondName"];
+
+                    var msg = new SendGridMessage()
+                    {
+                        From = new EmailAddress(loggedInEmail, "SOPMan"),
+                        Subject = "You have been registered as a SOPMan User",
+                        PlainTextContent = "Hello, " + firstName + " " + secondName,
+                        HtmlContent = "Hello, " + firstName + " " + secondName + ",<br>Your username is: " + newUserEmail + "<br>Your password is: " + newUserPassword
+                    };
+                    Console.WriteLine(msg);
+                    msg.AddTo(new EmailAddress(newUserEmail, firstName + " " + secondName));
+                    var response = await client.SendEmailAsync(msg);
+                    Console.WriteLine(response);
+
                     return RedirectToAction("People", "Setup");
                 }
             }

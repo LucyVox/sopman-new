@@ -70,6 +70,7 @@ namespace sopman
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
