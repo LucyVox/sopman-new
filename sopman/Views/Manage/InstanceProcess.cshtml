@@ -61,7 +61,7 @@
                                                 <div class="row">
                                                     <div class="col-12 raci-info">
                                                         <h4>Responsible</h4>
-                                                        @foreach(var data in (ViewBag.tempdata)){
+                                                        @foreach(var data in (ViewBag.res)){
                                                             var dropname = item.valuematch + "-RES";
                                                             if(data.valuematch == item.valuematch){
                                                                 <div class="row">
@@ -71,8 +71,18 @@
                                                                                   @Html.DropDownList(@dropname,ViewBag.selectlist as SelectList, new { @class = "form-control" })
                                                                             </div>
                                                                             <div class="col-12 col-md-6">
-                                                                                <p><strong>@data.DepartmentName</strong>
-                                                                                <br>@data.JobTitle</p>
+                                                                                <p>
+                                                                                @foreach(var dep in (ViewBag.getdeparts)){
+                                                                                    if(dep.DepartmentId == data.DepartmentId) {
+                                                                                        <strong>@dep.DepartmentName</strong><br />
+                                                                                    }
+                                                                                }
+                                                                                @foreach(var job in (ViewBag.getjobs)){
+                                                                                    if(job.JobTitleId == data.JobTitleId) {
+                                                                                        @job.JobTitle
+                                                                                    }
+                                                                                }
+                                                                                </p>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -86,9 +96,9 @@
                                                 <div class="row">
                                                     <div class="col-12 raci-info">
                                                         <h4>Accountable</h4>
-                                                            @foreach(var data in (ViewBag.tempdata)){
+                                                            @foreach(var data in (ViewBag.acc)){
                                                                 var dropname = item.valuematch + "-ACC";
-                                                                if(data.valuematch == item.valuematch){
+                                                                if(data.SOPTemplateID == item.SOPTemplateID){
                                                                     <div class="row">
                                                                         <div class="col-12 col-md-12 pick-person">
                                                                             <div class="row">
@@ -96,8 +106,18 @@
                                                                                     @Html.DropDownList(@dropname,ViewBag.selectlist as SelectList, new { @class = "form-control" })
                                                                                 </div>
                                                                                 <div class="col-12 col-md-6">
-                                                                                    <p><strong>@data.DepartmentName</strong>
-                                                                                    <br>@data.JobTitle</p>
+                                                                                    <p>
+                                                                                    @foreach(var dep in (ViewBag.getdeparts)){
+                                                                                        if(dep.DepartmentId == data.DepartmentId) {
+                                                                                            <strong>@dep.DepartmentName</strong><br />
+                                                                                        }
+                                                                                    }
+                                                                                    @foreach(var job in (ViewBag.getjobs)){
+                                                                                        if(job.JobTitleId == data.JobTitleId) {
+                                                                                            @job.JobTitle
+                                                                                        }
+                                                                                    }
+                                                                                    </p>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -111,9 +131,9 @@
                                                 <div class="row">
                                                     <div class="col-12 raci-info">
                                                         <h4>Consulted</h4>
-                                                            @foreach(var data in (ViewBag.racicons)){
+                                                            @foreach(var data in (ViewBag.cons)){
                                                                 var dropname = item.valuematch + "-CON";
-                                                                if(data.valuematch == item.valuematch){
+                                                                if(data.SOPTemplateID == item.SOPTemplateID){
                                                                     <div class="row">
                                                                         <div class="col-12 col-md-12 pick-person">
                                                                             <div class="row">
@@ -121,8 +141,18 @@
                                                                                     @Html.DropDownList(@dropname,ViewBag.selectlist as SelectList, new { @class = "form-control" })
                                                                                 </div>
                                                                                 <div class="col-12 col-md-6">
-                                                                                    <p><strong>@data.DepartmentName</strong>
-                                                                                    <br>@data.JobTitle</p>
+                                                                                    <p>
+                                                                                @foreach(var dep in (ViewBag.getdeparts)){
+                                                                                    if(dep.DepartmentId == data.DepartmentId) {
+                                                                                        <strong>@dep.DepartmentName</strong><br />
+                                                                                    }
+                                                                                }
+                                                                                @foreach(var job in (ViewBag.getjobs)){
+                                                                                    if(job.JobTitleId == data.JobTitleId) {
+                                                                                        @job.JobTitle
+                                                                                    }
+                                                                                }
+                                                                                </p>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -136,9 +166,9 @@
                                                 <div class="row">
                                                     <div class="col-12 raci-info">
                                                         <h4>Informed</h4>
-                                                            @foreach(var data in (ViewBag.raciinf)){
+                                                            @foreach(var data in (ViewBag.infi)){
                                                                 var dropname = item.valuematch + "-INF";
-                                                                if(data.valuematch == item.valuematch){
+                                                                if(data.SOPTemplateID == item.SOPTemplateID){
                                                                     <div class="row">
                                                                         <div class="col-12 col-md-12 pick-person">
                                                                             <div class="row">
@@ -146,8 +176,18 @@
                                                                                     @Html.DropDownList(@dropname,ViewBag.selectlist as SelectList, new { @class = "form-control" })
                                                                                 </div>
                                                                                 <div class="col-12 col-md-6">
-                                                                                    <p><strong>@data.DepartmentName</strong>
-                                                                                    <br>@data.JobTitle</p>
+                                                                                   <p>
+                                                                                @foreach(var dep in (ViewBag.getdeparts)){
+                                                                                    if(dep.DepartmentId == data.DepartmentId) {
+                                                                                        <strong>@dep.DepartmentName</strong><br />
+                                                                                    }
+                                                                                }
+                                                                                @foreach(var job in (ViewBag.getjobs)){
+                                                                                    if(job.JobTitleId == data.JobTitleId) {
+                                                                                        @job.JobTitle
+                                                                                    }
+                                                                                }
+                                                                                </p>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

@@ -337,6 +337,7 @@ hr.white-line {
 .dash-inner h4 {
     margin-bottom: 0px;
     font-size: 36px;
+    color:#fff !important;
 }
 
 .white-box, .company-setup {

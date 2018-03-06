@@ -26,7 +26,7 @@
                                 }
                             }
                         }
-                        <h4 class="res-claim-clount">0</h4>
+                        <a href="/Manage/Tasks"><h4 class="res-claim-clount">0</h4></a>
                     </div>
                 </div>
                 <div class="col-6 col-md-3 col-xs-6">
@@ -47,7 +47,7 @@
                                 }
                             }
                         }
-                        <h4 class="res-claim-acc-clount">0</h4>
+                       <a href="/Manage/Tasks"><h4 class="res-claim-acc-clount">0</h4></a>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
@@ -68,7 +68,7 @@
                                 }
                             }
                         }
-                        <h4 class="res-claim-con-clount">0</h4>
+                        <a href="/Manage/Tasks"><h4 class="res-claim-con-clount">0</h4></a>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
@@ -89,7 +89,7 @@
                                 }
                             }
                         }
-                        <h4 class="res-claim-inf-clount">0</h4>
+                        <a href="/Manage/Tasks"><h4 class="res-claim-inf-clount">0</h4></a>
                     </div>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                                 }
                             }
                         }
-                        <h4 class="inst-all-num-my">0</h4>
+                        <a href="/Manage/SOPInstances"><h4 class="inst-all-num-my">0</h4></a>
                     </div>
                 </div>
                 <div class="col-6 col-md-6">
@@ -128,7 +128,7 @@
                                 }
                             }
                         }
-                        <h4 class="inst-all-num">0</h4>
+                        <a href="/Manage/SOPInstances"><h4 class="inst-all-num">0</h4></a>
                     </div>
                 </div>
             </div>
@@ -154,7 +154,7 @@
                                 }
                             }
                           }
-                        <h4 class="my-inst-active-num">0</h4>
+                        <a href="/Manage/Projects"><h4 class="my-inst-active-num">0</h4></a>
                     </div>
                 </div>
                 <div class="col-6 col-md-6">
@@ -175,7 +175,7 @@
                                 }
                             }
                           }
-                        <h4 class="inst-active-num">0</h4>
+                        <a href="/Manage/Projects"><h4 class="inst-active-num">0</h4></a>
                     </div>
                 </div>
             </div>
@@ -188,7 +188,7 @@
             <h2>My SOP Instances</h2>
         </div>
         <div class="col-12 col-md-4 template-link">
-           <a asp-controller="Manage" asp-action="SOPInstacnes">VIEW ALL</a>
+           <a asp-controller="Manage" asp-action="SOPInstances">VIEW ALL</a>
 
         </div>
         <div class="col-12">
@@ -197,9 +197,9 @@
                         <tr>
                             <th>SOP Name</th>
                             <th>SOP Instance</th>
-                            <th>Expire Date</th>
                             <th>Project</th>
-                            <th></th>
+                            <th>Expire Date</th>
+                            <th>Progress</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -211,13 +211,13 @@
                                         <tr>
                                             <th scope="row"><a href="/Manage/SOPs?=@sub.ExecuteSopID">@item.TempName</a></th>
                                             <th>@ist.InstanceRef - @item.SOPCode</th>
-                                            <th>@ist.InstanceExpire</th>
                                             @foreach(var proj in (ViewBag.theprojects)){
                                                 if(ist.ProjectId == proj.ProjectId){
                                                      <th>@proj.ProjectName</th>
                                                 }
                                             }
-                                            <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
+                                            <th>@ist.InstanceExpire</th>
+                                            <th>Progress</th>
                                         </tr>
                                     }
                                 }

@@ -73,7 +73,7 @@ namespace sopman
             services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
-
+            services.AddSingleton<IConfiguration>(Configuration);
 
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

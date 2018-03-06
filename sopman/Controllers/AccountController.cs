@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +13,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using sopman.Data;
 using sopman.Models;
 using sopman.Models.AccountViewModels;
 using sopman.Services;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+
 
 namespace sopman.Controllers
 {
@@ -671,7 +673,7 @@ namespace sopman.Controllers
             var user = await _userManager.GetUserAsync(User);
             var user_id = user.Id;
 
-            var modules = (from i in _context.TheCompanyInfo
+            var modules = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
 
@@ -724,13 +726,13 @@ namespace sopman.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var user_id = user.Id;
-            var getcomp = (from i in _context.TheCompanyInfo
+            var getcomp = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
             var orderVM = new RegisterJobTitleViewModel();
             var getuser = _userManager.GetUserId(User);
 
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 

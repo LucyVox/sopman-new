@@ -413,7 +413,7 @@ namespace sopman.Controllers
         {
             var getuser = _userManager.GetUserId(User);
 
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
@@ -622,7 +622,7 @@ namespace sopman.Controllers
         {
             var orderVM = new RACIResponsible();
             var getuser = _userManager.GetUserId(User);
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
@@ -658,7 +658,7 @@ namespace sopman.Controllers
         {
             var orderVM = new RACIAccountable();
             var getuser = _userManager.GetUserId(User);
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
@@ -694,7 +694,7 @@ namespace sopman.Controllers
         {
             var orderVM = new RACIInformed();
             var getuser = _userManager.GetUserId(User);
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
@@ -730,7 +730,7 @@ namespace sopman.Controllers
         {
             var orderVM = new RACIConsulted();
             var getuser = _userManager.GetUserId(User);
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
@@ -794,6 +794,9 @@ namespace sopman.Controllers
                 var department = sub.DepartmentId;
                 racires.DepartmentId = department;
 
+                var sopid = getsop;
+                racires.soptoptempid = getsop;
+
                 var job = sub.JobTitleId;
                 racires.JobTitleId = job;
                 _context.Add(racires);
@@ -801,56 +804,62 @@ namespace sopman.Controllers
             _context.SaveChanges();
             foreach (var sub in acc)
             {
-                ApplicationDbContext.RACIAccount racires = new ApplicationDbContext.RACIAccount();
+                ApplicationDbContext.RACIAccount raciacc = new ApplicationDbContext.RACIAccount();
 
                 var subid = sub.valuematch;
-                racires.valuematch = subid;
+                raciacc.valuematch = subid;
 
                 var subidtwo = 123;
-                racires.SOPTemplateProcessID = subidtwo;
+                raciacc.SOPTemplateProcessID = subidtwo;
 
                 var department = sub.DepartmentId;
-                racires.DepartmentId = department;
+                raciacc.DepartmentId = department;
+
+                raciacc.soptoptempid = getsop;
 
                 var job = sub.JobTitleId;
-                racires.JobTitleId = job;
-                _context.Add(racires);
+                raciacc.JobTitleId = job;
+                _context.Add(raciacc);
             }
             _context.SaveChanges();
             foreach (var sub in con)
             {
-                ApplicationDbContext.RACIConsulted racires = new ApplicationDbContext.RACIConsulted();
+                ApplicationDbContext.RACIConsulted racicon = new ApplicationDbContext.RACIConsulted();
 
                 var subid = sub.valuematch;
-                racires.valuematch = subid;
+                racicon.valuematch = subid;
 
                 var subidtwo = 123;
-                racires.SOPTemplateProcessID = subidtwo;
+                racicon.SOPTemplateProcessID = subidtwo;
 
                 var department = sub.DepartmentId;
-                racires.DepartmentId = department;
+                racicon.DepartmentId = department;
+
+                racicon.soptoptempid = getsop;
 
                 var job = sub.JobTitleId;
-                racires.JobTitleId = job;
-                _context.Add(racires);
+                racicon.JobTitleId = job;
+                _context.Add(racicon);
             }
             _context.SaveChanges();
             foreach (var sub in inf)
             {
-                ApplicationDbContext.RACIInformed racires = new ApplicationDbContext.RACIInformed();
+                ApplicationDbContext.RACIInformed raciinfo = new ApplicationDbContext.RACIInformed();
 
                 var subid = sub.valuematch;
-                racires.valuematch = subid;
+                raciinfo.valuematch = subid;
 
                 var subidtwo = 123;
-                racires.SOPTemplateProcessID = subidtwo;
+                raciinfo.SOPTemplateProcessID = subidtwo;
 
                 var department = sub.DepartmentId;
-                racires.DepartmentId = department;
+                raciinfo.DepartmentId = department;
+
+                raciinfo.soptoptempid = getsop;
 
                 var job = sub.JobTitleId;
-                racires.JobTitleId = job;
-                _context.Add(racires);
+                raciinfo.JobTitleId = job;
+                _context.Add(raciinfo);
             }
             _context.SaveChanges();
             foreach (var item in process) {

@@ -16,10 +16,10 @@
                         <thead>
                             <tr>
                                 <th>SOP Name</th>
-                                <th>SOP Instance</th>
-                                <th>Expire Date</th>
-                                <th>Project</th>
-                                <th></th>
+                            <th>SOP Instance</th>
+                            <th>Project</th>
+                            <th>Expire Date</th>
+                            <th>Progress</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,13 +31,13 @@
                                             <tr>
                                                 <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@item.TempName</a></th>
                                                 <th>@ist.InstanceRef - @item.SOPCode</th>
-                                                <th>@ist.InstanceExpire</th>
                                                 @foreach(var proj in (ViewBag.theprojects)){
                                                     if(ist.ProjectId == proj.ProjectId){
                                                          <th>@proj.ProjectName</th>
                                                     }
                                                 }
-                                                <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">View SOP</a></th>
+                                                <th>@ist.InstanceExpire</th>
+                                                <th><p>progress</p></th>
                                             </tr>
                                         }
                                     }

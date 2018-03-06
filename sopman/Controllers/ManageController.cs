@@ -236,7 +236,6 @@ namespace sopman.Controllers
         public ActionResult Tasks()
         {
             var getu = _userManager.GetUserId(User);
-
             ViewBag.loggedinuser = getu;
 
             var comp = (from i in _context.CompanyClaim
@@ -275,15 +274,15 @@ namespace sopman.Controllers
             ViewBag.theprojects = theprojects;
 
             var resiuser = (from u in _context.RACIResUser
-                            select new SOPOverView { RACIResID = u.RACIResID, UserId = u.UserId, soptoptempid = u.soptoptempid }).ToList();
+                            select new SOPOverView { RACIResID = u.RACIResID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIResChosenID = u.RACIResChosenID }).ToList();
             var resiaccuser = (from u in _context.RACIAccUser
-                               select new SOPOverView { RACIAccID = u.RACIAccID, UserId = u.UserId, soptoptempid = u.soptoptempid }).ToList();
+                               select new SOPOverView { RACIAccID = u.RACIAccID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIAccChosenID = u.RACIAccChosenID }).ToList();
 
             var resiconuser = (from u in _context.RACIConUser
-                               select new SOPOverView { RACIConID = u.RACIConID, UserId = u.UserId, soptoptempid = u.soptoptempid }).ToList();
+                               select new SOPOverView { RACIConID = u.RACIConID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIConChosenID = u.RACIConChosenID }).ToList();
 
             var resiinfuser = (from u in _context.RACIInfUser
-                               select new SOPOverView { RACIInfID = u.RACIInfID, UserId = u.UserId, soptoptempid = u.soptoptempid }).ToList();
+                               select new SOPOverView { RACIInfID = u.RACIInfID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIInfChosenID = u.RACIInfChosenID }).ToList();
 
             var allusers = (from u in _context.CompanyClaim
                             select new SOPOverView { FirstName = u.FirstName, SecondName = u.SecondName, ClaimId = u.ClaimId }).ToList();
@@ -323,6 +322,8 @@ namespace sopman.Controllers
             var infcomp = (from i in _context.RACIInfComplete
                            select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
 
+            var infirec = (from i in _context.RACIInfRecusal
+                           select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
 
             ViewBag.rescomp = rescomp;
             ViewBag.resres = resres;
@@ -331,7 +332,7 @@ namespace sopman.Controllers
             ViewBag.concomp = concomp;
             ViewBag.conres = conres;
             ViewBag.infcomp = infcomp;
-
+            ViewBag.infirec = infirec;
 
             if (getu == null)
             {
@@ -1137,39 +1138,38 @@ namespace sopman.Controllers
             ViewBag.intref = intref;
             ViewBag.projname = projname;
 
+            var getdeparts = (from d in _context.Departments
+                              where d.CompanyId == theuser
+                              select new ProcessOutput { DepartmentId = d.DepartmentId, DepartmentName = d.DepartmentName }).ToList();
+            ViewBag.getdeparts = getdeparts;
+
+            var getjobs = (from j in _context.JobTitles
+                           where j.CompanyId == theuser
+                           select new ProcessOutput { JobTitle = j.JobTitle, JobTitleId = j.JobTitleId }).ToList();
+
+            ViewBag.getjobs = getjobs;
             var ordervm = new ProcessOutput();
 
             var process = (from i in _context.SOPProcessTempls
                            where i.SOPTemplateID == getsop
                            select new ProcessOutput { SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, ProcessType = i.ProcessType, valuematch = i.valuematch }).ToList();
 
-            var tempdata = (from i in _context.SOPProcessTempls
-                           join p in _context.SOPRACIRes on i.valuematch equals p.valuematch
-                           join m in _context.Departments on p.DepartmentId equals m.DepartmentId
-                           join j in _context.JobTitles on p.DepartmentId equals j.DepartmentId
-                           select new ProcessOutput { RACIResID = p.RACIResID, DepartmentId = p.DepartmentId, valuematch = i.valuematch, JobTitleId = p.JobTitleId, DepartmentName = m.DepartmentName, JobTitle = j.JobTitle }).ToList();
 
-            ViewBag.tempdata = tempdata;
-            var raciacc = (from i in _context.SOPProcessTempls
-                           join p in _context.SOPRACIAcc on i.valuematch equals p.valuematch
-                           join m in _context.Departments on p.DepartmentId equals m.DepartmentId
-                           join j in _context.JobTitles on p.DepartmentId equals j.DepartmentId
-                           select new ProcessOutput { DepartmentId = p.DepartmentId, valuematch = i.valuematch, JobTitleId = p.JobTitleId, DepartmentName = m.DepartmentName, JobTitle = j.JobTitle }).ToList();
+            var res = (from i in _context.SOPRACIRes
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+            ViewBag.res = res;
 
-            var racicons = (from i in _context.SOPProcessTempls
-                            join p in _context.SOPRACICon on i.valuematch equals p.valuematch
-                            join m in _context.Departments on p.DepartmentId equals m.DepartmentId
-                            join j in _context.JobTitles on p.DepartmentId equals j.DepartmentId
-                            select new ProcessOutput { DepartmentId = p.DepartmentId, valuematch = i.valuematch, JobTitleId = p.JobTitleId, DepartmentName = m.DepartmentName, JobTitle = j.JobTitle }).ToList();
+            var acc = (from i in _context.SOPRACIAcc
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+            ViewBag.acc = acc;
 
-            var raciinf = (from i in _context.SOPProcessTempls
-                           join p in _context.SOPRACICon on i.valuematch equals p.valuematch
-                           join m in _context.Departments on p.DepartmentId equals m.DepartmentId
-                           join j in _context.JobTitles on p.DepartmentId equals j.DepartmentId
-                           select new ProcessOutput { DepartmentId = p.DepartmentId, valuematch = i.valuematch, JobTitleId = p.JobTitleId, DepartmentName = m.DepartmentName, JobTitle = j.JobTitle }).ToList();
-            ViewBag.raciacc = raciacc;
-            ViewBag.racicons = raciacc;
-            ViewBag.raciinf = raciinf;
+            var cons = (from i in _context.SOPRACICon                       
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+            ViewBag.cons = cons;
+             var infi = (from i in _context.SOPRACIInf
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+
+            ViewBag.infi = infi;
 
             var userlist = (from i in _context.CompanyClaim
                             where i.CompanyId == theuser
@@ -1236,39 +1236,39 @@ namespace sopman.Controllers
             ViewBag.intref = intref;
             ViewBag.projname = projname;
 
+          
+            var getdeparts = (from d in _context.Departments
+                              where d.CompanyId == theuser
+                              select new ProcessOutput { DepartmentId = d.DepartmentId, DepartmentName = d.DepartmentName }).ToList();
+            ViewBag.getdeparts = getdeparts;
+
+            var getjobs = (from j in _context.JobTitles
+                           where j.CompanyId == theuser
+                           select new ProcessOutput { JobTitle = j.JobTitle, JobTitleId = j.JobTitleId }).ToList();
+
+            ViewBag.getjobs = getjobs;
             var ordervm = new ProcessOutput();
 
             var process = (from i in _context.SOPProcessTempls
                            where i.SOPTemplateID == getsop
                            select new ProcessOutput { SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, ProcessType = i.ProcessType, valuematch = i.valuematch }).ToList();
 
-            var tempdata = (from i in _context.SOPProcessTempls
-                            join p in _context.SOPRACIRes on i.valuematch equals p.valuematch
-                            join m in _context.Departments on p.DepartmentId equals m.DepartmentId
-                            join j in _context.JobTitles on p.DepartmentId equals j.DepartmentId
-                            select new ProcessOutput { RACIResID = p.RACIResID, DepartmentId = p.DepartmentId, valuematch = i.valuematch, JobTitleId = p.JobTitleId, DepartmentName = m.DepartmentName, JobTitle = j.JobTitle }).ToList();
+            ViewBag.process = process;
+            var res = (from i in _context.SOPRACIRes
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+            ViewBag.res = res;
 
-            ViewBag.tempdata = tempdata;
-            var raciacc = (from i in _context.SOPProcessTempls
-                           join p in _context.SOPRACIAcc on i.valuematch equals p.valuematch
-                           join m in _context.Departments on p.DepartmentId equals m.DepartmentId
-                           join j in _context.JobTitles on p.DepartmentId equals j.DepartmentId
-                           select new ProcessOutput { DepartmentId = p.DepartmentId, valuematch = i.valuematch, JobTitleId = p.JobTitleId, DepartmentName = m.DepartmentName, JobTitle = j.JobTitle }).ToList();
+            var acc = (from i in _context.SOPRACIAcc
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+            ViewBag.acc = acc;
 
-            var racicons = (from i in _context.SOPProcessTempls
-                            join p in _context.SOPRACICon on i.valuematch equals p.valuematch
-                            join m in _context.Departments on p.DepartmentId equals m.DepartmentId
-                            join j in _context.JobTitles on p.DepartmentId equals j.DepartmentId
-                            select new ProcessOutput { DepartmentId = p.DepartmentId, valuematch = i.valuematch, JobTitleId = p.JobTitleId, DepartmentName = m.DepartmentName, JobTitle = j.JobTitle }).ToList();
+            var cons = (from i in _context.SOPRACICon
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+            ViewBag.cons = cons;
+            var infi = (from i in _context.SOPRACIInf
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
 
-            var raciinf = (from i in _context.SOPProcessTempls
-                           join p in _context.SOPRACICon on i.valuematch equals p.valuematch
-                           join m in _context.Departments on p.DepartmentId equals m.DepartmentId
-                           join j in _context.JobTitles on p.DepartmentId equals j.DepartmentId
-                           select new ProcessOutput { DepartmentId = p.DepartmentId, valuematch = i.valuematch, JobTitleId = p.JobTitleId, DepartmentName = m.DepartmentName, JobTitle = j.JobTitle }).ToList();
-            ViewBag.raciacc = raciacc;
-            ViewBag.racicons = raciacc;
-            ViewBag.raciinf = raciinf;
+            ViewBag.infi = infi;
 
             var userlist = (from i in _context.CompanyClaim
                             where i.CompanyId == theuser
@@ -1299,55 +1299,81 @@ namespace sopman.Controllers
                     _context.Add(sopproc);
                     _context.SaveChanges();
                 }
-                foreach (var data in (ViewBag.tempdata))
-                {
-                    ApplicationDbContext.RACIResChosenUser chosen = new ApplicationDbContext.RACIResChosenUser();
-                    ApplicationDbContext.RACIAccChosenUser accchosen = new ApplicationDbContext.RACIAccChosenUser();
-                    ApplicationDbContext.RACIConChosenUser conchosen = new ApplicationDbContext.RACIConChosenUser();
-                    ApplicationDbContext.RACIInfChosenUser infchosen = new ApplicationDbContext.RACIInfChosenUser();
+                foreach(var item in (ViewBag.process)){
+                    foreach (var data in (ViewBag.res)){
+                        if (data.valuematch == item.valuematch)
+                        {
+                            ApplicationDbContext.RACIResChosenUser chosen = new ApplicationDbContext.RACIResChosenUser();
+                            var sel = Request.Form[data.valuematch + "-RES"];
+                            Console.WriteLine(sel);
+                            int onevalue = Convert.ToInt32(sel);
 
-                    var sel = Request.Form[data.valuematch+"-RES"];
-                    var sel2 = Request.Form[data.valuematch + "-ACC"];
-                    var sel3 = Request.Form[data.valuematch + "-CON"];
-                    var sel4 = Request.Form[data.valuematch + "-INF"];
+                            var status = "Pending";
 
-                    Console.WriteLine(sel);
-                    Console.WriteLine(sel2);
-                    Console.WriteLine(sel3);
-                    Console.WriteLine(sel4);
+                            chosen.RACIResID = data.valuematch;
+                            chosen.UserId = onevalue;
+                            chosen.Status = status;
+                            chosen.soptoptempid = data.SOPTemplateID;
 
-                    var status = "Pending";
+                            _context.Add(chosen);
+                        }
+                    }
+                    foreach (var data in (ViewBag.acc))
+                    {
+                        if (data.valuematch == item.valuematch)
+                        {
+                            ApplicationDbContext.RACIAccChosenUser accchosen = new ApplicationDbContext.RACIAccChosenUser();
+                            var sel2 = Request.Form[data.valuematch + "-ACC"];
+                            Console.WriteLine(sel2);
+                            Console.WriteLine(sel2);
+                            int twovalue = Convert.ToInt32(sel2);
+                            var status = "Pending";
 
-                    int onevalue = Convert.ToInt32(sel);
-                    int twovalue = Convert.ToInt32(sel2);
-                    int threevalue = Convert.ToInt32(sel3);
-                    int fourvalue = Convert.ToInt32(sel4);
+                            accchosen.RACIAccID = data.valuematch;
+                            accchosen.UserId = twovalue;
+                            accchosen.Status = status;
+                            accchosen.soptoptempid = data.SOPTemplateID;
 
-                    chosen.RACIResID = data.valuematch;
-                    chosen.UserId = onevalue;
-                    chosen.Status = status;
-                    chosen.soptoptempid = getid;
+                            _context.Add(accchosen);
+                        }
+                    }
+                    foreach (var data in (ViewBag.cons))
+                    {
+                        if (data.valuematch == item.valuematch)
+                        {
+                            ApplicationDbContext.RACIConChosenUser conchosen = new ApplicationDbContext.RACIConChosenUser();
+                            var sel3 = Request.Form[data.valuematch + "-CON"];
+                            Console.WriteLine(sel3);
+                            Console.WriteLine(sel3);
+                            int threevalue = Convert.ToInt32(sel3);
+                            var status = "Pending";
 
-                    accchosen.RACIAccID = data.valuematch;
-                    accchosen.UserId = twovalue;
-                    accchosen.Status = status;
-                    accchosen.soptoptempid = getid;
+                            conchosen.RACIConID = data.valuematch;
+                            conchosen.UserId = threevalue;
+                            conchosen.Status = status;
+                            conchosen.soptoptempid = data.SOPTemplateID;
 
-                    conchosen.RACIConID = data.valuematch;
-                    conchosen.UserId = threevalue;
-                    conchosen.Status = status;
-                    conchosen.soptoptempid = getid;
+                            _context.Add(conchosen);
+                        }
+                    }
+                    foreach (var data in (ViewBag.cons))
+                    {
+                        if (data.valuematch == item.valuematch)
+                        {
+                            ApplicationDbContext.RACIInfChosenUser infchosen = new ApplicationDbContext.RACIInfChosenUser();
+                            var sel4 = Request.Form[data.valuematch + "-INF"];
+                            Console.WriteLine(sel4);
+                            int fourvalue = Convert.ToInt32(sel4);
+                            var status = "Pending";
 
-                    infchosen.RACIInfID = data.valuematch;
-                    infchosen.UserId = fourvalue;
-                    infchosen.Status = status;
-                    infchosen.soptoptempid = getid;
+                            infchosen.RACIInfID = data.valuematch;
+                            infchosen.UserId = fourvalue;
+                            infchosen.Status = status;
+                            infchosen.soptoptempid = data.SOPTemplateID;
 
-                    _context.Add(chosen);
-                    _context.Add(accchosen);
-                    _context.Add(conchosen);
-                    _context.Add(infchosen);
-                    _context.SaveChanges();
+                            _context.Add(infchosen);
+                        }
+                    }
                 }
                 _context.SaveChanges();
             }

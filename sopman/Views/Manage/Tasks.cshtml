@@ -41,7 +41,7 @@
                                                             @foreach(var step in (ViewBag.procdate)){
                                                                 foreach(var pro in (ViewBag.process)){
                                                                     if((step.SOPTemplateID == res.soptoptempid) && (res.RACIResID == step.valuematch) && (pro.valuematch == step.valuematch)){
-                                                                    <th>@pro.ProcessName</th>
+                                                                    <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@pro.ProcessName</a></th>
                                                                     }
                                                                 }
                                                             } 
@@ -98,7 +98,7 @@
                                                             @foreach(var step in (ViewBag.procdate)){
                                                                 foreach(var pro in (ViewBag.process)){
                                                                     if((step.SOPTemplateID == res.soptoptempid) && (res.RACIAccID == step.valuematch) && (pro.valuematch == step.valuematch)){
-                                                                    <th>@pro.ProcessName</th>
+                                                                    <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@pro.ProcessName</a></th>
                                                                     }
                                                                 }
                                                             } 
@@ -155,7 +155,7 @@
                                                             @foreach(var step in (ViewBag.procdate)){
                                                                 foreach(var pro in (ViewBag.process)){
                                                                     if((step.SOPTemplateID == res.soptoptempid) && (res.RACIConID == step.valuematch) && (pro.valuematch == step.valuematch)){
-                                                                    <th>@pro.ProcessName</th>
+                                                                    <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@pro.ProcessName</a></th>
                                                                     }
                                                                 }
                                                             } 
@@ -211,7 +211,7 @@
                                                             @foreach(var step in (ViewBag.procdate)){
                                                                 foreach(var pro in (ViewBag.process)){
                                                                     if((step.SOPTemplateID == res.soptoptempid) && (res.RACIInfID == step.valuematch) && (pro.valuematch == step.valuematch)){
-                                                                    <th>@pro.ProcessName</th>
+                                                                    <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@pro.ProcessName</a></th>
                                                                     }
                                                                 }
                                                             } 
@@ -223,11 +223,15 @@
                                                             <th class="td-inf-@ist.InstanceId-@res.RACIInfChosenID">
                                                                 @foreach(var comp in (ViewBag.infcomp)){
                                                                     if(comp.RACIInfChosenID == res.RACIInfChosenID){
+                                                                        <p>@comp.RACIInfChosenID - @res.RACIInfChosenID</p>
                                                                         <p class="complete">Complete</p>
                                                                     }
                                                                 }
-                                                                @foreach(var comp in (ViewBag.infirec)){
-                                                                    <p class="recusal">Recusal</p>
+                                                                @foreach(var subietem in (ViewBag.infirec)){
+                                                                    if(subietem.RACIInfChosenID == res.RACIInfChosenID){
+                                                                        <p>@subietem.RACIInfChosenID - @res.RACIInfChosenID</p>
+                                                                         <p class="recusal">Recusal</p>   
+                                                                    }
                                                                 }
                                     
                                                                 <p class="pending">Pending</p>
