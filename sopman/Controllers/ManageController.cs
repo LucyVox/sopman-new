@@ -323,9 +323,7 @@ namespace sopman.Controllers
             var infcomp = (from i in _context.RACIInfComplete
                            select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
 
-            var infirec = (from i in _context.RACIInfRecusal
-                           select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID }).ToList();
-            
+
             ViewBag.rescomp = rescomp;
             ViewBag.resres = resres;
             ViewBag.acccomp = acccomp;
@@ -333,7 +331,6 @@ namespace sopman.Controllers
             ViewBag.concomp = concomp;
             ViewBag.conres = conres;
             ViewBag.infcomp = infcomp;
-            ViewBag.infirec = infirec;
 
 
             if (getu == null)
