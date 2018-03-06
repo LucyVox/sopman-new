@@ -231,6 +231,10 @@ hr.white-line {
     width: 50%
  }
 
+.top-nav .site-name h3 {
+    font-weight: 300;
+}
+
 .dashboard-quick {
     background-color: #2F2F2F;
     padding: 0px 20px;
@@ -337,11 +341,11 @@ hr.white-line {
 }
 
 .white-box h2 {
-    margin-top: 15px;
-    margin-bottom: 0px;
+    margin-top: 20px;
+    margin-bottom: 15px;
     color: #476176;
     font-weight:600;
-    font-size:28px;
+    font-size:21px;
 }
 
 .white-box hr {
