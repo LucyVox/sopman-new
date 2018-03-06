@@ -7,19 +7,21 @@
 <div class="container body-content">
 @using (Html.BeginForm()) {
     <div class="container sop-builder">
-        <div class="row header-black">
+        <div class="row header-dark-grey">
             <div class="col-12 col-md-8">
                 <p>@ViewBag.instref <span class="faded">Executed by: </span>@foreach(var name in (ViewBag.userinfo)){<span>@name.FirstName </span> <span> @name.SecondName</span> }</p>
             </div>
             <div class="col-12 col-md-4 text-right">
                 <p>Expiry Date: @ViewBag.expire</p>
             </div>
+            <hr class="white-divider"/>
             <div class="col-12 col-md-10">
                 <h1>@ViewBag.temp </h1>
             </div>
             <div class="col-12 col-md-2 text-right">
                     <input type="submit" class="btn" value="Save" />
             </div>
+            <hr class="invisible-divider"/>
             <div class="col-12">
                 <ul class="nav nav-temp nav-tabs" role="tablist">
                     <li class="nav-item">

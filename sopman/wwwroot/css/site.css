@@ -209,6 +209,11 @@ hr.white-line {
     font-weight:600;
 }
 
+.nav-tabs .nav-item a {
+    text-transform: none;
+}
+
+
 .top-nav {
     background-color: #fff;
     padding: 15px 0px
@@ -248,8 +253,9 @@ hr.white-line {
 }
 
 .dashboard-quick h2 {
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 21px;
+    font-weight: 400;
+    margin: 10px auto;
     text-transform:uppercase;
 }
 
@@ -336,8 +342,8 @@ hr.white-line {
 .white-box, .company-setup {
     background-color: #fff;
     border-radius: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px
+    margin-top: 45px;
+    margin-bottom: 45px
 }
 
 .white-box h2 {
@@ -571,6 +577,10 @@ padding-left:0px;
     font-size:20px;
 }
 
+    .sop-builder .nav-tabs .nav-link.active {
+        color: #456074;
+    }
+
 .people-div {
     background-color:#fff;
     border-radius: 10px;
@@ -751,34 +761,64 @@ padding-left:0px;
 .sop-builder .header-black {
     background-color: #000;
     color: #fff;
-    padding: 40px 20px 0px
+    padding: 30px 15px 0px
 }
 
     .sop-builder .header-black h1 {
-        font-size: 22px;
+        font-size: 12pt;
         font-weight: 600
+    }
+
+    .sop-builder .header-black p {
+        margin-bottom: 0px;
+    }
+
+.sop-builder .header-dark-grey {
+    background-color: #212121;
+    color: #fff;
+    padding: 30px 15px 0px
+}
+
+    .sop-builder .header-dark-grey h1 {
+        font-size: 12pt;
+        font-weight: 600
+    }
+
+    .sop-builder .header-dark-grey p {
+        margin-bottom: 0px
     }
 
 .header-right {
     background-color: #E5E5E5;
     color:#000;
-    margin-top:15px;
     display:flex;
     align-items:center;
 
 }
     .header-right h2 {
-        font-size:22px;
+        font-size:14pt;
         margin-bottom:0px;
         padding: 5px 0px;
     }
     .header-left {
     background-color: #456074;
-    color: #fff;
-    margin-top: 15px
+    color: #fff;
 }
-.nav-temp li{
-    padding: 8px 0px 0px    
+
+.white-divider {
+    width: 100%;
+    margin-left: 15px;
+    margin-right: 15px;
+    border-top: 1px solid #FFFFFFAA;
+    margin-top: .5rem;
+}
+.invisible-divider {
+    width: 100%;
+    border: 0;
+}
+
+.nav-temp li {
+    padding: 8px 0px 0px
 }
 
 .sop-table {
@@ -793,12 +833,17 @@ padding-left:0px;
     
 }
 
+.section-count {
+    margin-top: 30px;
+    border: 1px solid #00000066;
+}
 
 
 .number h3 {
     text-align: center;
     margin-bottom: 0px;
-    padding: 15px 0px
+    padding: 20px 0px;
+    font-size: 14pt;
 }
 
 .inner-cols.cols-3 {
