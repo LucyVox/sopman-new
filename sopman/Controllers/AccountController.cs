@@ -348,7 +348,7 @@ namespace sopman.Controllers
             var orderVM = new RegisterSopCreatorViewModel();
             var getuser = _userManager.GetUserId(User);
 
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
@@ -403,7 +403,6 @@ namespace sopman.Controllers
                            where m.CompanyId == compid
                            select new { m.JobTitleId, m.JobTitle }).ToList();
             
-
             orderVM.Departments = new List<RegisterDepartmentViewModel>();
             foreach (var items in getdep)
             {

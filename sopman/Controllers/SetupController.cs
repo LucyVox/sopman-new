@@ -913,7 +913,7 @@ namespace sopman.Controllers
             var orderVM = new RegisterSOPUserViewModel();
             var getuser = _userManager.GetUserId(User);
 
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
