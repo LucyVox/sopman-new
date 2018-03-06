@@ -402,7 +402,7 @@ namespace sopman.Controllers
             var getjobs = (from m in _context.JobTitles
                            where m.CompanyId == compid
                            select new { m.JobTitleId, m.JobTitle }).ToList();
-
+            
 
             orderVM.Departments = new List<RegisterDepartmentViewModel>();
             foreach (var items in getdep)
