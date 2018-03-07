@@ -248,10 +248,27 @@
     });
     var div = 0;
     $(document).ready(function () {
+        var i = 0;
+        $(".section-count").each(function() {
+            var j = 1;
+            if($(this).hasClass("SubProcess")){
+                $(this).find(".number").find("h3").text(i + "." + j);
+                j++;
+            }
+            else {
+    i++;
+                $(this).find(".number").find("h3").text(i);
+
+            }
+        });
+    });
+    /* OLD
+    $(document).ready(function () {
         $(".number").each(function(i) {
             $(this).find("h3").text(++i);
         });
     });
+    */
 </script>
 
 

@@ -138,6 +138,13 @@
         <script src="~/js/site.js" asp-append-version="true"></script>        
     </environment>
 
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+          $( function() {
+            $( ".datepicker" ).datepicker();
+          } );
+        </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
