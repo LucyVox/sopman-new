@@ -1307,29 +1307,50 @@ namespace sopman.Controllers
 
                             Console.WriteLine("Dropdown res:");
                             Console.WriteLine(sel);
-                            int onevalue = Convert.ToInt32(sel);
+                            int onevalue = int.Parse(sel);
 
-                            var status = "Pending";
+                            // var status = "Pending";
 
-                            raciResUser.RACIResID = data.valuematch;
+                            // raciResUser.RACIResID = data.valuematch;
                             raciResUser.UserId = onevalue;
-                            raciResUser.Status = status;
+                            // raciResUser.Status = status;
 
-                            raciResUser.soptoptempid = data.SOPTemplateID;
-                            raciResUser.InstanceId = getid;
+                            // raciResUser.soptoptempid = data.SOPTemplateID;
+                            // raciResUser.InstanceId = getid;
 
                             Console.WriteLine("data valuematch:");
-                            Console.WriteLine(raciResUser.RACIResID);
+                            // Console.WriteLine(raciResUser.RACIResID);
 
                             Console.WriteLine("data SOPTemplateID:");
-                            Console.WriteLine(data.SOPTemplateID);
+                            // Console.WriteLine(data.SOPTemplateID);
+                            // Console.WriteLine(raciResUser.RACIResChosenID);
 
-                            _context.Add(raciResUser);
+                            Console.WriteLine(raciResUser.UserId);
+
+                            try
+                            {
+                                _context.Add(raciResUser);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("CHRISERROR");
+                                Console.WriteLine(ex.Message);
+                            }
                         }
 
                     }
+
+                }
+                try
+                {
                     _context.SaveChanges();
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("CHRISERROR");
+                    Console.WriteLine(ex.Message);
+                }
+
             }
             return View(process);
         }
