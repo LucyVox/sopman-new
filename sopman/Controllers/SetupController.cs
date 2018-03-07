@@ -1,10 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Web;
 using System.Data;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.IO;
 using LumenWorks.Framework.IO.Csv;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -1031,11 +1031,53 @@ namespace sopman.Controllers
             return View();
         }
 
-        public IActionResult OrgStructure()
+        [HttpGet]
+        public ActionResult OrgStructure()
         {
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> OrgStructure(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return View();
+            }
+            else
+            {
+                var userId = _userManager.GetUserId(User);
+                var path = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "Uploads/CSV",
+                    userId + "-" + file.FileName);
+                Console.WriteLine("CHRIS");
+                Console.WriteLine(path, file.FileName);
 
+                using (FileStream stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                return RedirectToAction("CSVMap", new {file = userId + "-" + file.FileName});
+            }
+        }
+
+        [HttpGet]
+        public ActionResult CSVMap()
+        {
+            var filePath = Request.Query["file"];
+            var path = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "Uploads/CSV",
+                    filePath);
+            ViewBag.Data.DataTable.head = null;
+
+            using (StreamReader sr = new StreamReader(path))
+            {
+                List<string> headings = new List<string>();
+            }
+
+            return View();
+        }
     }  
 }
