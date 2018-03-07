@@ -1342,6 +1342,169 @@ namespace sopman.Controllers
         }
 
         [HttpGet]
+        public ActionResult Settings(int CompanyId)
+        {
+
+            var getuser = _userManager.GetUserId(User);
+
+            var compid = CompanyId;
+
+            var getcompiduser = (from y in _context.CompanyClaim
+                             where y.UserId == getuser
+                             select y.CompanyId).Single();
+
+            var getcompid = (from i in _context.TheCompanyInfo
+                             where i.CompanyId == getcompiduser
+                             select i.Name).Single();
+            
+            ViewBag.getcompid = getcompid;
+
+
+            //Generabl Tab
+            var selsopformat = (from y in _context.TheCompanyInfo
+                                where y.CompanyId == getcompiduser
+                                select y.SOPNumberFormat).Single();
+            var sopstartnum = (from y in _context.TheCompanyInfo
+                               where y.CompanyId == getcompiduser
+                               select y.SOPStartNumber).Single();
+
+            var filenamefirstpart = (from y in _context.TheCompanyInfo
+                                     where y.CompanyId == getcompiduser
+                                     select y.Logo).Single();
+            
+            var fileuserid = (from y in _context.TheCompanyInfo
+                                     where y.CompanyId == getcompiduser
+                              select y.UserId).Single();
+
+            var filenames = getcompid + filenamefirstpart;
+
+            var path = Path.Combine(
+                Directory.GetCurrentDirectory(),         
+                "Uploads/CompanyLogos", filenames);
+            
+            ViewBag.path = path;
+            ViewBag.filenamefirstpart = filenamefirstpart;
+            ViewBag.fileuserid = fileuserid;
+
+            // Users tab
+            var getthepeople = (from m in _context.CompanyClaim
+                                where m.CompanyId == getcompiduser
+                                select new RegisterSOPUserViewModel { UserId = m.UserId, CompanyId = m.CompanyId, FirstName = m.FirstName, SecondName = m.SecondName, DepartmentId = m.DepartmentId, JobTitleId = m.JobTitleId }).ToList();
+
+            ViewBag.getthepeople = getthepeople;
+
+            var userinfo = (from i in _context.Users
+                            select new RegisterSOPUserViewModel { Email = i.Email, Id = i.Id }).ToList();
+            ViewBag.userinfo = userinfo;
+
+            var deppartments = (from y in _context.Departments
+                                select new RegisterSOPUserViewModel { DepartmentId = y.DepartmentId, DepartmentName = y.DepartmentName }).ToList();
+            ViewBag.deppartments = deppartments;
+
+            var jobtitle = (from x in _context.JobTitles
+                            select new RegisterSOPUserViewModel { CompanyId = x.CompanyId, JobTitleId = x.JobTitleId, JobTitle = x.JobTitle }).ToList();
+            ViewBag.jobtitle = jobtitle;
+
+            SettingsViewModel savesettings = new SettingsViewModel()
+            {
+                SOPStartNumber = sopstartnum,
+                SOPNumberFormat = selsopformat,
+            };
+
+            return View(savesettings);
+        }
+
+        [HttpPost]
+        public ActionResult Settings(int CompanyId, IFormFile logo, [Bind("SOPStartNumber,SOPNumberFormat,Logo")]ApplicationDbContext.CompanyInfo comp)
+        {var getuser = _userManager.GetUserId(User);
+
+            var compid = CompanyId;
+
+            var getcompiduser = (from y in _context.CompanyClaim
+                                 where y.UserId == getuser
+                                 select y.CompanyId).Single();
+
+            var getcompid = (from i in _context.TheCompanyInfo
+                             where i.CompanyId == getcompiduser
+                             select i.Name).Single();
+
+            ViewBag.getcompid = getcompid;
+
+
+            //Generabl Tab
+            var selsopformat = (from y in _context.TheCompanyInfo
+                                where y.CompanyId == getcompiduser
+                                select y.SOPNumberFormat).Single();
+            var sopstartnum = (from y in _context.TheCompanyInfo
+                               where y.CompanyId == getcompiduser
+                               select y.SOPStartNumber).Single();
+
+            var filenamefirstpart = (from y in _context.TheCompanyInfo
+                                     where y.CompanyId == getcompiduser
+                                     select y.Logo).Single();
+
+            var fileuserid = (from y in _context.TheCompanyInfo
+                              where y.CompanyId == getcompiduser
+                              select y.UserId).Single();
+
+            var filenames = getcompid + filenamefirstpart;
+
+            var path = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Uploads/CompanyLogos", filenames);
+
+            ViewBag.path = path;
+            ViewBag.filenamefirstpart = filenamefirstpart;
+            ViewBag.fileuserid = fileuserid;
+
+            // Users tab
+            var getthepeople = (from m in _context.CompanyClaim
+                                where m.CompanyId == getcompiduser
+                                select new RegisterSOPUserViewModel { UserId = m.UserId, CompanyId = m.CompanyId, FirstName = m.FirstName, SecondName = m.SecondName, DepartmentId = m.DepartmentId, JobTitleId = m.JobTitleId }).ToList();
+
+            ViewBag.getthepeople = getthepeople;
+
+            var userinfo = (from i in _context.Users
+                            select new RegisterSOPUserViewModel { Email = i.Email, Id = i.Id }).ToList();
+            ViewBag.userinfo = userinfo;
+
+            var deppartments = (from y in _context.Departments
+                                select new RegisterSOPUserViewModel { DepartmentId = y.DepartmentId, DepartmentName = y.DepartmentName }).ToList();
+            ViewBag.deppartments = deppartments;
+
+            var jobtitle = (from x in _context.JobTitles
+                            select new RegisterSOPUserViewModel { CompanyId = x.CompanyId, JobTitleId = x.JobTitleId, JobTitle = x.JobTitle }).ToList();
+            ViewBag.jobtitle = jobtitle;
+
+            SettingsViewModel savesettings = new SettingsViewModel()
+            {
+                SOPStartNumber = sopstartnum,
+                SOPNumberFormat = selsopformat,
+            };
+
+
+            var getthecompid = _context.TheCompanyInfo.FirstOrDefault(x => x.CompanyId == CompanyId);
+
+            Console.WriteLine(getthecompid);
+            var getsopnum = Request.Form["SOPStartNumber"];
+            var getdigits = Request.Form["SOPNumberFormat"];
+
+            Console.WriteLine(getsopnum);
+
+            if(ModelState.IsValid){
+                
+                getthecompid.SOPStartNumber = getsopnum;
+                getthecompid.SOPNumberFormat = getdigits;
+                _context.TheCompanyInfo.Update(getthecompid);
+
+                _context.SaveChanges();
+            }
+
+
+            return View(savesettings);
+        }
+
+        [HttpGet]
         public ActionResult TheSOP(string InstanceId)
         {
             var getuser = _userManager.GetUserId(User);
