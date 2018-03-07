@@ -1297,92 +1297,41 @@ namespace sopman.Controllers
                     Console.WriteLine(valuematch);
 
                     _context.Add(sopproc);
-                    _context.SaveChanges();
-                }
-                foreach(var item in (ViewBag.process)){
-                    foreach (var data in (ViewBag.res)){
+
+                    foreach (var data in (ViewBag.res))
+                    {
                         if (data.valuematch == item.valuematch)
                         {
-                            ApplicationDbContext.RACIResChosenUser chosen = new ApplicationDbContext.RACIResChosenUser();
+                            ApplicationDbContext.RACIResChosenUser raciResUser = new ApplicationDbContext.RACIResChosenUser();
                             var sel = Request.Form[data.valuematch + "-RES"];
+
+                            Console.WriteLine("Dropdown res:");
                             Console.WriteLine(sel);
                             int onevalue = Convert.ToInt32(sel);
 
                             var status = "Pending";
 
-                            chosen.RACIResID = data.valuematch;
-                            chosen.UserId = onevalue;
-                            chosen.Status = status;
-                            chosen.soptoptempid = data.SOPTemplateID;
+                            raciResUser.RACIResID = data.valuematch;
+                            raciResUser.UserId = onevalue;
+                            raciResUser.Status = status;
 
-                            _context.Add(chosen);
+                            raciResUser.soptoptempid = data.SOPTemplateID;
+                            raciResUser.InstanceId = getid;
+
+                            Console.WriteLine("data valuematch:");
+                            Console.WriteLine(raciResUser.RACIResID);
+
+                            Console.WriteLine("data SOPTemplateID:");
+                            Console.WriteLine(data.SOPTemplateID);
+
+                            _context.Add(raciResUser);
                         }
+
                     }
-                    foreach (var data in (ViewBag.acc))
-                    {
-                        if (data.valuematch == item.valuematch)
-                        {
-                            ApplicationDbContext.RACIAccChosenUser accchosen = new ApplicationDbContext.RACIAccChosenUser();
-                            var sel2 = Request.Form[data.valuematch + "-ACC"];
-                            Console.WriteLine(sel2);
-                            Console.WriteLine(sel2);
-                            int twovalue = Convert.ToInt32(sel2);
-                            var status = "Pending";
-
-                            accchosen.RACIAccID = data.valuematch;
-                            accchosen.UserId = twovalue;
-                            accchosen.Status = status;
-                            accchosen.soptoptempid = data.SOPTemplateID;
-
-                            _context.Add(accchosen);
-                        }
-                    }
-                    foreach (var data in (ViewBag.cons))
-                    {
-                        if (data.valuematch == item.valuematch)
-                        {
-                            ApplicationDbContext.RACIConChosenUser conchosen = new ApplicationDbContext.RACIConChosenUser();
-                            var sel3 = Request.Form[data.valuematch + "-CON"];
-                            Console.WriteLine(sel3);
-                            Console.WriteLine(sel3);
-                            int threevalue = Convert.ToInt32(sel3);
-                            var status = "Pending";
-
-                            conchosen.RACIConID = data.valuematch;
-                            conchosen.UserId = threevalue;
-                            conchosen.Status = status;
-                            conchosen.soptoptempid = data.SOPTemplateID;
-
-                            _context.Add(conchosen);
-                        }
-                    }
-                    foreach (var data in (ViewBag.cons))
-                    {
-                        if (data.valuematch == item.valuematch)
-                        {
-                            ApplicationDbContext.RACIInfChosenUser infchosen = new ApplicationDbContext.RACIInfChosenUser();
-                            var sel4 = Request.Form[data.valuematch + "-INF"];
-                            Console.WriteLine(sel4);
-                            int fourvalue = Convert.ToInt32(sel4);
-                            var status = "Pending";
-
-                            infchosen.RACIInfID = data.valuematch;
-                            infchosen.UserId = fourvalue;
-                            infchosen.Status = status;
-                            infchosen.soptoptempid = data.SOPTemplateID;
-
-                            _context.Add(infchosen);
-                        }
-                    }
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
             }
-            string url1 = Url.Content("TheSOP" + Uri.EscapeUriString("?=") + getid);
-            string newurl = url1.Replace("%3F%3D", "?=");
-
-            Console.WriteLine(newurl);
-
-            return new RedirectResult(newurl);
+            return View(process);
         }
 
         [HttpGet]
@@ -2069,6 +2018,8 @@ namespace sopman.Controllers
         {
             var getuser = _userManager.GetUserId(User);
 
+            ViewBag.Userid = getuser;
+
             var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
@@ -2100,6 +2051,7 @@ namespace sopman.Controllers
                             select new SOPTemplateList { 
                                     ProjectName = i.ProjectName,
                                     ProjectId = i.ProjectId,
+                                    UserId = i.UserId,  
                                     creationdate = i.creationdate,
                                      countnum =  _context.NewInstance.Where(x => x.ProjectId == i.ProjectId).Count()    
                             }).ToList();
@@ -2126,7 +2078,7 @@ namespace sopman.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateNewProject([Bind("ProjectId,CompId,ProjectName,CreationDate")] ApplicationDbContext.Project project)
+        public ActionResult CreateNewProject([Bind("ProjectId,CompId,ProjectName,CreationDate,UserId")] ApplicationDbContext.Project project)
         {
             var getuser = _userManager.GetUserId(User);
 
@@ -2140,7 +2092,7 @@ namespace sopman.Controllers
                 project.CompId = compid;
 
                 project.creationdate = DateTime.Now;
-
+                project.UserId = getuser;
                 _context.Add(project);
                 _context.SaveChanges();
             }
@@ -2164,7 +2116,8 @@ namespace sopman.Controllers
             var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
-            
+
+            ViewBag.ProjectId = ProjectId;
 
             var projname = (from i in _context.Projects
                             where i.ProjectId == ProjectId

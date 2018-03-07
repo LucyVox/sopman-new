@@ -383,6 +383,8 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("ProjectName");
 
+                    b.Property<string>("UserId");
+
                     b.Property<DateTime>("creationdate");
 
                     b.HasKey("ProjectId");
@@ -394,6 +396,8 @@ namespace sopman.Data.Migrations
                 {
                     b.Property<int>("RACIAccChosenID")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("InstanceId");
 
                     b.Property<string>("RACIAccID");
 
@@ -471,6 +475,8 @@ namespace sopman.Data.Migrations
                     b.Property<int>("RACIConChosenID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("InstanceId");
+
                     b.Property<string>("RACIConID");
 
                     b.Property<string>("Status");
@@ -547,6 +553,8 @@ namespace sopman.Data.Migrations
                     b.Property<int>("RACIInfChosenID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("InstanceId");
+
                     b.Property<string>("RACIInfID");
 
                     b.Property<string>("Status");
@@ -622,6 +630,8 @@ namespace sopman.Data.Migrations
                 {
                     b.Property<int>("RACIResChosenID")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("InstanceId");
 
                     b.Property<string>("RACIResID");
 

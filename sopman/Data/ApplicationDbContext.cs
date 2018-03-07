@@ -318,6 +318,7 @@ namespace sopman.Data
             public string ProjectName { get; set; }
 
             public DateTime creationdate { get; set; }
+            public string UserId { get; set; }
         }
         public DbSet<Project> Projects { get; set; }
 
@@ -437,6 +438,7 @@ namespace sopman.Data
             public string StatusComplete { get; set; }
             public int UserId { get; set; }
             public string soptoptempid { get; set; }
+            public string InstanceId { get; set; }
         }
         public DbSet<RACIResChosenUser> RACIResUser { get; set; }
 
@@ -469,6 +471,7 @@ namespace sopman.Data
             public string StatusComplete { get; set; }
             public int UserId { get; set; }
             public string soptoptempid { get; set; }
+            public string InstanceId { get; set; }
 
         }
         public DbSet<RACIAccChosenUser> RACIAccUser { get; set; }
@@ -503,6 +506,7 @@ namespace sopman.Data
             public string StatusComplete { get; set; }
             public int UserId { get; set; }
             public string soptoptempid { get; set; }
+            public string InstanceId { get; set; }
         }
         public DbSet<RACIConChosenUser> RACIConUser { get; set; }
 
@@ -535,6 +539,7 @@ namespace sopman.Data
             public string StatusComplete { get; set; }
             public int UserId { get; set; }
             public string soptoptempid { get; set; }
+            public string InstanceId { get; set; }
         }
         public DbSet<RACIInfChosenUser> RACIInfUser { get; set; }
 

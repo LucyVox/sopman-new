@@ -6,7 +6,17 @@
 <div class="container people-div">
     <div class="row">
         <div class="col-12 col-md-8">
-            <h2>@ViewData["Title"]</h2>
+            <div class="row">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      My Projects
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item my-projects-@ViewBag.Userid" href="#fullprojlist">My Projects</a>
+                      <a class="dropdown-item all-projects" href="#fullprojlist">All Projects</a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-12 col-md-4 text-right">
             <a asp-controller="Manage" asp-action="CreateNewProject">Create New Project</a>
@@ -23,8 +33,8 @@
                 </thead>
                 <tbody> 
                     @foreach(var item in Model){
-                        <tr>
-                            <td>@item.ProjectName</td>
+                        <tr class="tablerow user-@item.UserId">
+                            <td class="">@item.ProjectName</td>
                             <td>@item.countnum</td>
                             <td>@item.creationdate.ToString("dd MMM yyyy")</td>
                             <td><a href="/Manage/ViewProject?=@item.ProjectId">Go to project</a></td>
@@ -46,6 +56,11 @@
             "columnDefs": [
                 { "orderable": false, "targets": 3 }
             ]
+        });
+     });
+     $(document).ready(function() {
+        $( ".my-projects-@ViewBag.Userid" ).click(function() {
+            $.each("tr.tablerow").not("user-@ViewBag.Userid").hide();
         });
      });
 </script>

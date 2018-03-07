@@ -53,11 +53,11 @@ namespace sopman.Controllers
         {
             var getuser = _userManager.GetUserId(User);
 
-            if (_context.TheCompanyInfo.Any(o => o.UserId == getuser))
+            if (_context.CompanyClaim.Any(o => o.UserId == getuser))
             {
                 ViewBag.Class = "true";
 
-                var theid = (from m in _context.TheCompanyInfo
+                var theid = (from m in _context.CompanyClaim
                              where m.UserId == getuser
                              select m.CompanyId).Single();
                 if (_context.SOPTopTemplates.Any(o => o.CompanyId == theid))
@@ -80,7 +80,7 @@ namespace sopman.Controllers
             var user = await _userManager.GetUserAsync(User);
             var user_id = user.Id;
 
-            var modules = (from i in _context.TheCompanyInfo
+            var modules = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
 
@@ -171,11 +171,11 @@ namespace sopman.Controllers
             var user = await _userManager.GetUserAsync(User);
             var user_id = user.Id;
 
-            var modules = (from i in _context.TheCompanyInfo
+            var modules = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
 
-            var usermod = (from i in _context.TheCompanyInfo
+            var usermod = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.UserId).Single();
 

@@ -11,6 +11,7 @@ namespace sopman.Models.SetupViewModels
 {
     public class SopTemplate
     {
+        [Required]
         [Display(Name = "SOP Name")]
         public string TempName { get; set; }
 
