@@ -23,6 +23,7 @@ using sopman.Data;
 using sopman.Models.AccountViewModels;
 using sopman.Models.SetupViewModels;
 using sopman.Services;
+using CsvHelper;
 
 namespace sopman.Controllers
 {
@@ -1070,11 +1071,24 @@ namespace sopman.Controllers
                     Directory.GetCurrentDirectory(),
                     "Uploads/CSV",
                     filePath);
-            ViewBag.Data.DataTable.head = null;
+
+
+
+
+            List<string> head = new List<string>();
+            List<CSVMapModel> rows = new List<CSVMapModel>();
+            ViewBag.Rows = rows;
 
             using (StreamReader sr = new StreamReader(path))
             {
-                List<string> headings = new List<string>();
+                CsvHelper.CsvReader csv = new CsvHelper.CsvReader(sr);
+                csv.Read();
+                csv.ReadHeader();
+                while (csv.Read())
+                {
+                    var record = csv.GetRecord<CSVMapModel>();
+                    rows.Add(record);
+                }
             }
 
             return View();
