@@ -19,8 +19,8 @@ namespace sopman.Models.ManageViewModels
 
 
         [Display(Name = "Logo Upload")]
-        [FileExtensions(Extensions = "jpg,jpeg")]
-        public IFormFile Logo { get; set; }
+        [FileExtensions(Extensions = "jpg,jpeg,png")]
+        public IFormFile File { get; set; }
 
         //public string Logo { get; set; }
 

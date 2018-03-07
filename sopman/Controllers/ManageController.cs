@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Linq;
@@ -1311,7 +1311,12 @@ namespace sopman.Controllers
 
                             // var status = "Pending";
 
+<<<<<<< Updated upstream
                             // raciResUser.RACIResID = data.valuematch;
+=======
+
+                            raciResUser.RACIResID = data.valuematch;
+>>>>>>> Stashed changes
                             raciResUser.UserId = onevalue;
                             // raciResUser.Status = status;
 
@@ -1407,6 +1412,7 @@ namespace sopman.Controllers
             ViewBag.filenamefirstpart = filenamefirstpart;
             ViewBag.fileuserid = fileuserid;
 
+
             // Users tab
             var getthepeople = (from m in _context.CompanyClaim
                                 where m.CompanyId == getcompiduser
@@ -1436,7 +1442,7 @@ namespace sopman.Controllers
         }
 
         [HttpPost]
-        public ActionResult Settings(int CompanyId, IFormFile logo, [Bind("SOPStartNumber,SOPNumberFormat,Logo")]ApplicationDbContext.CompanyInfo comp)
+        public async Task<IActionResult> Settings(int CompanyId, IFormFile file, [Bind("SOPStartNumber,SOPNumberFormat,Logo")]ApplicationDbContext.CompanyInfo comp)
         {var getuser = _userManager.GetUserId(User);
 
             var compid = CompanyId;
@@ -1513,9 +1519,32 @@ namespace sopman.Controllers
             Console.WriteLine(getsopnum);
 
             if(ModelState.IsValid){
-                
+
+                if (file == null || file.Length == 0) {
+                    return Content("file not selected");
+                }
+
+                else{
+                    var logopath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "Uploads/CompanyLogos",
+                        file.FileName);
+                    Console.WriteLine(logopath);
+
+                    using (var stream = new FileStream(logopath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                }
+                   
+
+
+
+                var logopathform = file.FileName;
+
                 getthecompid.SOPStartNumber = getsopnum;
                 getthecompid.SOPNumberFormat = getdigits;
+                getthecompid.Logo = logopathform;
                 _context.TheCompanyInfo.Update(getthecompid);
 
                 _context.SaveChanges();

@@ -904,7 +904,19 @@ namespace sopman.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Search(string searchString)
+        {
+            var getinstances = from m in _context.NewInstance
+                               select m;
 
+            if (!String.IsNullOrEmpty(searchString)) 
+             { 
+                getinstances = getinstances.Where(s => s.InstanceRef.Contains(searchString)); 
+             } 
+
+            return View(getinstances);
+        }
         #region Helpers
 
         private void AddErrors(IdentityResult result)

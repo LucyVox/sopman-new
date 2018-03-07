@@ -40,7 +40,13 @@
                     <div class="site-name"><h3>My SOP Manager</h3></div>
                 </div>
                 <div class="col-12 col-md-6 text-right">
-                    <div class="search"></div>
+                    @using (Html.BeginForm("Search", "Account", FormMethod.Get))
+                    {
+                        <ul class="nav navbar-nav">
+                            <li>@Html.TextBox("SearchString")</li>
+                            <li><input type="submit" value="Search" /></li>
+                        </ul>
+                    }
                 </div>
             </div>
         </div>     

@@ -57,7 +57,7 @@
                 <h4>@Html.LabelFor(m => m.Logo, new { @class = "col-md-12 control-label" })</h4>
             </div>
             <div class="col-12 col-md-6">
-                @Html.TextBoxFor(m => m.Logo, new { type = "file" })
+                <input type="file" name="file" />
             </div>
             <div class="col-12 col-md-4">
                 <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Upload your company logo, try to use a png with a transparent background as the logo will be used at the top of the page.">
