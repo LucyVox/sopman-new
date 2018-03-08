@@ -1,10 +1,61 @@
-﻿@models SearchViewModel
-@{
-    ViewData["Title"] = "Search Results";
+﻿@{
+    ViewData["Title"] = "Search Results for - " + ViewBag.searchString;
+
 }
-@foreach(var item in Model){
-   <p>@item.InstanceRef</p>
-}
+<div class="container body-content">
+    <div class="container sop-builder">
+         <div class="row header-white">
+            <table id="sop-table" class="table list-table">
+                <thead>
+                    <tr>
+                        <th>SOP Name</th>
+                        <th>SOP Instance</th>
+                        <th>Project</th>
+                        <th>Expire Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var temp in (ViewBag.newtemps)){
+                        foreach(var sub in (@ViewBag.getexe)){
+                            foreach(var ist in (@ViewBag.getinst)){
+                                if(temp.TempName.Contains(ViewBag.searchString)){
+                                    if(ist.SOPTemplateID == temp.SOPTemplateID){
+                                        if(sub.SectionId == ist.InstanceId){
+                                            <tr>
+                                                <td><a href="/Manage/SOPs?=@sub.ExecuteSopID">@temp.TempName</a></td>
+                                                <td>@ist.InstanceRef - @temp.SOPCode</td>
+                                                @foreach(var proj in (ViewBag.theprojects)){
+                                                    if(ist.ProjectId == proj.ProjectId){
+                                                         <td>@proj.ProjectName</td>
+                                                    }
+                                                }
+                                                <td>@ist.InstanceExpire</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                   }
+                </tbody>
+            </table>        
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#sop-table').DataTable( {
+            "order": [[ 0, "desc" ]],
+            "paging": false,
+            "info": false,
+            "columnDefs": [
+                { "orderable": false, "targets": 4 }
+            ]
+        });
+     });
+</script>
+
 
 
 

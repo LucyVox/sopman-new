@@ -1340,7 +1340,19 @@ table thead th {
     color: #000;
     font-size: 26px !important
 }
- @media (max-width: 768px) {
+
+.setting-row {
+    padding: 30px 0px;
+}
+.setting-row h2 {
+    font-size:20px;
+    font-weight:400;
+}
+
+.font-14 {
+    font-size:14px;
+}
+@media (max-width: 768px) {
     .top-nav .site-name {
             width: 100%
         }

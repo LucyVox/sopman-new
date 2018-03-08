@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using sopman.Data;
 using sopman.Models;
 using sopman.Models.AccountViewModels;
+using sopman.Models.ManageViewModels;
 using sopman.Services;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -905,17 +906,52 @@ namespace sopman.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(string searchString)
+        public async Task<IActionResult> Search(string searchString)
         {
-            var getinstances = from m in _context.NewInstance
+            var getu = _userManager.GetUserId(User);
+
+            ViewBag.loggedinuser = getu;
+
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getu
+                        select i.CompanyId).Single();
+
+            var top = (from i in _context.SOPTopTemplates
+                       where i.CompanyId == comp
+                       select i.TopTempId).Single();
+            
+            var getinstances = from m in _context.SOPNewTemplate
                                select m;
+            
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                getinstances = getinstances.Where(s => s.TempName.Contains(searchString));
+            }
+            var newtemps = (from t in _context.SOPNewTemplate
+                            where t.TopTempId == top
+                            select new SOPTemplateList { SOPTemplateID = t.SOPTemplateID, TempName = t.TempName, SOPCode = t.SOPCode, ExpireDate = t.ExpireDate }).ToList();
 
-            if (!String.IsNullOrEmpty(searchString)) 
-             { 
-                getinstances = getinstances.Where(s => s.InstanceRef.Contains(searchString)); 
-             } 
+            ViewBag.newtemps = newtemps;
 
-            return View(getinstances);
+            var getexe = (from y in _context.ExecutedSop
+                          select new SOPTemplateList { ExecuteSopID = y.ExecuteSopID, SectionId = y.SectionId, UserId = y.UserId }).ToList();
+            ViewBag.getexe = getexe;
+            var getinst = (from y in _context.NewInstance
+                           select new SOPTemplateList { SOPTemplateID = y.SOPTemplateID, InstanceExpire = y.InstanceExpire, ProjectId = y.ProjectId, InstanceRef = y.InstanceRef, InstanceId = y.InstanceId }).ToList();
+            ViewBag.getinst = getinst;
+
+            ViewBag.searchString = searchString;
+            ViewBag.getinstances = getinstances;
+
+            var theprojects = (from x in _context.Projects
+                               where x.CompId == comp
+                               select new SOPTemplateList { ProjectId = x.ProjectId, ProjectName = x.ProjectName }).ToList();
+
+            ViewBag.theprojects = theprojects;
+
+            var instanceVM = new SearchViewModel();
+
+            return View(await getinstances.ToListAsync());
         }
         #region Helpers
 

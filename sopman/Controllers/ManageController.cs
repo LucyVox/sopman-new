@@ -1311,12 +1311,12 @@ namespace sopman.Controllers
 
                             // var status = "Pending";
 
-<<<<<<< Updated upstream
+
                             // raciResUser.RACIResID = data.valuematch;
-=======
+
 
                             raciResUser.RACIResID = data.valuematch;
->>>>>>> Stashed changes
+
                             raciResUser.UserId = onevalue;
                             // raciResUser.Status = status;
 
