@@ -140,7 +140,7 @@
                                                      <h3>@item.ProcessName</h3>
                                                 </div>
                                                 <div class="col-12 col-md-2 text-right">
-                                                    <a data-toggle="collapse" class="font-14" href="#collapse-@nameshort" role="button" aria-expanded="false" aria-controls="collapseOne">
+                                                    <a data-toggle="collapse" class="collapsed" href="#collapse-@nameshort" role="button" aria-expanded="false" aria-controls="collapseOne">
                                                         SHOW DETAIL
                                                     </a>
                                                 </div>
@@ -490,7 +490,7 @@
                                                      <h3>@item.ProcessName</h3>
                                                 </div>
                                                 <div class="col-12 col-md-2 text-right">
-                                                    <a data-toggle="collapse" class="font-14" href="#collapse-tab-@nameshort" role="button" aria-expanded="false" aria-controls="collapseOne">
+                                                    <a data-toggle="collapse" class="collapsed" href="#collapse-tab-@nameshort" role="button" aria-expanded="false" aria-controls="collapseOne">
                                                         SHOW DETAIL
                                                     </a>
                                                 </div>
@@ -858,6 +858,34 @@
     });
     */
 
+
+    $(document).ready(function () {
+        $('a').each(function(){
+        if($(this).data('toggle') == "collapse"){
+                if($(this).hasClass('collapsed')){
+                    $(this).html('SHOW DETAIL');
+                }
+                else{
+                    $(this).html('HIDE DETAIL');
+                }
+            }
+        })
+    });
+
+    $(document).ready(function() {
+        $('a').each(function(){
+        if($(this).data('toggle') == "collapse"){
+            $(this).click(function(){
+                if($(this).hasClass('collapsed')){
+                    $(this).html('HIDE DETAIL');
+                }
+                else{
+                    $(this).html('SHOW DETAIL');
+                }
+            })
+        }
+    });
+    });
 
 </script>
 
