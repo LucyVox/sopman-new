@@ -3,21 +3,29 @@
 @{
     ViewData["Title"] = "My Projects";
 }
-<div class="container people-div">
+<div class="container projects-content">
+        <div class="row header-dark-grey">
+        <div class="dropdown">
+  <button class="btn btn-secondary d-flex" type="button" id="projects" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Projects<i class="material-icons ml-5">menu</i>
+  </button>
+  <div class="dropdown-menu" aria-labelledby="projects">
+    <a class="dropdown-item my-projects-@ViewBag.Userid" href="#fullprojlist">My Projects</a>
+    <a class="dropdown-item all-projects" href="#fullprojlist">All Projects</a>
+  </div>
+</div>
+        <div class="dropdown ml-3">
+  <button class="btn btn-secondary d-flex" type="button" id="active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Active<i class="material-icons ml-5">menu</i>
+  </button>
+  <div class="dropdown-menu" aria-labelledby="active">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+  </div>
+</div>
+    </div>
     <div class="row">
-        <div class="col-12 col-md-8">
-            <div class="row">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      My Projects
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item my-projects-@ViewBag.Userid" href="#fullprojlist">My Projects</a>
-                      <a class="dropdown-item all-projects" href="#fullprojlist">All Projects</a>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="col-12 col-md-4 text-right">
             <a asp-controller="Manage" asp-action="CreateNewProject">Create New Project</a>
         </div>

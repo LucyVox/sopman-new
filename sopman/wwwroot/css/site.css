@@ -777,7 +777,8 @@ padding-left:0px;
 .sop-builder .header-dark-grey {
     background-color: #212121;
     color: #fff;
-    padding: 30px 15px 0px
+    padding: 30px 15px 0px;
+    margin-bottom:0px;
 }
 
     .sop-builder .header-dark-grey h1 {
@@ -1498,5 +1499,31 @@ table thead th {
     }
 }
 
+.sop-instances-content {
+    background-color: #fff;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow:hidden;
+}
 
+.projects-content {
+    background-color: #fff;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden
+}
+
+.sops-template-content {
+    background-color: #fff;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden
+}
+
+.header-dark-grey {
+    background-color: #212121;
+    color: #fff;
+    padding: 30px 15px;
+    margin-bottom:20px;
+}
 
