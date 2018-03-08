@@ -3,6 +3,8 @@
 @using Microsoft.AspNetCore.Identity
 @{
     ViewData["Title"] = "The SOP";
+    var sectioncount = 0;
+    int subsectioncount = 1;
 }
 <div class="container body-content">
     <div class="container sop-builder">
@@ -40,9 +42,12 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="overview" role="tabpanel">
                         @foreach(var subitem in (ViewBag.thesecs)){
+
+                            sectioncount++;
+                        
                             <div class="row">
                                 <div class="col-12 col-md-1 header-left">
-                                    <div class="number"><h3></h3></div>
+                                    <div class="number"><h3>@sectioncount</h3></div>
                                 </div>
                                 <div class="col-12 col-md-11 header-right">
                                     <h2>@subitem.SectionText</h2>
@@ -102,10 +107,27 @@
                                 var nameshort = item.ProcessName.Replace(" ", "");
                                 var protype = item.ProcessType;
                                 var value = item.valuematch;
+
+
+
+                                string number;
+                                if(protype == "SubProcess")
+                                {
+                                    number = sectioncount.ToString() + "." + subsectioncount.ToString();
+                                    subsectioncount++;
+                                    
+                                }
+                                else
+                                {
+                                    sectioncount++;
+                                    number = sectioncount.ToString();
+                                    subsectioncount = 1;
+                                }
+                            
                                 <div class="card container @protype process-@value">
                                     <div class="card-header row" role="tab" id="headingOne">
                                             <div class="col-12 col-md-1 count-col">
-                                               <div class="number"><h3></h3></div>
+                                               <div class="number"><h3>@number</h3></div>
                                             </div>
                                             <div class="col-12 col-md-11 padding-left-zero">
                                                 <div class="row header-row">
@@ -247,6 +269,7 @@
         $(".inner-rows").addClass(content);
     });
     var div = 0;
+    /* NOT QUITE AS OLD
     $(document).ready(function () {
         var i = 0;
         $(".section-count").each(function() {
@@ -262,6 +285,7 @@
             }
         });
     });
+    */
     /* OLD
     $(document).ready(function () {
         $(".number").each(function(i) {

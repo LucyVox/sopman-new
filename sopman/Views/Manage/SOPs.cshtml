@@ -3,6 +3,9 @@
 @using Microsoft.AspNetCore.Identity
 @{
     ViewData["Title"] = "The SOP";
+    int sectioncount = 0;
+    int subsectioncount = 0;
+    int tasks = 0; // A second section counter to reset the count for the 'Tasks' tab
 }
 <div class="container body-content">
 @using (Html.BeginForm()) {
@@ -44,9 +47,13 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="overview" role="tabpanel">
                         @foreach(var subitem in (ViewBag.thesecs)){
+
+                            sectioncount++;
+                            tasks++;
+                        
                             <div class="row section-count">
                                 <div class="col-12 col-md-1 header-left">
-                                    <div class="number"><h3></h3></div>
+                                    <div class="number"><h3>@sectioncount</h3></div>
                                 </div>
                                 <div class="col-12 col-md-11 header-right">
                                     <h2>@subitem.SectionText</h2>
@@ -105,10 +112,27 @@
                                 var nameshort = item.ProcessName.Replace(" ", "");
                                 var protype = item.ProcessType;
                                 var value = item.valuematch;
+
+
+
+                                string number;
+                                if(protype == "SubProcess")
+                                {
+                                    number = sectioncount.ToString() + "." + subsectioncount.ToString();
+                                    subsectioncount++;
+                                    
+                                }
+                                else
+                                {
+                                    sectioncount++;
+                                    number = sectioncount.ToString();
+                                    subsectioncount = 1;
+                                }
+                            
                                 <div class="card section-count container @protype process-@value">
                                     <div class="card-header row" role="tab" id="headingOne">
                                         <div class="col-12 col-md-1 count-col">
-                                            <div class="number"><h3></h3></div>
+                                            <div class="number"><h3>@number</h3></div>
                                         </div>
                                         <div class="col-12 col-md-11 padding-left-zero">
                                             <div class="row header-row">
@@ -432,16 +456,33 @@
                             }
                         </div>
                     </div>
+                    @{
+                        sectioncount = tasks;
+                    }
                     <div class="tab-pane" id="history" role="tabpanel">
                         <div id="accordion" role="tablist">
                             @foreach(var item in (ViewBag.processtmps)){
                                 var nameshort = item.ProcessName.Replace(" ", "");
                                 var protype = item.ProcessType;
                                 var value = item.valuematch;
+
+                                string number;
+                                if(protype == "SubProcess")
+                                {
+                                    number = sectioncount.ToString() + "." + subsectioncount.ToString();
+                                    subsectioncount++;
+                                    
+                                }
+                                else
+                                {
+                                    sectioncount++;
+                                    number = sectioncount.ToString();
+                                    subsectioncount = 1;
+                                }
                                 <div class="card sops-raci-info section-count container @protype process-@value">
                                     <div class="card-header row" role="tab" id="headingOne">
                                         <div class="col-12 col-md-1 count-col">
-                                            <div class="number"><h3></h3></div>
+                                            <div class="number"><h3>@number</h3></div>
                                         </div>
                                         <div class="col-12 col-md-11 padding-left-zero">
                                             <div class="row header-row">
@@ -792,6 +833,7 @@
         $(".inner-rows").addClass(content);
     });
     var div = 0;
+    /* NOT QUITE AS OLD
     $(document).ready(function () {
         var i = 0;
         $(".section-count").each(function() {
@@ -807,6 +849,7 @@
             }
         });
     });
+    */
     /* OLD
     $(document).ready(function () {
         $(".number").each(function(i) {
