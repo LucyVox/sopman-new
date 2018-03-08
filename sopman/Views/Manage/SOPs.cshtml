@@ -460,7 +460,7 @@
                         sectioncount = tasks;
                     }
                     <div class="tab-pane" id="history" role="tabpanel">
-                        <div id="accordion" role="tablist">
+                        <div id="accordion-history" role="tablist">
                             @foreach(var item in (ViewBag.processtmps)){
                                 var nameshort = item.ProcessName.Replace(" ", "");
                                 var protype = item.ProcessType;
@@ -497,7 +497,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="collapse-tab-@nameshort" class="container collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div id="collapse-tab-@nameshort" class="container collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion-history">
                                         <div class="card-body row">
                                             <div class="col-12 col-md-12">
                                                 <p>@item.ProcessDesc</p>
@@ -858,35 +858,25 @@
     });
     */
 
-
-    $(document).ready(function () {
-        $('a').each(function(){
-        if($(this).data('toggle') == "collapse"){
-                if($(this).hasClass('collapsed')){
-                    $(this).html('SHOW DETAIL');
-                }
-                else{
-                    $(this).html('HIDE DETAIL');
-                }
-            }
-        })
-    });
-
     $(document).ready(function() {
-        $('a').each(function(){
-        if($(this).data('toggle') == "collapse"){
-            $(this).click(function(){
+       var $arr = $("a[data-toggle='collapse']");
+        $arr.each(function(){
+             $(this).click(function(){
                 if($(this).hasClass('collapsed')){
                     $(this).html('HIDE DETAIL');
+                    $arr.not(this).each(function(){
+                        $(this).html('SHOW DETAIL');
+                    });
                 }
                 else{
                     $(this).html('SHOW DETAIL');
                 }
-            })
-        }
-    });
+            });
+        });
+    
     });
 
+    
 </script>
 
 

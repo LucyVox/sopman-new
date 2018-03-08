@@ -295,33 +295,22 @@
     */
 
 
+$(document).ready(function() {
+       var $arr = $("a[data-toggle='collapse']");
+        $arr.each(function(){
+             $(this).click(function(){
+                if($(this).hasClass('collapsed')){
+                    $(this).html('HIDE DETAIL');
+                    $arr.not(this).each(function(){
+                        $(this).html('SHOW DETAIL');
+                    });
+                }
+                else{
+                    $(this).html('SHOW DETAIL');
+                }
+            });
+        });
     
-    $(document).ready(function () {
-        $('a').each(function(){
-        if($(this).data('toggle') == "collapse"){
-                if($(this).hasClass('collapsed')){
-                    $(this).html('SHOW DETAIL');
-                }
-                else{
-                    $(this).html('HIDE DETAIL');
-                }
-            }
-        })
-    });
-
-    $(document).ready(function() {
-        $('a').each(function(){
-        if($(this).data('toggle') == "collapse"){
-            $(this).click(function(){
-                if($(this).hasClass('collapsed')){
-                    $(this).html('HIDE DETAIL');
-                }
-                else{
-                    $(this).html('SHOW DETAIL');
-                }
-            })
-        }
-    });
     });
 
 
