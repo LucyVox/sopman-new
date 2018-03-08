@@ -37,6 +37,7 @@
     <Folder Include="Views\Setup\EditorTemplates\" />
     <Folder Include="Helpers\" />
     <Folder Include="Uploads\TemplateFiles\" />
+    <Folder Include="Uploads\CSV\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Data\SeedData.cs" />

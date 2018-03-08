@@ -151,6 +151,27 @@
           } );
         </script>
 
-    @RenderSection("Scripts", required: false)
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js" integrity="sha384-CchuzHs077vGtfhGYl9Qtc7Vx64rXBXdIAZIPbItbNyWIRTdG0oYAqki3Ry13Yzu" crossorigin="anonymous"></script>
+
+
+        <script>
+            var doc = new jsPDF();
+            doc.setProperties({
+                title: 'Title',
+                subject: 'This is the subject',
+                author: 'James Hall',
+                keywords: 'generated, javascript, web 2.0, ajax',
+                creator: 'MEEE'
+            });
+            var body = document.getElementsByTagName("BODY")[0];
+            doc.fromHTML(body,15,15,
+            {
+                'width': 170
+            });
+            // doc.save('Test.pdf');
+        </script>
+
+        @RenderSection("Scripts", required: false)
 </body>
 </html>
