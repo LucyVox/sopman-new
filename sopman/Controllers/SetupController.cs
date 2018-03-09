@@ -1072,25 +1072,36 @@ namespace sopman.Controllers
                     "Uploads/CSV",
                     filePath);
 
-
-
-
-            List<string> head = new List<string>();
+            int failed = 0;
             List<CSVMapModel> rows = new List<CSVMapModel>();
-            ViewBag.Rows = rows;
-
             using (StreamReader sr = new StreamReader(path))
             {
                 CsvHelper.CsvReader csv = new CsvHelper.CsvReader(sr);
                 csv.Read();
                 csv.ReadHeader();
                 while (csv.Read())
-                {
-                    var record = csv.GetRecord<CSVMapModel>();
-                    rows.Add(record);
+                {   
+                    try
+                    {
+                        var record = csv.GetRecord<CSVMapModel>();
+                        if(String.IsNullOrEmpty(record.Department) || String.IsNullOrEmpty(record.Email) || String.IsNullOrEmpty(record.JobTitle) || String.IsNullOrEmpty(record.FirstName) || String.IsNullOrEmpty(record.SecondName))
+                        {
+                            failed++;
+                        }
+                        else
+                        {
+                            rows.Add(record);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
-
+            ViewBag.Rows = rows;
+            ViewBag.Failed = failed;
             return View();
         }
     }  

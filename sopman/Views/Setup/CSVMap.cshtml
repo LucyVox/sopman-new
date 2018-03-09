@@ -1,21 +1,38 @@
-﻿<h1>This is the csv map view</h1>
-
-@{
+﻿@{
     var rows = @ViewBag.Rows;
+    int failed = @ViewBag.Failed;
 }
-
-<table>
-    <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    @foreach(var row in rows)
-    {
-        <tr>
-            <td>@row.CompanyName</td>
-            <td>@row.FirstName</td>
-            <td>@row.SecondName</td>
-        </tr>
+<div class="container py-3">
+    @if(failed > 0){
+        <div class="alert alert-danger" role="alert">
+            <b>Warning!</b>&nbsp;Number of failed records: @failed. Make sure all fields are populated.
+        </div>
     }
-</table>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Second Name</th>
+                <th scope="col">Department</th>
+                <th scope="col">Job Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var row in rows)
+            {
+                <tr>
+                    <td>@row.Email</td>
+                    <td>@row.FirstName</td>
+                    <td>@row.SecondName</td>
+                    <td>@row.Department</td>
+                    <td>@row.JobTitle</td>
+                </tr>
+            }
+            </tbody>
+    </table>
+    <form>
+        <button type="submit" class="btn btn-secondary">Submit</button>
+    </form>
+</div>

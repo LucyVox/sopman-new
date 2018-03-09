@@ -10,7 +10,7 @@ namespace sopman.Models.SetupViewModels
 {
     public class CSVMapModel
     {
-        public string CompanyName
+        public string Email
         {
             get;
             set;
@@ -25,8 +25,19 @@ namespace sopman.Models.SetupViewModels
             get;
             set;
         }
+        public string Department
+        {
+            get;
+            set;
+        }
+        public string JobTitle
+        {
+            get;
+            set;
+        }
         public CSVMapModel()
         {
+            
         }
     }
 }
