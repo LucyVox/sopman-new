@@ -1589,3 +1589,12 @@ table thead th {
     margin-bottom:20px;
 }
 
+.nav-tabs .nav-link {
+    border: 1px solid #FFFFFF55;
+}
+.nav-tabs .nav-item a {
+    color: #FFFFFF55;
+}
+.nav-tabs .nav-link:hover {
+    color: white;
+}
