@@ -350,7 +350,16 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="docs" role="tabpanel">
-                        <p>Documents will go here</p>
+                            <div class="row">
+                                <div class="col-12">
+                                </div>
+                                @foreach(var item in (ViewBag.files)){
+                                    <h3>@item.ProcessName</h3>
+                                    foreach(var img in item.ProcessFiles){
+                                        <p>@img</p>
+                                    }
+                                }
+                            </div>
                     </div>
                     <div class="tab-pane" id="history" role="tabpanel">
                         <h3>There is currently no version history</h3>

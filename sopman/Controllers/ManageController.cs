@@ -242,9 +242,15 @@ namespace sopman.Controllers
                         where i.UserId == getu
                         select i.CompanyId).Single();
 
+            var userselid = (from i in _context.CompanyClaim
+                            where i.UserId == getu
+                             select i.ClaimId).Single();
+
+            ViewBag.userselid = userselid;
+
             var top = (from i in _context.SOPTopTemplates
                        where i.CompanyId == comp
-                       select i.TopTempId).Single();
+                 select i.TopTempId).Single();
 
             var claimid = (from t in _context.CompanyClaim
                            where t.UserId == getu
@@ -273,66 +279,30 @@ namespace sopman.Controllers
 
             ViewBag.theprojects = theprojects;
 
-            var resiuser = (from u in _context.RACIResUser
-                            select new SOPOverView { RACIResID = u.RACIResID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIResChosenID = u.RACIResChosenID }).ToList();
-            var resiaccuser = (from u in _context.RACIAccUser
-                               select new SOPOverView { RACIAccID = u.RACIAccID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIAccChosenID = u.RACIAccChosenID }).ToList();
+            var getprocess = (from x in _context.SOPInstanceProcesses
+                              select new ProcessOutput { DueDate = x.DueDate, valuematch = x.valuematch, SOPTemplateID = x.SOPTemplateID }).ToList();
 
-            var resiconuser = (from u in _context.RACIConUser
-                               select new SOPOverView { RACIConID = u.RACIConID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIConChosenID = u.RACIConChosenID }).ToList();
+            ViewBag.getprocess = getprocess;
 
-            var resiinfuser = (from u in _context.RACIInfUser
-                               select new SOPOverView { RACIInfID = u.RACIInfID, UserId = u.UserId, soptoptempid = u.soptoptempid, RACIInfChosenID = u.RACIInfChosenID }).ToList();
+            var res = (from i in _context.SOPRACIRes
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, InstanceId = i.InstanceId }).ToList();
+            ViewBag.res = res;
 
-            var allusers = (from u in _context.CompanyClaim
-                            select new SOPOverView { FirstName = u.FirstName, SecondName = u.SecondName, ClaimId = u.ClaimId }).ToList();
+            var acc = (from i in _context.SOPRACIAcc
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, InstanceId = i.InstanceId }).ToList();
+            ViewBag.acc = acc;
 
-            var procdate = (from p in _context.SOPInstanceProcesses
-                            select new SOPOverView { DueDate = p.DueDate, valuematch = p.valuematch, SOPTemplateID = p.SOPTemplateID }).ToList();
+            var cons = (from i in _context.SOPRACICon
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, InstanceId = i.InstanceId }).ToList();
+            ViewBag.cons = cons;
+            var infi = (from i in _context.SOPRACIInf
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, InstanceId = i.InstanceId, }).ToList();
 
-            var process = (from t in _context.SOPProcessTempls
-                           select new SOPOverView { ProcessName = t.ProcessName, valuematch = t.valuematch }).ToList();
+            ViewBag.infi = infi;
 
-            ViewBag.resiuser = resiuser;
-            ViewBag.resiaccuser = resiaccuser;
-            ViewBag.resiconuser = resiconuser;
-            ViewBag.resiinfuser = resiinfuser;
-            ViewBag.allusers = allusers;
-            ViewBag.procdate = procdate;
-            ViewBag.process = process;
+            var deps = (from i in _context.Departments
+                        select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
 
-            var rescomp = (from i in _context.RACIResComplete
-                           select new SOPOverView { RACIResChosenID = i.RACIResChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
-
-            var resres = (from i in _context.RACIResRecusal
-                          select new SOPOverView { RACIResChosenID = i.RACIResChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
-
-            var acccomp = (from i in _context.RACIAccComplete
-                           select new SOPOverView { RACIAccChosenID = i.RACIAccChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
-
-            var accres = (from i in _context.RACIAccRecusal
-                          select new SOPOverView { RACIAccChosenID = i.RACIAccChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
-
-            var concomp = (from i in _context.RACIConComplete
-                           select new SOPOverView { RACIConChosenID = i.RACIConChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
-
-            var conres = (from i in _context.RACIConRecusal
-                          select new SOPOverView { RACIConChosenID = i.RACIConChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
-
-            var infcomp = (from i in _context.RACIInfComplete
-                           select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID, StatusComplete = i.StatusComplete }).ToList();
-
-            var infirec = (from i in _context.RACIInfRecusal
-                           select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, InstanceID = i.InstanceID, StatusRecusal = i.StatusRecusal }).ToList();
-
-            ViewBag.rescomp = rescomp;
-            ViewBag.resres = resres;
-            ViewBag.acccomp = acccomp;
-            ViewBag.accres = accres;
-            ViewBag.concomp = concomp;
-            ViewBag.conres = conres;
-            ViewBag.infcomp = infcomp;
-            ViewBag.infirec = infirec;
 
             if (getu == null)
             {
@@ -1779,7 +1749,7 @@ namespace sopman.Controllers
             ViewBag.allusers = allusers;
             var processtmps = (from i in _context.SOPProcessTempls
                                where i.SOPTemplateID == SOPTemplateID
-                               select new SOPOverView { ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
+                               select new SOPOverView { SOPTemplateID = i.SOPTemplateID , ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
             ViewBag.processtmps = processtmps;
 
 
@@ -1803,6 +1773,43 @@ namespace sopman.Controllers
                         select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
 
             ViewBag.deps = deps;
+
+            var getinstprocess = (from i in _context.SOPInstanceProcesses
+                                  select new ProcessOutput { valuematch = i.valuematch, SOPTemplateID = i.SOPTemplateID, DueDate = i.DueDate, ExternalDocument = i.ExternalDocument }).ToList();
+
+            var thetempid = SOPTemplateID;
+
+            List<ProcessOutput.aList> anotherlist = new List<ProcessOutput.aList>();
+
+            ViewBag.getinstprocess = getinstprocess;
+            foreach (var item in processtmps)
+            {
+                if(item.SOPTemplateID == thetempid){
+
+
+                    ViewBag.Date = item.DueDate;
+                    ViewBag.externDoc = item.ExternalDocument;
+
+
+                    var firstid = InstanceId;
+                    var secondid = item.valuematch;
+                    var path = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "Uploads/" + firstid + secondid);
+
+                    ProcessOutput.aList filesList = new ProcessOutput.aList();
+                    filesList.ProcessName = item.ProcessName;
+
+                    filesList.ProcessFiles = new List<string>();
+                    foreach (string file in Directory.EnumerateFiles(path, "*"))
+                    {
+                        filesList.ProcessFiles.Add(file);
+                    }
+
+                    anotherlist.Add(filesList);
+                }
+            }
+            ViewBag.files = anotherlist;
             return View();
         }
 

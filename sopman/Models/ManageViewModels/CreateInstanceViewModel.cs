@@ -64,6 +64,12 @@ namespace sopman.Models.ManageViewModels
         public string Status { get; set; }
         public string InstanceId { get; set; }
 
+        public class aList {
+            public List<string> ProcessFiles { get; set; }
+            public string ProcessName { get; set; }
+        }
+
+
         [DataType(DataType.Date)]
         public string DueDate { get; set; }
         public string ExternalDocument { get; set; }
