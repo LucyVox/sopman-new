@@ -2143,7 +2143,7 @@ namespace sopman.Controllers
 
             var comments = (from i in _context.Comments
                             where i.ExecuteSopID == exeid
-                            select new CommentsView { CommentId = i.CommentId, TheComment = i.TheComment, PostTime = i.PostTime }).ToList();
+                            select new CommentsView { CommentId = i.CommentId, TheComment = i.TheComment, PostTime = i.PostTime , UserId = i.UserId}).ToList();
 
             ViewBag.comments = comments;
 
@@ -2335,7 +2335,7 @@ namespace sopman.Controllers
 
             var comments = (from i in _context.Comments
                             where i.ExecuteSopID == exeid
-                            select new CommentsView { CommentId = i.CommentId, TheComment = i.TheComment, PostTime = i.PostTime }).ToList();
+                            select new CommentsView { CommentId = i.CommentId, TheComment = i.TheComment, PostTime = i.PostTime , UserId = i.UserId}).ToList();
 
             ViewBag.comments = comments;
 

@@ -96,6 +96,7 @@ namespace sopman.Models.ManageViewModels
         public string ExecuteSopID { get; set; }
         public string TheComment { get; set; }
         public DateTime PostTime { get; set; }
+        public int UserId { get; set; }
     }
     public class RACIRESPick
     {
