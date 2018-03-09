@@ -11,7 +11,7 @@ using sopman.Models;
 
 namespace sopman.Data
 {
-    
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public class CompanyInfo
@@ -20,7 +20,7 @@ namespace sopman.Data
             public int CompanyId { get; set; }
             public string Name { get; set; }
 
-           [DataType(DataType.ImageUrl)]
+            [DataType(DataType.ImageUrl)]
             public string Logo { get; set; }
             //public HttpPostedFileBase Logo { get; set; }
 
@@ -89,7 +89,7 @@ namespace sopman.Data
         public DbSet<ClaimComp> CompanyClaim { get; set; }
 
         public class SOPSectionCreator
-        { 
+        {
             [Key]
             public int SectionId { get; set; }
 
@@ -102,7 +102,8 @@ namespace sopman.Data
         }
         public DbSet<SOPSectionCreator> SOPSectionCreate { get; set; }
 
-        public class SingleLinkTextSec {
+        public class SingleLinkTextSec
+        {
             [Key]
             public int SubSecId { get; set; }
 
@@ -126,7 +127,7 @@ namespace sopman.Data
             public string NewTempId { get; set; }
         }
         public DbSet<EntSingleLinkTextSec> UsedSingleLinkText { get; set; }
-            
+
         public class MultilinkTextSec
         {
             [Key]
@@ -206,7 +207,8 @@ namespace sopman.Data
         }
         public DbSet<EntTableSecRows> UsedTableRows { get; set; }
 
-        public class SecOrder {
+        public class SecOrder
+        {
             [Key]
             public int SecOrderId { get; set; }
 
@@ -215,11 +217,12 @@ namespace sopman.Data
         }
         public DbSet<SecOrder> SectionOrder { get; set; }
 
-        public class DepartmentTable {
+        public class DepartmentTable
+        {
             [Key]
             public string DepartmentId { get; set; }
 
-            public string DepartmentName { get; set;  }
+            public string DepartmentName { get; set; }
 
             public int CompanyId { get; set; }
             [ForeignKey("CompanyId")]
@@ -228,9 +231,10 @@ namespace sopman.Data
         }
         public DbSet<DepartmentTable> Departments { get; set; }
 
-        public class JobTitlesTable {
+        public class JobTitlesTable
+        {
             [Key]
-            public string JobTitleId { get; set; }    
+            public string JobTitleId { get; set; }
 
             public string JobTitle { get; set; }
 
@@ -247,9 +251,10 @@ namespace sopman.Data
         }
         public DbSet<JobTitlesTable> JobTitles { get; set; }
 
-        public class SOPTemplate {
+        public class SOPTemplate
+        {
             [Key]
-            public string SOPTemplateID { get; set; } 
+            public string SOPTemplateID { get; set; }
 
             public int TopTempId { get; set; }
             [ForeignKey("TopTempId")]
@@ -265,7 +270,7 @@ namespace sopman.Data
         public class SOPTemplateProcess
         {
             [Key]
-            public string SOPTemplateProcessID { get; set; } 
+            public string SOPTemplateProcessID { get; set; }
 
             public int ProcessCount { get; set; }
 
@@ -279,18 +284,19 @@ namespace sopman.Data
 
             public string ProcessDesc { get; set; }
 
-            public string valuematch { get; set;  }
+            public string valuematch { get; set; }
 
         }
         public DbSet<SOPTemplateProcess> SOPProcess { get; set; }
 
-        public class SOPNewInstance {
+        public class SOPNewInstance
+        {
             [Key]
-            public string InstanceId { get; set; } 
+            public string InstanceId { get; set; }
 
-            public string SOPTemplateID { get; set; } 
+            public string SOPTemplateID { get; set; }
 
-            public string InstanceRef {get; set;}
+            public string InstanceRef { get; set; }
 
             public string InstanceExpire { get; set; }
 
@@ -303,14 +309,15 @@ namespace sopman.Data
         public class InstanceFiles
         {
             [Key]
-            public string InstanceFilesID { get; set; } 
-            public string InstanceId { get; set; } 
+            public string InstanceFilesID { get; set; }
+            public string InstanceId { get; set; }
 
-            public string FileString { get; set; } 
+            public string FileString { get; set; }
         }
         public DbSet<InstanceFiles> InstanceFile { get; set; }
 
-        public class Project {
+        public class Project
+        {
             [Key]
             public string ProjectId { get; set; }
 
@@ -440,11 +447,12 @@ namespace sopman.Data
         }
         public DbSet<RACIResposible> SOPRACIRes { get; set; }
 
-        public class RACIResChosenUser {
+        public class RACIResChosenUser
+        {
             [Key]
             public int RACIResChosenID { get; set; }
             public string RACIResID { get; set; }
-            public string Status {get; set;}
+            public string Status { get; set; }
             public string StatusComplete { get; set; }
             public int UserId { get; set; }
             public string soptoptempid { get; set; }
@@ -629,6 +637,17 @@ namespace sopman.Data
             public string UserId { get; set; }
         }
         public DbSet<ExecuteSop> ExecutedSop { get; set; }
+
+        public class Comment {
+            [Key]
+            public int CommentId { get; set; }
+            public string ExecuteSopID { get; set; }
+            public string TheComment { get; set; }
+            public DateTime PostTime { get; set; }
+            public int UserId { get; set; }
+
+        }
+        public DbSet<Comment> Comments { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

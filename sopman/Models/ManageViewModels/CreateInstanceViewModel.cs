@@ -63,6 +63,7 @@ namespace sopman.Models.ManageViewModels
         public int UserId { get; set; }
         public string Status { get; set; }
         public string InstanceId { get; set; }
+        public DateTime editDate { get; set; }
 
         public class aList {
             public List<string> ProcessFiles { get; set; }
@@ -88,6 +89,13 @@ namespace sopman.Models.ManageViewModels
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public int ClaimId { get; set; }
+    }
+    public class CommentsView {
+
+        public int CommentId { get; set; }
+        public string ExecuteSopID { get; set; }
+        public string TheComment { get; set; }
+        public DateTime PostTime { get; set; }
     }
     public class RACIRESPick
     {

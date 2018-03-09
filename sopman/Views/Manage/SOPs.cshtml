@@ -1,4 +1,4 @@
-@model IEnumerable<sopman.Models.ManageViewModels.SOPOverView> 
+﻿@model IEnumerable<sopman.Models.ManageViewModels.SOPOverView> 
 @using HtmlHelpers.BeginCollectionItemCore
 @using Microsoft.AspNetCore.Identity
 @{
@@ -33,6 +33,9 @@
                     </li>
                     <li class="nav-item ml-2">
                         <a class="nav-link" data-toggle="tab" href="#process" role="tab">Process Steps</a>
+                    </li>
+                    <li class="nav-item ml-2">
+                        <a class="nav-link" data-toggle="tab" href="#activity" role="tab">Activity</a>
                     </li>
                     <li class="nav-item ml-2">
                         <a class="nav-link" data-toggle="tab" href="#history" role="tab">My Tasks</a>
@@ -190,6 +193,11 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
+
+
+                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
+
 
                                                                                 <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
                                                                                 <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
@@ -519,6 +527,81 @@
                             }
                         </div>
                     </div>
+                    <div class="tab-pane" id="activity" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12 col-md-10">
+                                  @foreach(var item in (ViewBag.comments)) {
+                                    <p>@item.PostTime</p>
+                                    <p>@item.TheComment</p>
+                                  }
+                                @foreach(var item in (ViewBag.processtmps)){
+                                    var pending = "Pending";
+                                    foreach(var sub in (ViewBag.res)){
+                                        if(sub.valuematch == item.valuematch){
+                                            if(sub.Status == "Pending"){
+                                            }else {
+                                                foreach(var name in (ViewBag.allusers)){
+                                                    if(sub.UserId == name.ClaimId){
+                                                        <p>@sub.editDate</p>
+                                                        <p>@name.FirstName @name.SecondName has completed @item.ProcessName</p>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    foreach(var sub in (ViewBag.acc)){
+                                        if(sub.valuematch == item.valuematch){
+                                            if(sub.Status == "Pending"){
+                                            }else {
+                                               foreach(var name in (ViewBag.allusers)){
+                                                    if(sub.UserId == name.ClaimId){
+                                                        <p>@sub.editDate</p>
+                                                        <p>@name.FirstName @name.SecondName has completed @item.ProcessName</p>
+                                                    }
+                                                }
+                                            }
+                                         }
+                                    }
+                                    foreach(var sub in (ViewBag.cons)){
+                                        if(sub.valuematch == item.valuematch){
+                                            if(sub.Status == "Pending"){
+                                            }else {
+                                                foreach(var name in (ViewBag.allusers)){
+                                                    if(sub.UserId == name.ClaimId){
+                                                        <p>@sub.editDate</p>
+                                                        <p>@name.FirstName @name.SecondName has completed @item.ProcessName</p>
+                                                    }
+                                                }
+                                            }
+                                         }
+                                    }
+                                    foreach(var sub in (ViewBag.infi)){
+                                        if(sub.valuematch == item.valuematch){
+                                             if(sub.Status == "Pending"){
+                                            }else {
+                                               foreach(var name in (ViewBag.allusers)){
+                                                    if(sub.UserId == name.ClaimId){
+                                                        <p>@sub.editDate</p>
+                                                        <p>@name.FirstName @name.SecondName has completed @item.ProcessName</p>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                                <div class="add-new-comment">
+                                    
+                                    <textarea name="newcomment"></textarea>
+                                    <input type="submit" value="post">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                
+                            </div>
+                        </div>
+                     </div>
                     @{
                         sectioncount = tasks;
                     }

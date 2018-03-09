@@ -158,6 +158,24 @@ namespace sopman.Data.Migrations
                     b.ToTable("CompanyClaim");
                 });
 
+            modelBuilder.Entity("sopman.Data.ApplicationDbContext+Comment", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ExecuteSopID");
+
+                    b.Property<DateTime>("PostTime");
+
+                    b.Property<string>("TheComment");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("CommentId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("sopman.Data.ApplicationDbContext+CompanyInfo", b =>
                 {
                     b.Property<int>("CompanyId")

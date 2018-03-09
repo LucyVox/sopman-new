@@ -2141,6 +2141,13 @@ namespace sopman.Controllers
 
             ViewBag.deps = deps;
 
+            var comments = (from i in _context.Comments
+                            where i.ExecuteSopID == exeid
+                            select new CommentsView { CommentId = i.CommentId, TheComment = i.TheComment, PostTime = i.PostTime }).ToList();
+
+            ViewBag.comments = comments;
+
+
             return View();
         }
 
@@ -2306,18 +2313,18 @@ namespace sopman.Controllers
             ViewBag.ifinfres = ifinfres;
 
             var res = (from i in _context.SOPRACIRes
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.res = res;
 
             var acc = (from i in _context.SOPRACIAcc
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.acc = acc;
 
             var cons = (from i in _context.SOPRACICon
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.cons = cons;
             var infi = (from i in _context.SOPRACIInf
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
 
             ViewBag.infi = infi;
 
@@ -2326,8 +2333,30 @@ namespace sopman.Controllers
 
             ViewBag.deps = deps;
 
+            var comments = (from i in _context.Comments
+                            where i.ExecuteSopID == exeid
+                            select new CommentsView { CommentId = i.CommentId, TheComment = i.TheComment, PostTime = i.PostTime }).ToList();
+
+            ViewBag.comments = comments;
+
+
             if (ModelState.IsValid)
             {
+                var newcomment = Request.Form["newcomment"];
+                if (!String.IsNullOrEmpty(newcomment))
+                {
+                    ApplicationDbContext.Comment comment = new ApplicationDbContext.Comment();
+
+                    comment.TheComment = newcomment;
+                    comment.PostTime = DateTime.Now;
+                    comment.ExecuteSopID = exeid;
+                    comment.UserId = getuserid;
+
+                    _context.Add(comment);
+                    _context.SaveChanges();
+                }
+
+
                 foreach (var data in (ViewBag.processtmps))
                 {
                     foreach (var item in res)
@@ -2471,6 +2500,7 @@ namespace sopman.Controllers
                         }
                     }
                 }
+
             }
             string url1 = Url.Content("SOPs" + Uri.EscapeUriString("?=") + exeid);
             string newurl = url1.Replace("%3F%3D", "?=");
