@@ -409,6 +409,7 @@ namespace sopman.Data
             public int UserId { get; set; }
             public string Status { get; set; }
             public string InstanceId { get; set; }
+            public DateTime editDate { get; set; }
         }
         public DbSet<RACIAccount> SOPRACIAcc { get; set; }
 
@@ -434,6 +435,7 @@ namespace sopman.Data
             public int UserId { get; set; }
             public string Status { get; set; }
             public string InstanceId { get; set; }
+            public DateTime editDate { get; set; }
 
         }
         public DbSet<RACIResposible> SOPRACIRes { get; set; }
@@ -591,6 +593,7 @@ namespace sopman.Data
             public int UserId { get; set; }
             public string Status { get; set; }
             public string InstanceId { get; set; }
+            public DateTime editDate { get; set; }
         }
         public DbSet<RACIConsulted> SOPRACICon { get; set; }
 
@@ -613,6 +616,7 @@ namespace sopman.Data
             public int UserId { get; set; }
             public string Status { get; set; }
             public string InstanceId { get; set; }
+            public DateTime editDate { get; set; }
         }
         public DbSet<RACIInformed> SOPRACIInf { get; set; }
 

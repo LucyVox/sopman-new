@@ -1318,7 +1318,7 @@ table thead th {
     text-align: center;
     align-items: center
 }
-.Recusal.sop-status {
+.Recused.sop-status {
     background-color: #DEDEDE;
      color: #000;
     display: flex;
@@ -1326,7 +1326,7 @@ table thead th {
     align-items: center
 }
 
-.complete.sop-status {
+.Complete.sop-status {
     background-color: #96C9DB;
     color: #fff;
     display: flex;
@@ -1415,6 +1415,10 @@ table thead th {
 .theproject a {
     color: #96C9DB;
 }
+.modal-backdrop {
+    display:none;
+}
+
 @media (max-width: 768px) {
     .top-nav .site-name {
             width: 100%

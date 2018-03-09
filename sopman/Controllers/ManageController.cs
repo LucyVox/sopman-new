@@ -1889,7 +1889,21 @@ namespace sopman.Controllers
 
             var allusers = (from u in _context.CompanyClaim
                             select new SOPOverView { FirstName = u.FirstName, SecondName = u.SecondName, ClaimId = u.ClaimId }).ToList();
+            var res = (from i in _context.SOPRACIRes
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.res = res;
 
+            var acc = (from i in _context.SOPRACIAcc
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.acc = acc;
+
+            var cons = (from i in _context.SOPRACICon
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.cons = cons;
+            var infi = (from i in _context.SOPRACIInf
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+
+            ViewBag.infi = infi;
             ViewBag.thesecs = getsecs;
             ViewBag.thesin = getsin;
             ViewBag.getmul = getmul;
@@ -1905,6 +1919,10 @@ namespace sopman.Controllers
                                where i.SOPTemplateID == SOPTemplateID
                                select new SOPOverView { ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
             ViewBag.processtmps = processtmps;
+
+
+
+
             if (ModelState.IsValid)
             {
 
@@ -2093,6 +2111,28 @@ namespace sopman.Controllers
                             select new SOPOverView { RACIConChosenID = i.RACIInfChosenID, StatusRecusal = i.StatusRecusal, InstanceID = i.InstanceID }).ToList();
             ViewBag.ifinfres = ifinfres;
 
+
+            var res = (from i in _context.SOPRACIRes
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.res = res;
+
+            var acc = (from i in _context.SOPRACIAcc
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.acc = acc;
+
+            var cons = (from i in _context.SOPRACICon
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.cons = cons;
+            var infi = (from i in _context.SOPRACIInf
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+
+            ViewBag.infi = infi;
+
+            var deps = (from i in _context.Departments
+                        select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
+
+            ViewBag.deps = deps;
+
             return View();
         }
 
@@ -2257,125 +2297,179 @@ namespace sopman.Controllers
                             select new SOPOverView { RACIConChosenID = i.RACIInfChosenID, StatusRecusal = i.StatusRecusal, InstanceID = i.InstanceID }).ToList();
             ViewBag.ifinfres = ifinfres;
 
+            var res = (from i in _context.SOPRACIRes
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.res = res;
+
+            var acc = (from i in _context.SOPRACIAcc
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.acc = acc;
+
+            var cons = (from i in _context.SOPRACICon
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.cons = cons;
+            var infi = (from i in _context.SOPRACIInf
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+
+            ViewBag.infi = infi;
+
+            var deps = (from i in _context.Departments
+                        select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
+
+            ViewBag.deps = deps;
+
             if (ModelState.IsValid)
             {
                 foreach (var data in (ViewBag.processtmps))
                 {
-                    foreach (var sub in (ViewBag.resiuser))
+                    foreach (var item in res)
                     {
-                        foreach (var name in (ViewBag.allusers))
+                        if (item.valuematch == data.valuematch)
                         {
-                            if ((sub.RACIResID == data.valuematch) && (sub.soptoptempid == getexe) && (name.ClaimId == sub.UserId))
+                            var getvalue = (from i in _context.SOPRACIRes
+                                            where i.valuematch == item.valuematch
+                                            select i.valuematch).First();
+
+
+                            foreach (var name in allusers)
                             {
-                                string getform = Request.Form["sop-number-resp" + name.FirstName + name.SecondName + sub.RACIResChosenID + data.valuematch];
-                                ApplicationDbContext.RACIResComp chosencomplete = new ApplicationDbContext.RACIResComp();
-                                ApplicationDbContext.RACIResRecu chosenrecusal = new ApplicationDbContext.RACIResRecu();
-                                var subid = sub.RACIResChosenID;
-                                if (getform.Contains("Complete"))
+                                if (item.UserId == name.ClaimId)
                                 {
-                                    chosencomplete.RACIResChosenID = subid;
-                                    chosencomplete.InstanceID = exeid;
-                                    chosencomplete.StatusComplete = "Complete";
-                                    _context.Add(chosencomplete);
-                                }else if (getform.Contains("Recusal"))
-                                {
-                                    chosenrecusal.RACIResChosenID = subid;
-                                    chosenrecusal.InstanceID = exeid;
-                                    chosenrecusal.StatusRecusal = "Recusal";
-                                    _context.Add(chosenrecusal);
+                                    var updateres = _context.SOPRACIRes.FirstOrDefault(x => x.soptoptempid == gettopid && x.valuematch == getvalue && x.UserId == item.UserId);
+                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIResChosenID + item.valuematch;
+                                    string firstname = name.FirstName;
+                                    var getname = Request.Form["signature-" + namenospace];
+                                    var getrecuse = Request.Form["recuse-" + namenospace];
+                                    if (!String.IsNullOrEmpty(getname))
+                                    {
+                                        updateres.Status = "Complete";
+                                        updateres.editDate = DateTime.Now;
+                                    }
+                                    else if (!String.IsNullOrEmpty(getrecuse))
+                                    {
+                                        updateres.Status = "Recused";
+                                        updateres.editDate = DateTime.Now;
+                                    }
+
+                                    _context.SOPRACIRes.Update(updateres);
+                                    _context.SaveChanges();
                                 }
-                                _context.SaveChanges();
                             }
+
                         }
                     }
-                    foreach (var sub in (ViewBag.resiaccuser))
+                    foreach (var item in acc)
                     {
-                        foreach (var name in (ViewBag.allusers))
+                        if (item.valuematch == data.valuematch)
                         {
-                            if ((sub.RACIAccID == data.valuematch) && (sub.soptoptempid == getexe) && (name.ClaimId == sub.UserId))
+                            var getvalue = (from i in _context.SOPRACIAcc
+                                            where i.valuematch == item.valuematch
+                                            select i.valuematch).First();
+
+                            foreach (var name in allusers)
                             {
-                                string getform = Request.Form["sop-number-acc" + name.FirstName + name.SecondName + sub.RACIAccChosenID + data.valuematch];
-                                ApplicationDbContext.RACIAccComp chosenacccomplete = new ApplicationDbContext.RACIAccComp();
-                                ApplicationDbContext.RACIAccRecu chosenaccrecusal = new ApplicationDbContext.RACIAccRecu();
-                                var subidacc = sub.RACIAccChosenID;
-                                Console.WriteLine(subidacc);
-                                if (getform.Contains("Complete"))
+                                if (item.UserId == name.ClaimId)
                                 {
-                                    chosenacccomplete.RACIAccChosenID = subidacc;
-                                    chosenacccomplete.InstanceID = exeid;
-                                    chosenacccomplete.StatusComplete = "Complete";
-                                    _context.Add(chosenacccomplete);
+                                    var updateacc = _context.SOPRACIAcc.FirstOrDefault(x => x.soptoptempid == gettopid && x.valuematch == getvalue && x.UserId == item.UserId);
+                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIAccChosenID + item.valuematch;
+                                    string firstname = name.FirstName;
+                                    var getname = Request.Form["signature-" + namenospace];
+                                    var getrecuse = Request.Form["recuse-" + namenospace];
+                                    if (!String.IsNullOrEmpty(getname))
+                                    {
+                                        updateacc.Status = "Complete";
+                                        updateacc.editDate = DateTime.Now;
+                                    }
+                                    else if (!String.IsNullOrEmpty(getrecuse))
+                                    {
+                                        updateacc.Status = "Recused";
+                                        updateacc.editDate = DateTime.Now;
+                                    }
+
+                                    _context.SOPRACIAcc.Update(updateacc);
+                                    _context.SaveChanges();
+                                    Console.WriteLine(getname);
                                 }
-                                else if (getform.Contains("Recusal"))
-                                {
-                                    chosenaccrecusal.RACIAccChosenID = subidacc;
-                                    chosenaccrecusal.InstanceID = exeid;
-                                    chosenaccrecusal.StatusRecusal = "Recusal";
-                                    _context.Add(chosenaccrecusal);
-                                }
-                                _context.SaveChanges();
                             }
+
                         }
                     }
-                    foreach (var sub in (ViewBag.resiconuser))
+                    foreach (var item in cons)
                     {
-                        foreach (var name in (ViewBag.allusers))
+                        if (item.valuematch == data.valuematch)
                         {
-                            if ((sub.RACIConID == data.valuematch) && (sub.soptoptempid == getexe) && (name.ClaimId == sub.UserId))
+                            var getvalue = (from i in _context.SOPRACICon
+                                            where i.valuematch == item.valuematch
+                                            select i.valuematch).First();
+
+                            foreach (var name in allusers)
                             {
-                                string getform = Request.Form["sop-number-con" + name.FirstName + name.SecondName + sub.RACIConChosenID + data.valuematch];
-                                ApplicationDbContext.RACIConComp chosencomplete = new ApplicationDbContext.RACIConComp();
-                                ApplicationDbContext.RACIConRecu chosenrecusal = new ApplicationDbContext.RACIConRecu();
-                                var subidcon = sub.RACIConChosenID;
-                                if (getform.Contains("Complete"))
+                                if (item.UserId == name.ClaimId)
                                 {
-                                    chosencomplete.RACIConChosenID = subidcon;
-                                    chosencomplete.InstanceID = exeid;
-                                    chosencomplete.StatusComplete = "Complete";
-                                    _context.Add(chosencomplete);
+                                    var updatecon = _context.SOPRACICon.FirstOrDefault(x => x.soptoptempid == gettopid && x.valuematch == getvalue && x.UserId == item.UserId);
+                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIConChosenID + item.valuematch;
+                                    string firstname = name.FirstName;
+                                    var getname = Request.Form["signature-" + namenospace];
+                                    var getrecuse = Request.Form["recuse-" + namenospace];
+                                    if (!String.IsNullOrEmpty(getname))
+                                    {
+                                        updatecon.Status = "Complete";
+                                        updatecon.editDate = DateTime.Now;
+                                    }
+                                    else if(!String.IsNullOrEmpty(getrecuse)){
+                                        updatecon.Status = "Recused";
+                                        updatecon.editDate = DateTime.Now;
+                                    }
+
+                                    _context.SOPRACICon.Update(updatecon);
+                                    _context.SaveChanges();
+
+                                    Console.WriteLine(getname);
                                 }
-                                else if (getform.Contains("Recusal"))
-                                {
-                                    chosenrecusal.RACIConChosenID = subidcon;
-                                    chosenrecusal.InstanceID = exeid;
-                                    chosenrecusal.StatusRecusal = "Recusal";
-                                    _context.Add(chosenrecusal);
-                                }
-                                _context.SaveChanges();
                             }
+
                         }
                     }
-                    foreach (var sub in (ViewBag.resiinfuser))
+                    foreach (var item in infi)
                     {
-                        foreach (var name in (ViewBag.allusers))
+                        if (item.valuematch == data.valuematch)
                         {
-                            if ((sub.RACIInfID == data.valuematch) && (sub.soptoptempid == getexe) && (name.ClaimId == sub.UserId))
+                            var getvalue = (from i in _context.SOPRACIInf
+                                            where i.valuematch == item.valuematch
+                                            select i.valuematch).First();
+
+                            foreach (var name in allusers)
                             {
-                                string getform = Request.Form["sop-number-inf" + name.FirstName + name.SecondName + sub.RACIInfChosenID + data.valuematch];
-                                ApplicationDbContext.RACIInfComp chosencomplete = new ApplicationDbContext.RACIInfComp();
-                                ApplicationDbContext.RACIInfRecu chosenrecusal = new ApplicationDbContext.RACIInfRecu();
-                                var subidinf = sub.RACIInfChosenID;
-                                if (getform.Contains("Complete"))
+                                if (item.UserId == name.ClaimId)
                                 {
-                                    chosencomplete.RACIInfChosenID = subidinf;
-                                    chosencomplete.InstanceID = exeid;
-                                    chosencomplete.StatusComplete = "Complete";
-                                    _context.Add(chosencomplete);
+                                    var updateinf = _context.SOPRACIInf.FirstOrDefault(x => x.soptoptempid == gettopid && x.valuematch == getvalue && x.UserId == item.UserId);
+                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIInfChosenID + item.valuematch;
+                                    string firstname = name.FirstName;
+                                    var getname = Request.Form["signature-" + namenospace];
+                                    var getrecuse = Request.Form["recuse-" + namenospace];
+                                    if (!String.IsNullOrEmpty(getname))
+                                    {
+                                        updateinf.Status = "Complete";
+                                        updateinf.editDate = DateTime.Now;
+                                    }
+                                    else if (!String.IsNullOrEmpty(getrecuse))
+                                    {
+                                        updateinf.Status = "Recused";
+                                        updateinf.editDate = DateTime.Now;
+                                    }
+                                    _context.SOPRACIInf.Update(updateinf);
+                                    _context.SaveChanges();
+
                                 }
-                                else if (getform.Contains("Recusal"))
-                                {
-                                    chosenrecusal.RACIInfChosenID = subidinf;
-                                    chosenrecusal.InstanceID = exeid;
-                                    chosenrecusal.StatusRecusal = "Recusal";
-                                    _context.Add(chosenrecusal);
-                                }
-                                _context.SaveChanges();
                             }
+
                         }
                     }
                 }
             }
-            return View();
+            string url1 = Url.Content("SOPs" + Uri.EscapeUriString("?=") + exeid);
+            string newurl = url1.Replace("%3F%3D", "?=");
+            return new RedirectResult(newurl);
         }
 
 

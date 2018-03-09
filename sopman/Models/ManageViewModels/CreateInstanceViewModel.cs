@@ -53,6 +53,9 @@ namespace sopman.Models.ManageViewModels
     {
         public string SOPTemplateID { get; set; }
         public int RACIResChosenID { get; set; }
+        public int RACIAccChosenID { get; set; }
+        public int RACIConChosenID { get; set; }
+        public int RACIInfChosenID { get; set; }
         public string ProcessName { get; set; }
         public string ProcessDesc { get; set; }
         public string valuematch { get; set; }

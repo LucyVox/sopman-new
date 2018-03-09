@@ -447,6 +447,8 @@ namespace sopman.Data.Migrations
 
                     b.Property<int>("UserId");
 
+                    b.Property<DateTime>("editDate");
+
                     b.Property<string>("soptoptempid");
 
                     b.Property<string>("valuematch");
@@ -547,6 +549,8 @@ namespace sopman.Data.Migrations
 
                     b.Property<int>("UserId");
 
+                    b.Property<DateTime>("editDate");
+
                     b.Property<string>("soptoptempid");
 
                     b.Property<string>("valuematch");
@@ -614,6 +618,8 @@ namespace sopman.Data.Migrations
                     b.Property<string>("Status");
 
                     b.Property<int>("UserId");
+
+                    b.Property<DateTime>("editDate");
 
                     b.Property<string>("soptoptempid");
 
@@ -698,6 +704,8 @@ namespace sopman.Data.Migrations
                     b.Property<string>("Status");
 
                     b.Property<int>("UserId");
+
+                    b.Property<DateTime>("editDate");
 
                     b.Property<string>("soptoptempid");
 
