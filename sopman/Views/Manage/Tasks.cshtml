@@ -26,44 +26,28 @@
                                     foreach(var ist in (@ViewBag.getinst)){
                                         if(ist.SOPTemplateID == item.SOPTemplateID){
                                             if(sub.SectionId == ist.InstanceId){
-                                                foreach(var res in (ViewBag.res)){
-                                                    if(res.UserId == ViewBag.userselid){
-                                                        @ViewBag.userselid
-                                                        <p>@res.UserId @ist.SOPTemplateID</p>
+                                                foreach(var proc in (@ViewBag.processtmps)) {
+                                                    if(proc.SOPTemplateID == ist.SectionId){
+                                                        foreach(var res in (ViewBag.res)){
+                                                            if(res.valuematch == proc.valuematch){
+                                                                <tr>
+                                                                <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@item.TempName</a></th>
+                                                                @foreach(var proj in (ViewBag.theprojects)){
+                                                                    if(ist.ProjectId == proj.ProjectId){
+                                                                         <th>@proj.ProjectName</th>
+                                                                    }
+                                                                }
+                                                                 <th>@ist.InstanceExpire</th>
+                                                            </tr>
+                                                            }
                                                         }
                                                     }
-                                                }
+                                                }   
+                                               }
                                             }
-                                     }
-                                }
-                            }
-                                @foreach(var res in (ViewBag.res)){
-                                        if(res.UserId == @ViewBag.userselid){
-                                            foreach(var inst in (ViewBag.getinst)){
-                                                if(res.InstanceId == inst.InstanceId){
-                                                     <tr>
-                                                        <td>@inst.InstanceRef</td>
-                                                        <td>
-                                                            @foreach(var poj in (ViewBag.theprojects)){
-                                                                if(inst.ProjectId == poj.ProjectId){
-                                                                    <a href="/Manage/ViewProject?=@poj.ProjectId">@poj.ProjectName</a>
-                                                                }
-                                                            }
-                                                         </td>
-                                                        <td>
-                                                           
-                                                        
-                                                        </td>
-                                                        <td>
-                                                        </td>
-                                                        <td>@res.Status</td>
-                                                    </tr>
-                                                }
-                                            }
-                                        
+                                        }
                                     }
-                                }
-                            }
+                               }
                         </tbody>
                     </table>
                 </div>

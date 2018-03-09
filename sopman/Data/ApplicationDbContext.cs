@@ -649,6 +649,16 @@ namespace sopman.Data
         }
         public DbSet<Comment> Comments { get; set; }
 
+
+        public class Archived
+        {
+            [Key]
+            public int ArchiveId { get; set; }
+            public string InstancedId { get; set; }
+        }
+
+        public DbSet<Archived> ArchivedInstacned { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

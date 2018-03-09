@@ -128,6 +128,18 @@ namespace sopman.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("sopman.Data.ApplicationDbContext+Archived", b =>
+                {
+                    b.Property<int>("ArchiveId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("InstancedId");
+
+                    b.HasKey("ArchiveId");
+
+                    b.ToTable("ArchivedInstacned");
+                });
+
             modelBuilder.Entity("sopman.Data.ApplicationDbContext+ClaimComp", b =>
                 {
                     b.Property<int>("ClaimId")

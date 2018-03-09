@@ -2,7 +2,7 @@
 @using HtmlHelpers.BeginCollectionItemCore
 @using Microsoft.AspNetCore.Identity
 @{
-    ViewData["Title"] = "The SOP";
+    ViewData["Title"] = "Edit SOP";
     int sectioncount = 0;
     int subsectioncount = 0;
     int tasks = 0; // A second section counter to reset the count for the 'Tasks' tab
@@ -25,7 +25,6 @@
             </div>
             <div class="col-12 col-md-2 text-right">
                     <input type="submit" class="btn" value="Save" />
-                    <a class="white-btn mod-btn" href="/Manage/EditSOP?=@ViewBag.exeid">Modify</a>
             </div>
             <hr class="invisible-divider"/>
             <div class="col-12">
@@ -35,12 +34,6 @@
                     </li>
                     <li class="nav-item ml-2">
                         <a class="nav-link" data-toggle="tab" href="#process" role="tab">Process Steps</a>
-                    </li>
-                    <li class="nav-item ml-2">
-                        <a class="nav-link" data-toggle="tab" href="#activity" role="tab">Activity</a>
-                    </li>
-                    <li class="nav-item ml-2">
-                        <a class="nav-link" data-toggle="tab" href="#history" role="tab">My Tasks</a>
                     </li>
                     <li class="nav-item ml-2">
                         <a class="nav-link" data-toggle="tab" href="#docs" role="tab">Documents</a>
@@ -157,7 +150,7 @@
                                     <div id="collapse-@nameshort" class="container collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                                         <div class="card-body sops-raci-info row">
                                             <div class="col-12 col-md-12">
-                                                <p>@item.ProcessDesc</p>
+                                                <textarea name="desc-@value" class="form-control">@item.ProcessDesc</textarea>
                                             </div>
                                             <div class="col-12 col-md-12">
                                                 <div class="row">
@@ -529,111 +522,7 @@
                             }
                         </div>
                     </div>
-                    <div class="tab-pane" id="activity" role="tabpanel">
-                        <div class="row">
-                            <div class="col-12 col-md-9">
-                                  @foreach(var item in (ViewBag.comments)) {
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <p class="mb-1"><small class="text-muted">@item.PostTime.ToString("dd MMM yyyy")</small></p>
-                                        @foreach(var name in (ViewBag.allusers)){
-                                                    if(item.UserId == name.ClaimId){
-                                                    <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;posted a comment</p>
-                                        }}
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="mb-1">@item.TheComment</p>
-                                            </div>
-                                        </div>
 
-                                  }
-                                @foreach(var item in (ViewBag.processtmps)){
-                                    var pending = "Pending";
-                                    foreach(var sub in (ViewBag.res)){
-                                        if(sub.valuematch == item.valuematch){
-                                            if(sub.Status == "Pending"){
-                                            }else {
-                                                foreach(var name in (ViewBag.allusers)){
-                                                    if(sub.UserId == name.ClaimId){
-                                                    <div class="card">
-                                                        <div class="card-header">
-                                                            <p class="mb-1"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
-                                                            <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
-                                                        </div>
-                                                    </div>
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    foreach(var sub in (ViewBag.acc)){
-                                        if(sub.valuematch == item.valuematch){
-                                            if(sub.Status == "Pending"){
-                                            }else {
-                                               foreach(var name in (ViewBag.allusers)){
-                                                    if(sub.UserId == name.ClaimId){
-                                                        <div class="card">
-                                                        <div class="card-header">
-                                                            <p class="mb-1"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
-                                                            <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
-                                                        </div>
-                                                    </div>
-                                                    }
-                                                }
-                                            }
-                                         }
-                                    }
-                                    foreach(var sub in (ViewBag.cons)){
-                                        if(sub.valuematch == item.valuematch){
-                                            if(sub.Status == "Pending"){
-                                            }else {
-                                                foreach(var name in (ViewBag.allusers)){
-                                                    if(sub.UserId == name.ClaimId){
-                                                        <div class="card">
-                                                        <div class="card-header">
-                                                            <p class="mb-1"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
-                                                            <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
-                                                        </div>
-                                                    </div>
-                                                    }
-                                                }
-                                            }
-                                         }
-                                    }
-                                    foreach(var sub in (ViewBag.infi)){
-                                        if(sub.valuematch == item.valuematch){
-                                             if(sub.Status == "Pending"){
-                                            }else {
-                                               foreach(var name in (ViewBag.allusers)){
-                                                    if(sub.UserId == name.ClaimId){
-                                                        <div class="card">
-                                                        <div class="card-header">
-                                                            <p class="mb-1"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
-                                                            <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
-                                                        </div>
-                                                    </div>
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                }
-
-                                <div class="row mt-3">
-                                    <div class="col-12">
-                                        <textarea class="w-100" placeholder="Add a comment" name="newcomment"></textarea>
-                                    </div>
-                                    <div class="col-12 d-flex flex-row-reverse">
-                                        <button type="submit" value="post" class="btn btn-secondary">POST</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-2">
-                                
-                            </div>
-                        </div>
-                     </div>
                     @{
                         sectioncount = tasks;
                     }
@@ -1176,5 +1065,6 @@
 
     
 </script>
+
 
 

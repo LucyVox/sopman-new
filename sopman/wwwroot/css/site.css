@@ -22,8 +22,17 @@
     padding-left:0px;
 }
 
+.mod-btn {
+    display: inline-block;
+    background: #fff;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    color: #000
+}
 .list-table {
-    border: none !important;
+    border: none !important
 }
 .list-table a {
     color: #476176
