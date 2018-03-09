@@ -2350,12 +2350,10 @@ namespace sopman.Controllers
                                         updateres.Status = "Recused";
                                         updateres.editDate = DateTime.Now;
                                     }
-
                                     _context.SOPRACIRes.Update(updateres);
                                     _context.SaveChanges();
                                 }
                             }
-
                         }
                     }
                     foreach (var item in acc)
@@ -2437,7 +2435,6 @@ namespace sopman.Controllers
                             var getvalue = (from i in _context.SOPRACIInf
                                             where i.valuematch == item.valuematch
                                             select i.valuematch).First();
-
                             foreach (var name in allusers)
                             {
                                 if (item.UserId == name.ClaimId)
