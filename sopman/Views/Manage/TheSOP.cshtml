@@ -25,19 +25,19 @@
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">SOP Overview</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item ml-2">
                         <a class="nav-link" data-toggle="tab" href="#process" role="tab">Process Steps</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item ml-2">
                         <a class="nav-link" data-toggle="tab" href="#docs" role="tab">Documents</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item ml-2">
                         <a class="nav-link" data-toggle="tab" href="#history" role="tab">Version History</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="row white-row">
+        <div class="row white-row pt-3">
             <div class="col-12">
                 <div class="tab-content">
                     <div class="tab-pane active" id="overview" role="tabpanel">
@@ -121,6 +121,11 @@
                                     number = sectioncount.ToString();
                                     subsectioncount = 1;
                                 }
+
+                                int resCount = 1;
+                                int accCount = 1;
+                                int conCount = 1;
+                                int infCount = 1;
                             
                                 <div class="card container @protype process-@value">
                                     <div class="card-header row" role="tab" id="headingOne">
@@ -155,17 +160,41 @@
                                                             <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
                                                                 if(sub.UserId == name.ClaimId){
-                                                                 <p>@name.FirstName @name.SecondName</p>
-                                                                <p>@sub.Status</p>
+                                                                    <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                        <div class="row">
+                                                                            <div class="col-12 col-md-1 sop-number">
+                                                                                <h3>@resCount</h3>
+                                                                            </div>
+                                                                            <div class="col-12 col-md-3 sop-status d-flex align-items-center">
+                                                                                <h5>@sub.Status</h5>
+                                                                            </div>
+                                                                            <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                                <h4>@name.FirstName @name.SecondName</h4>
+                                                                                <!-- Getting the department -->    
+                                                                                @foreach(var dep in (ViewBag.deps)){
+                                                                                    if(sub.DepartmentId == dep.DepartmentId){
+                                                                                        <p class="m-0">@dep.DepartmentName</p>
+                                                                                    }
+                                                                                }
+                                                                            </div>
+                                                                            <div class="col-12 col-md-2 sop-buttons">
+                                                                                    <div class="dropdown h-100">
+                                                                                      <button class="btn btn-secondary h-100 w-100" type="button" id="resbtn-@resCount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                        <i class="material-icons">menu</i>
+                                                                                      </button>
+                                                                                      <div class="dropdown-menu" aria-labelledby="resbtn-@resCount">
+                                                                                        <div class="complete"><p>Complete Task</p></div>
+                                                                                        <div class="recusal"><p>Request recusal</p></div>
+                                                                                      </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                        </div>
+                                                                    </div>
                                                                 }
                                                              }
-                                                            <!-- Getting the department -->    
-                                                            foreach(var dep in (ViewBag.deps)){
-                                                                if(sub.DepartmentId == dep.DepartmentId){
-                                                                    <p>@dep.DepartmentName</p>
-                                                                }
-                                                            }
+                                                            resCount++;
                                                         }
+
                                                     }
                                                 </div>
                                             </div>
@@ -179,16 +208,40 @@
                                                             <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
                                                                 if(sub.UserId == name.ClaimId){
-                                                                 <p>@name.FirstName @name.SecondName</p>
-                                                                <p>@sub.Status</p>
+                                                                <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                        <div class="row">
+                                                                            <div class="col-12 col-md-1 sop-number">
+                                                                                <h3>@accCount</h3>
+                                                                            </div>
+                                                                            <div class="col-12 col-md-3 sop-status d-flex align-items-center">
+                                                                                <h5>@sub.Status</h5>
+                                                                            </div>
+                                                                            <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                                <h4>@name.FirstName @name.SecondName</h4>
+                                                                                <!-- Getting the department -->    
+                                                                                @foreach(var dep in (ViewBag.deps)){
+                                                                                    if(sub.DepartmentId == dep.DepartmentId){
+                                                                                        <p class="m-0">@dep.DepartmentName</p>
+                                                                                    }
+                                                                                }
+                                                                            </div>
+                                                                            <div class="col-12 col-md-2 sop-buttons">
+                                                                                    <div class="dropdown h-100">
+                                                                                      <button class="btn btn-secondary h-100 w-100" type="button" id="resbtn-@accCount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                        <i class="material-icons">menu</i>
+                                                                                      </button>
+                                                                                      <div class="dropdown-menu" aria-labelledby="resbtn-@accCount">
+                                                                                        <div class="complete"><p>Complete Task</p></div>
+                                                                                        <div class="recusal"><p>Request recusal</p></div>
+                                                                                      </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                        </div>
+                                                                    </div>
                                                                 }
                                                              }
-                                                            <!-- Getting the department -->    
-                                                            foreach(var dep in (ViewBag.deps)){
-                                                                if(sub.DepartmentId == dep.DepartmentId){
-                                                                    <p>@dep.DepartmentName</p>
-                                                                }
-                                                            }
+                                                            
+                                                            accCount++;
                                                         }
                                                     }
                                                 </div>
@@ -200,21 +253,44 @@
                                                     </div>
                                                     @foreach(var sub in (ViewBag.cons)){
                                                         if(sub.valuematch == item.valuematch){
-                                                            <!-- Getting the first and second name from users -->
+                                                             <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
                                                                 if(sub.UserId == name.ClaimId){
-                                                                 <p>@name.FirstName @name.SecondName</p>
-                                                                <p>@sub.Status</p>
-                                                                }
-                                                             }
-                                                            <!-- Getting the department -->    
-                                                            foreach(var dep in (ViewBag.deps)){
-                                                                if(sub.DepartmentId == dep.DepartmentId){
-                                                                    <p>@dep.DepartmentName</p>
-                                                                }
-                                                            }
+                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                        <div class="row">
+                                                                            <div class="col-12 col-md-1 sop-number">
+                                                                                <h3>@conCount</h3>
+                                                                            </div>
+                                                                            <div class="col-12 col-md-3 sop-status d-flex align-items-center">
+                                                                                <h5>@sub.Status</h5>
+                                                                            </div>
+                                                                            <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                                <h4>@name.FirstName @name.SecondName</h4>
+                                                                                <!-- Getting the department -->    
+                                                                                @foreach(var dep in (ViewBag.deps)){
+                                                                                    if(sub.DepartmentId == dep.DepartmentId){
+                                                                                        <p class="m-0">@dep.DepartmentName</p>
+                                                                                    }
+                                                                                }
+                                                                            </div>
+                                                                            <div class="col-12 col-md-2 sop-buttons">
+                                                                                    <div class="dropdown h-100">
+                                                                                      <button class="btn btn-secondary h-100 w-100" type="button" id="resbtn-@conCount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                        <i class="material-icons">menu</i>
+                                                                                      </button>
+                                                                                      <div class="dropdown-menu" aria-labelledby="resbtn-@conCount">
+                                                                                        <div class="complete"><p>Complete Task</p></div>
+                                                                                        <div class="recusal"><p>Request recusal</p></div>
+                                                                                      </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                        </div>
+                                                                    </div>
+                                                            
                                                         }
+                                                }conCount++;
                                                     }
+                                                }
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-12">
@@ -227,16 +303,39 @@
                                                             <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
                                                                 if(sub.UserId == name.ClaimId){
-                                                                 <p>@name.FirstName @name.SecondName</p>
-                                                                <p>@sub.Status</p>
-                                                                }
-                                                             }
-                                                            <!-- Getting the department -->    
-                                                            foreach(var dep in (ViewBag.deps)){
-                                                                if(sub.DepartmentId == dep.DepartmentId){
-                                                                    <p>@dep.DepartmentName</p>
-                                                                }
-                                                            }
+                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                        <div class="row">
+                                                                            <div class="col-12 col-md-1 sop-number">
+                                                                                <h3>@infCount</h3>
+                                                                            </div>
+                                                                            <div class="col-12 col-md-3 sop-status d-flex align-items-center">
+                                                                                <h5>@sub.Status</h5>
+                                                                            </div>
+                                                                            <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                                <h4>@name.FirstName @name.SecondName</h4>
+                                                                                <!-- Getting the department -->    
+                                                                                @foreach(var dep in (ViewBag.deps)){
+                                                                                    if(sub.DepartmentId == dep.DepartmentId){
+                                                                                        <p class="m-0">@dep.DepartmentName</p>
+                                                                                    }
+                                                                                }
+                                                                            </div>
+                                                                            <div class="col-12 col-md-2 sop-buttons">
+                                                                                    <div class="dropdown h-100">
+                                                                                      <button class="btn btn-secondary h-100 w-100" type="button" id="resbtn-@infCount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                        <i class="material-icons">menu</i>
+                                                                                      </button>
+                                                                                      <div class="dropdown-menu" aria-labelledby="resbtn-@infCount">
+                                                                                        <div class="complete"><p>Complete Task</p></div>
+                                                                                        <div class="recusal"><p>Request recusal</p></div>
+                                                                                      </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                        </div>
+                                                                    </div>
+                                                }
+                                                }
+                                                            infCount++;
                                                         }
                                                     }
                                                 </div>
