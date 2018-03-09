@@ -68,7 +68,10 @@
      });
      $(document).ready(function() {
         $( ".my-projects-@ViewBag.Userid" ).click(function() {
-            $.each("tr.tablerow").not("user-@ViewBag.Userid").hide();
+            $("tr.tablerow").not(".user-@ViewBag.Userid").hide();
+        });
+        $( ".all-projects" ).click(function() {
+            $("tr.tablerow").show();
         });
      });
 </script>
