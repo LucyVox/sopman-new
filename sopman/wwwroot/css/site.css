@@ -551,7 +551,6 @@ padding-left:0px;
 
 .sop-builder {
     border-radius: 10px;
-    overflow: hidden;
     margin-top: -20px;
     z-index: 15;
     position: relative
@@ -779,6 +778,8 @@ padding-left:0px;
     color: #fff;
     padding: 30px 15px 0px;
     margin-bottom:0px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
     .sop-builder .header-dark-grey h1 {
@@ -1245,7 +1246,7 @@ table thead th {
         margin-bottom: 0px;
         padding: 15px 0px;
         color: #fff;
-        font-size: 26px !important
+        font-size: 14pt !important
     }
 
     .card.SubProcess .card-header {
@@ -1339,7 +1340,7 @@ table thead th {
     margin-bottom: 0px;
     padding: 15px 0px;
     color: #000;
-    font-size: 26px !important
+    font-size: 14pt !important
 }
 
 .setting-row {
@@ -1601,4 +1602,9 @@ table thead th {
 }
 .nav-tabs .nav-link:hover {
     color: white;
+}
+
+.modal {
+    top: 50%;
+    transform: translateY(-50%);
 }

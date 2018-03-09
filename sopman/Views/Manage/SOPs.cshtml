@@ -54,7 +54,7 @@
                         
                             <div class="row section-count">
                                 <div class="col-12 col-md-1 header-left">
-                                    <div class="number"><h3>@sectioncount</h3></div>
+                                    <div class="number"><h3 class="h5">@sectioncount</h3></div>
                                 </div>
                                 <div class="col-12 col-md-11 header-right">
                                     <h2>@subitem.SectionText</h2>
@@ -126,11 +126,15 @@
                                     number = sectioncount.ToString();
                                     subsectioncount = 1;
                                 }
+                                int resCount = 1;
+                                int accCount = 1;
+                                int conCount = 1;
+                                int infCount = 1;
                             
                                 <div class="card section-count container @protype process-@value">
                                     <div class="card-header row" role="tab" id="headingOne">
                                         <div class="col-12 col-md-1 count-col">
-                                            <div class="number"><h3>@number</h3></div>
+                                            <div class="number"><h3 class="h5">@number</h3></div>
                                         </div>
                                         <div class="col-12 col-md-11 padding-left-zero">
                                             <div class="row header-row">
@@ -164,19 +168,19 @@
                                                                     if(sub.UserId == name.ClaimId){
                                                                         var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIResChosenID + item.valuematch;
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
-                                                                            <h3></h3>
+                                                                            <h3 class="h5">@resCount</h3>
                                                                         </div>
                                                                         <div class="col-12 col-md-3 @sub.Status sop-status">
                                                                             <input type="hidden" value="@item.valuematch">
                                                                             <input type="text" class="hidden-value raci-number-@namenospace" value="@sub.Status" name="sop-number-@namenospace">
                                                                             <h5>@sub.Status</h5>
                                                                         </div>
-                                                                        <div class="col-12 col-md-6 sop-person">
-                                                                            <h4>@name.FirstName @name.SecondName</h4>
+                                                                        <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                            <h4 class="h5">@name.FirstName @name.SecondName</h4>
                                                                             <!-- Getting the department -->    
                                                                             @foreach(var dep in (ViewBag.deps)){
                                                                                 if(sub.DepartmentId == dep.DepartmentId){
-                                                                                    <p>@dep.DepartmentName</p>
+                                                                                    <p class="mb-0">@dep.DepartmentName</p>
                                                                                 }
                                                                             }
                                                                         </div>
@@ -186,12 +190,8 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comp-@namenospace">
-                                                                                     Complete Task
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div class="recusal rec-@namenospace"><p>Request recusal</p></div>
+                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
                                                                               </div>
                                                                             </div>
                                                                         </div>
@@ -233,6 +233,7 @@
                                                                                 </div>
                                                                               </div>
                                                                         </div>
+                                                                        resCount++;
                                                                     }
                                                                  }
                                                                  </div>
@@ -255,19 +256,19 @@
                                                                     if(sub.UserId == name.ClaimId){
                                                                         var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIAccChosenID + item.valuematch;
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
-                                                                            <h3></h3>
+                                                                            <h3 class="h5">@accCount</h3>
                                                                         </div>
                                                                         <div class="col-12 col-md-3 @sub.Status sop-status">
                                                                             <input type="hidden" value="@item.valuematch">
                                                                             <input type="text" class="hidden-value raci-number-@namenospace" value="@sub.Status" name="sop-number-@namenospace">
                                                                             <h5>@sub.Status</h5>
                                                                         </div>
-                                                                        <div class="col-12 col-md-6 sop-person">
-                                                                            <h4>@name.FirstName @name.SecondName</h4>
+                                                                        <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                            <h4 class="h5">@name.FirstName @name.SecondName</h4>
                                                                             <!-- Getting the department -->    
                                                                             @foreach(var dep in (ViewBag.deps)){
                                                                                 if(sub.DepartmentId == dep.DepartmentId){
-                                                                                    <p>@dep.DepartmentName</p>
+                                                                                    <p class="mb-0">@dep.DepartmentName</p>
                                                                                 }
                                                                             }
                                                                         </div>
@@ -277,16 +278,8 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comp-@namenospace">
-                                                                                     Complete Task
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div class="recusal rec-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rec-@namenospace">
-                                                                                     Request recusal
-                                                                                    </button>
-                                                                                </div>
+                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
                                                                               </div>
                                                                             </div>
                                                                         </div>
@@ -328,6 +321,7 @@
                                                                                 </div>
                                                                               </div>
                                                                         </div>
+                                                                        accCount++;
                                                                     }
                                                                  }
                                                                  </div>
@@ -351,19 +345,19 @@
                                                                     if(sub.UserId == name.ClaimId){
                                                                         var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIConChosenID + item.valuematch;
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
-                                                                            <h3></h3>
+                                                                            <h3 class="h5">@conCount</h3>
                                                                         </div>
                                                                         <div class="col-12 col-md-3 @sub.Status sop-status">
                                                                             <input type="hidden" value="@item.valuematch">
                                                                             <input type="text" class="hidden-value raci-number-@namenospace" value="@sub.Status" name="sop-number-@namenospace">
                                                                             <h5>@sub.Status</h5>
                                                                         </div>
-                                                                        <div class="col-12 col-md-6 sop-person">
-                                                                            <h4>@name.FirstName @name.SecondName</h4>
+                                                                        <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                            <h4 class="h5">@name.FirstName @name.SecondName</h4>
                                                                             <!-- Getting the department -->    
                                                                             @foreach(var dep in (ViewBag.deps)){
                                                                                 if(sub.DepartmentId == dep.DepartmentId){
-                                                                                    <p>@dep.DepartmentName</p>
+                                                                                    <p class="mb-0">@dep.DepartmentName</p>
                                                                                 }
                                                                             }
                                                                         </div>
@@ -373,16 +367,8 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comp-@namenospace">
-                                                                                     Complete Task
-                                                                                    </button>
-                                                                                </div>
-                                                                               <div class="recusal rec-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rec-@namenospace">
-                                                                                     Request recusal
-                                                                                    </button>
-                                                                                </div>
+                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
                                                                               </div>
                                                                             </div>
                                                                         </div>
@@ -424,6 +410,7 @@
                                                                                 </div>
                                                                               </div>
                                                                         </div>
+                                                                        conCount++;
                                                                     }
                                                                  }
                                                                  </div>
@@ -447,19 +434,19 @@
                                                                     if(sub.UserId == name.ClaimId){
                                                                         var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIInfChosenID + item.valuematch;
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
-                                                                            <h3></h3>
+                                                                            <h3 class="h5">@infCount</h3>
                                                                         </div>
                                                                         <div class="col-12 col-md-3 @sub.Status sop-status">
                                                                             <input type="hidden" value="@item.valuematch">
                                                                             <input type="text" class="hidden-value raci-number-@namenospace" value="@sub.Status" name="sop-number-@namenospace">
                                                                             <h5>@sub.Status</h5>
                                                                         </div>
-                                                                        <div class="col-12 col-md-6 sop-person">
-                                                                            <h4>@name.FirstName @name.SecondName</h4>
+                                                                        <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                            <h4 class="h5">@name.FirstName @name.SecondName</h4>
                                                                             <!-- Getting the department -->    
                                                                             @foreach(var dep in (ViewBag.deps)){
                                                                                 if(sub.DepartmentId == dep.DepartmentId){
-                                                                                    <p>@dep.DepartmentName</p>
+                                                                                    <p class="mb-0">@dep.DepartmentName</p>
                                                                                 }
                                                                             }
                                                                         </div>
@@ -469,16 +456,8 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comp-@namenospace">
-                                                                                     Complete Task
-                                                                                    </button>
-                                                                                </div>
-                                                                               <div class="recusal rec-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rec-@namenospace">
-                                                                                     Request recusal
-                                                                                    </button>
-                                                                                </div>
+                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
                                                                               </div>
                                                                             </div>
                                                                         </div>
@@ -520,6 +499,7 @@
                                                                                 </div>
                                                                               </div>
                                                                         </div>
+                                                                        infCount++;
                                                                     }
                                                                  }
                                                                  </div>
