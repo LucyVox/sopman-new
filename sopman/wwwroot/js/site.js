@@ -26,15 +26,19 @@ $(document).ready(function() {
         }
     });
 
+    $('input[name=auto-gen-lim-char]').click(function(){
+        if ($(this).is(':checked')) {
+            $('.limit-form-char').removeAttr("disabled"); 
+        }
+    });
+
+
+
     $('.tick-img.true img').attr('src', '/images/tick.png');
 
-    $('body').tooltip({
-        selector: '[data-toggle="tooltip"]'
-    });
+
 });  
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+    
 
 
 

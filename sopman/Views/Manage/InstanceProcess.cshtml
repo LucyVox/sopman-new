@@ -21,9 +21,9 @@
                 <p>Process Step Setup</p>
                 <div id="theform">
                     <div id="accordion" role="tablist">
-                        @using (Html.BeginForm()) {
+                        <form action="" method="post" enctype="multipart/form-data">
                             <input type="hidden" value="@ViewBag.theid" name="SOPID">
-                            foreach(var item in Model){
+                            @foreach(var item in Model){
                                 var nameshort = item.ProcessName.Replace(" ", "");
                                 var protype = item.ProcessType;
                                 var value = item.valuematch;
@@ -223,7 +223,7 @@
                             <div class="col-12 float-to-right ex-row">
                                 <input type="submit" class="btn" value="EXECUTE" />
                             </div>
-                        }
+                        </form>
                 </div>
             </div>
        </div>

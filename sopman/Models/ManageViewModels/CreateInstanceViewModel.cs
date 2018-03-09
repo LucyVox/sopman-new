@@ -57,6 +57,9 @@ namespace sopman.Models.ManageViewModels
         public string ProcessDesc { get; set; }
         public string valuematch { get; set; }
         public string ProcessType { get; set; }
+        public int UserId { get; set; }
+        public string Status { get; set; }
+        public string InstanceId { get; set; }
 
         [DataType(DataType.Date)]
         public string DueDate { get; set; }

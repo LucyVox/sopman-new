@@ -1349,9 +1349,71 @@ table thead th {
     font-size:20px;
     font-weight:400;
 }
-
+.search-table {
+    padding-bottom:20px;
+}
 .font-14 {
+    font-size: 14px
+}
+
+.search-icon {
+    position: absolute;
+    right: 0px;
+    font-size: 32px;
+    color: #C8C8C8;
+    transition: all 0.4s;
+}
+
+    .search-icon:hover {
+        cursor: pointer;
+        color: #2F2F2F
+    }
+    .search-col {
+    padding: 0px
+}
+.search-btn {
+    background: transparent;
+    border: none;
+    text-indent: -9999px;
+}
+.search-box {
+    padding-right:0px;
+}
+
+    .search-box #SearchString {
+        border-radius: 10px;
+        border: 1px solid #ced4da;        padding: 5px;
+    }
+.btn-no-bg {
+    color: #476176;
+    font-weight: 700;
+    transition: all 0.3s;
+    background:transparent;
+    border:none;
+    box-shadow:none;
+    transition: all 0.4s;
+}
+.btn-right {
+    padding-right:0px;
+}
+.btn-no-bg:hover {
+    text-decoration: underline;
+    color: #476176
+}
+.inner-form-row {
+    padding: 10px 0px;
+}
+.sop-form {
+    padding-top:20px;
+}
+.theproject {
+    color: #CECECE;
+    margin-top:10px;
     font-size:14px;
+}
+
+.theproject a {
+    color: #96C9DB;
 }
 @media (max-width: 768px) {
     .top-nav .site-name {

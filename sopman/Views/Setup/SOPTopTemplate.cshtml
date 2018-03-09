@@ -62,15 +62,15 @@
             </div>  
             <div class="form-group inline-row row pad-top-20">
                 <div class="col-12 col-md-6">
-                    <input type="radio" name="auto-gen" value=""  id="auto-gen-lim"/><label class="gen-radio" for="auto-gen">Use auto-generated SOP numbers</label>
+                    <input type="radio" name="auto-gen-lim-char" value=""  id="auto-gen-lim"/><label class="gen-radio" for="auto-gen"> Allow user defined SOP codes</label>
                 </div>
             </div>
             <div class="form-group inline-row row">
                 <div class="col-12 col-md-4 offset-md-1">
-                    <input type="radio" name="radioallowlimitcode" value=""  id="radioallowlimitcode"/>@Html.LabelFor(m => m.SOPAllowCodeLimit, new { @for = "radiolimit", @class="radio-label"})
+                    <input type="radio" name="radioallowlimitcode" value=""  id="radioallowlimitcode"/><label  class="gen-radio" for="SOPAllowCodeLimit"> Limit characters</label>
                 </div>
                 <div class="col-12 col-md-2">
-                    @Html.TextBoxFor(m => m.SOPAllowCodeLimit, new { @class = "form-control limit-form-lim", @disabled = "disabled" })
+                    @Html.TextBoxFor(m => m.SOPAllowCodeLimit, new { @class = "form-control limit-form-char", @disabled = "disabled" })
                 </div>
             </div>
             <div class="form-group submit-row">
@@ -78,7 +78,6 @@
                     <input type="submit" class="btn btn-default" value="continue" />
                 </div>
             </div>
-        
         }   
     </div>
 </div>

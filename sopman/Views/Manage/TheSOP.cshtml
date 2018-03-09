@@ -108,8 +108,6 @@
                                 var protype = item.ProcessType;
                                 var value = item.valuematch;
 
-
-
                                 string number;
                                 if(protype == "SubProcess")
                                 {
@@ -136,7 +134,7 @@
                                                     </div>
                                                     <div class="col-12 col-md-2 text-right">
                                                         <a data-toggle="collapse" class="collapsed font-14" href="#collapse-@nameshort" role="button" aria-expanded="false" aria-controls="collapseOne">
-                                                            
+                                                            SHOW DETAIL
                                                         </a>
                                                     </div>
                                                 </div>
@@ -152,16 +150,20 @@
                                                     <div class="col-12 raci-info">
                                                         <h4>Responsible</h4>
                                                     </div>
-                                                    @foreach(var sub in (ViewBag.resiuser)){
-                                                        if(sub.RACIResID ==  item.valuematch){
+                                                    @foreach(var sub in (ViewBag.res)){
+                                                        if(sub.valuematch == item.valuematch){
+                                                            <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
-                                                                if(sub.soptoptempid == ViewBag.getid){
-                                                                    if(name.ClaimId == sub.UserId){
-                                                                        <div class="col-12 col-md-12">
-                                                                            <h4>@name.UserId - @name.FirstName</h4>
-                                                                        </div>
-                                                                    }
-                                                                } 
+                                                                if(sub.UserId == name.ClaimId){
+                                                                 <p>@name.FirstName @name.SecondName</p>
+                                                                <p>@sub.Status</p>
+                                                                }
+                                                             }
+                                                            <!-- Getting the department -->    
+                                                            foreach(var dep in (ViewBag.deps)){
+                                                                if(sub.DepartmentId == dep.DepartmentId){
+                                                                    <p>@dep.DepartmentName</p>
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -172,16 +174,20 @@
                                                     <div class="col-12 raci-info">
                                                         <h4>Accountable</h4>
                                                     </div>
-                                                    @foreach(var sub in (ViewBag.resiaccuser)){
-                                                        if(sub.RACIAccID ==  item.valuematch){
+                                                    @foreach(var sub in (ViewBag.acc)){
+                                                        if(sub.valuematch == item.valuematch){
+                                                            <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
-                                                                 if(sub.soptoptempid == ViewBag.getid){
-                                                                    if(name.ClaimId == sub.UserId){
-                                                                        <div class="col-12 col-md-12">
-                                                                            <h4>@name.FirstName</h4>
-                                                                        </div>
-                                                                    }
-                                                                } 
+                                                                if(sub.UserId == name.ClaimId){
+                                                                 <p>@name.FirstName @name.SecondName</p>
+                                                                <p>@sub.Status</p>
+                                                                }
+                                                             }
+                                                            <!-- Getting the department -->    
+                                                            foreach(var dep in (ViewBag.deps)){
+                                                                if(sub.DepartmentId == dep.DepartmentId){
+                                                                    <p>@dep.DepartmentName</p>
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -192,16 +198,20 @@
                                                     <div class="col-12 raci-info">
                                                         <h4>Consulted</h4>
                                                     </div>
-                                                    @foreach(var sub in (ViewBag.resiconuser)){
-                                                        if(sub.RACIConID ==  item.valuematch){
+                                                    @foreach(var sub in (ViewBag.cons)){
+                                                        if(sub.valuematch == item.valuematch){
+                                                            <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
-                                                                if(sub.soptoptempid == ViewBag.getid){
-                                                                    if(name.ClaimId == sub.UserId){
-                                                                        <div class="col-12 col-md-12">
-                                                                            <h4>@name.FirstName</h4>
-                                                                        </div>
-                                                                    }
-                                                                } 
+                                                                if(sub.UserId == name.ClaimId){
+                                                                 <p>@name.FirstName @name.SecondName</p>
+                                                                <p>@sub.Status</p>
+                                                                }
+                                                             }
+                                                            <!-- Getting the department -->    
+                                                            foreach(var dep in (ViewBag.deps)){
+                                                                if(sub.DepartmentId == dep.DepartmentId){
+                                                                    <p>@dep.DepartmentName</p>
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -212,16 +222,20 @@
                                                     <div class="col-12 raci-info">
                                                         <h4>Informed</h4>
                                                     </div>
-                                                    @foreach(var sub in (ViewBag.resiinfuser)){
-                                                        if(sub.RACIInfID ==  item.valuematch){
+                                                    @foreach(var sub in (ViewBag.infi)){
+                                                        if(sub.valuematch == item.valuematch){
+                                                            <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
-                                                                if(sub.soptoptempid == ViewBag.getid){
-                                                                    if(name.ClaimId == sub.UserId){
-                                                                        <div class="col-12 col-md-12">
-                                                                            <h4>@name.FirstName</h4>
-                                                                        </div>
-                                                                    }
-                                                                } 
+                                                                if(sub.UserId == name.ClaimId){
+                                                                 <p>@name.FirstName @name.SecondName</p>
+                                                                <p>@sub.Status</p>
+                                                                }
+                                                             }
+                                                            <!-- Getting the department -->    
+                                                            foreach(var dep in (ViewBag.deps)){
+                                                                if(sub.DepartmentId == dep.DepartmentId){
+                                                                    <p>@dep.DepartmentName</p>
+                                                                }
                                                             }
                                                         }
                                                     }

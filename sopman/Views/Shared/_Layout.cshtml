@@ -42,10 +42,16 @@
                 <div class="col-12 col-md-6 text-right">
                     @using (Html.BeginForm("Search", "Account", FormMethod.Get))
                     {
-                        <ul class="nav navbar-nav">
-                            <li>@Html.TextBox("SearchString")</li>
-                            <li><input type="submit" value="Search" /></li>
-                        </ul>
+                        <div class="row">
+                            <div class="col-12 col-md-5"></div>
+                            <div class="col-12 col-md-6 search-box">
+                                @Html.TextBox("SearchString")
+                            </div>
+                            <div class="col-12 col-md-1 search-col">
+                                <i class="material-icons search-icon">search</i>         
+                                <input type="submit" class="search-btn" value="Search" />
+                            </div>
+                        </div>
                     }
                 </div>
             </div>
@@ -144,6 +150,15 @@
         <script src="~/js/site.js" asp-append-version="true"></script>        
     </environment>
 
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+          $( function() {
+            $( ".datepicker" ).datepicker();
+          } );
+            $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+        </script>
 
 
 

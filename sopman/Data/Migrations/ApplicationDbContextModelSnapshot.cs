@@ -437,9 +437,15 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("DepartmentId");
 
+                    b.Property<string>("InstanceId");
+
                     b.Property<string>("JobTitleId");
 
                     b.Property<int>("SOPTemplateProcessID");
+
+                    b.Property<string>("Status");
+
+                    b.Property<int>("UserId");
 
                     b.Property<string>("soptoptempid");
 
@@ -531,9 +537,15 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("DepartmentId");
 
+                    b.Property<string>("InstanceId");
+
                     b.Property<string>("JobTitleId");
 
                     b.Property<int>("SOPTemplateProcessID");
+
+                    b.Property<string>("Status");
+
+                    b.Property<int>("UserId");
 
                     b.Property<string>("soptoptempid");
 
@@ -593,9 +605,15 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("DepartmentId");
 
+                    b.Property<string>("InstanceId");
+
                     b.Property<string>("JobTitleId");
 
                     b.Property<int>("SOPTemplateProcessID");
+
+                    b.Property<string>("Status");
+
+                    b.Property<int>("UserId");
 
                     b.Property<string>("soptoptempid");
 
@@ -671,9 +689,15 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("DepartmentId");
 
+                    b.Property<string>("InstanceId");
+
                     b.Property<string>("JobTitleId");
 
                     b.Property<int>("SOPTemplateProcessID");
+
+                    b.Property<string>("Status");
+
+                    b.Property<int>("UserId");
 
                     b.Property<string>("soptoptempid");
 
@@ -756,6 +780,8 @@ namespace sopman.Data.Migrations
                 {
                     b.Property<int>("SOPInstanceProcessFilesId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("InstanceId");
 
                     b.Property<int>("SOPInstancesProcessId");
 

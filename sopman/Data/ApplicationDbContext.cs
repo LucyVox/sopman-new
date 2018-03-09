@@ -373,6 +373,7 @@ namespace sopman.Data
 
             public int SOPInstancesProcessId { get; set; }
             public string filepath { get; set; }
+            public string InstanceId { get; set; }
         }
         public DbSet<SOPInstanceProcessFiles> SOPInstanceProcessesFiles { get; set; }
 
@@ -405,6 +406,9 @@ namespace sopman.Data
 
             public string valuematch { get; set; }
             public string soptoptempid { get; set; }
+            public int UserId { get; set; }
+            public string Status { get; set; }
+            public string InstanceId { get; set; }
         }
         public DbSet<RACIAccount> SOPRACIAcc { get; set; }
 
@@ -426,6 +430,10 @@ namespace sopman.Data
             public string valuematch { get; set; }
 
             public string soptoptempid { get; set; }
+
+            public int UserId { get; set; }
+            public string Status { get; set; }
+            public string InstanceId { get; set; }
 
         }
         public DbSet<RACIResposible> SOPRACIRes { get; set; }
@@ -580,6 +588,9 @@ namespace sopman.Data
 
             public string valuematch { get; set; }
             public string soptoptempid { get; set; }
+            public int UserId { get; set; }
+            public string Status { get; set; }
+            public string InstanceId { get; set; }
         }
         public DbSet<RACIConsulted> SOPRACICon { get; set; }
 
@@ -599,6 +610,9 @@ namespace sopman.Data
 
             public string valuematch { get; set; }
             public string soptoptempid { get; set; }
+            public int UserId { get; set; }
+            public string Status { get; set; }
+            public string InstanceId { get; set; }
         }
         public DbSet<RACIInformed> SOPRACIInf { get; set; }
 

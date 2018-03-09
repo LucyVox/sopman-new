@@ -37,7 +37,10 @@ namespace sopman.Models.ManageViewModels
        
         [Display(Name = "Second Name")]
         public string SecondName { get; set; }
-
+        public int SOPNameLimit { get; set; }
+        public string SOPCodePrefix { get; set; }
+        public string SOPCodeSuffix { get; set; }
+        public string SOPAllowCodeLimit { get; set; }
 
     }
 

@@ -1177,6 +1177,7 @@ namespace sopman.Controllers
             ViewBag.userlist = userlist;
             ViewBag.selectlist = new SelectList(userlist, "ClaimId", "FirstName");
 
+
             return View(process);
         }
 
@@ -1276,13 +1277,14 @@ namespace sopman.Controllers
             ViewBag.userlist = userlist;
             ViewBag.selectlist = new SelectList(userlist, "ClaimId", "FirstName");
 
+
             if (ModelState.IsValid)
             {
                 Console.WriteLine(secinf.Count());
                 foreach (var item in secinf)
                 {
                     ApplicationDbContext.SOPInstanceProcess sopproc = new ApplicationDbContext.SOPInstanceProcess();
-                    ApplicationDbContext.SOPInstanceProcessFiles instfiles = new ApplicationDbContext.SOPInstanceProcessFiles();
+
                     var date = item.DueDate;
                     var externdocs = item.ExternalDocument;
                     var valuematch = item.valuematch;
@@ -1294,57 +1296,117 @@ namespace sopman.Controllers
                     sopproc.ExternalDocument = externdocs;
 
                     Console.WriteLine(date);
+                    Console.WriteLine(externdocs);
                     Console.WriteLine(valuematch);
 
+                    Console.WriteLine(files.Count());
+
                     _context.Add(sopproc);
+                    _context.SaveChanges();
 
-                    foreach (var data in (ViewBag.res))
+                    var dbprocess = _context.SOPInstanceProcesses.FirstOrDefault(x => x.valuematch == item.valuematch && x.SOPTemplateID == getid);
+                    Console.WriteLine(dbprocess.SOPTemplateID);
+
+                    dbprocess.DueDate = date;
+                    dbprocess.ExternalDocument = externdocs;
+
+                    _context.SOPInstanceProcesses.Update(dbprocess);
+                    _context.SaveChanges();
+                    foreach (var sub in (ViewBag.res))
                     {
-                        if (data.valuematch == item.valuematch)
+                        if (sub.valuematch == item.valuematch)
                         {
-                            ApplicationDbContext.RACIResChosenUser raciResUser = new ApplicationDbContext.RACIResChosenUser();
-                            var sel = Request.Form[data.valuematch + "-RES"];
 
-                            Console.WriteLine("Dropdown res:");
+                            var dbcon = _context.SOPRACIRes.FirstOrDefault(x => x.valuematch == item.valuematch);
+
+                            var status = "Pending";
+
+                            var sel = Request.Form[sub.valuematch + "-RES"];
                             Console.WriteLine(sel);
                             int onevalue = int.Parse(sel);
 
-                            // var status = "Pending";
+                            dbcon.Status = status;
+                            dbcon.UserId = onevalue;
+                            dbcon.InstanceId = getid;
+                            _context.SOPRACIRes.Update(dbcon);
+                            _context.SaveChanges();
+                        }
+                    }
+                    foreach (var sub in (ViewBag.cons))
+                    {
+                        if (sub.valuematch == item.valuematch)
+                        {
+                            var dbconcon = _context.SOPRACICon.FirstOrDefault(x => x.valuematch == item.valuematch);
+                            var statuscon = "Pending";
 
+                            var selcon = Request.Form[sub.valuematch + "-CON"];
+                            Console.WriteLine(selcon);
+                            int onevalueacc = int.Parse(selcon);
 
-                            // raciResUser.RACIResID = data.valuematch;
+                            dbconcon.Status = statuscon;
+                            dbconcon.UserId = onevalueacc;
+                            dbconcon.InstanceId = getid;
+                            _context.SOPRACICon.Update(dbconcon);
+                            _context.SaveChanges();
+                        }
+                    }
+                    foreach (var sub in (ViewBag.acc))
+                    {
+                        if (sub.valuematch == item.valuematch)
+                        {
+                            var dbconacc = _context.SOPRACIAcc.FirstOrDefault(x => x.valuematch == item.valuematch);
+                            var statusacc = "Pending";
 
+                            var selacc = Request.Form[sub.valuematch + "-ACC"];
+                            Console.WriteLine(selacc);
+                            int onevalueacc = int.Parse(selacc);
 
-                            raciResUser.RACIResID = data.valuematch;
+                            dbconacc.Status = statusacc;
+                            dbconacc.UserId = onevalueacc;
+                            dbconacc.InstanceId = getid;
+                            _context.SOPRACIAcc.Update(dbconacc);
+                            _context.SaveChanges();
 
-                            raciResUser.UserId = onevalue;
-                            // raciResUser.Status = status;
+                        }
+                    }
+                    foreach (var sub in (ViewBag.infi))
+                    {
+                        if (sub.valuematch == item.valuematch)
+                        {
+                            var dbconinf = _context.SOPRACIInf.FirstOrDefault(x => x.valuematch == item.valuematch);
+                            var statuscon = "Pending";
 
-                            // raciResUser.soptoptempid = data.SOPTemplateID;
-                            // raciResUser.InstanceId = getid;
+                            var selcon = Request.Form[sub.valuematch + "-INF"];
+                            Console.WriteLine(selcon);
+                            int onevaluecon = int.Parse(selcon);
 
-                            Console.WriteLine("data valuematch:");
-                            // Console.WriteLine(raciResUser.RACIResID);
+                            dbconinf.Status = statuscon;
+                            dbconinf.UserId = onevaluecon;
+                            dbconinf.InstanceId = getid;
+                            _context.SOPRACIInf.Update(dbconinf);
+                            _context.SaveChanges();
 
-                            Console.WriteLine("data SOPTemplateID:");
-                            // Console.WriteLine(data.SOPTemplateID);
-                            // Console.WriteLine(raciResUser.RACIResChosenID);
+                        }
+                    }
+                    _context.SaveChanges();
 
-                            Console.WriteLine(raciResUser.UserId);
+                    if (files.Count() > 0)
+                    {
+                        var folderpath = Path.Combine(Directory.GetCurrentDirectory(),
+                              "Uploads/" + getid + valuematch);
+                        Console.WriteLine(folderpath);
 
-                            try
+                        Directory.CreateDirectory(folderpath);
+
+                        foreach (var file in files)
+                        {
+                            using (FileStream stream = new FileStream(Path.Combine(folderpath, file.FileName), FileMode.Create))
                             {
-                                _context.Add(raciResUser);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine("CHRISERROR");
-                                Console.WriteLine(ex.Message);
+                                await file.CopyToAsync(stream);
                             }
                         }
-
                     }
-
+                    _context.SaveChanges();
                 }
                 try
                 {
@@ -1357,7 +1419,12 @@ namespace sopman.Controllers
                 }
 
             }
-            return View(process);
+            string url1 = Url.Content("TheSOP" + Uri.EscapeUriString("?=") + getid);
+            string newurl = url1.Replace("%3F%3D", "?=");
+
+            Console.WriteLine(newurl);
+
+            return new RedirectResult(newurl);
         }
 
         [HttpGet]
@@ -1374,7 +1441,7 @@ namespace sopman.Controllers
             var getuser = _userManager.GetUserId(User);
 
             var compid = CompanyId;
-
+            ViewBag.compid = compid;
             var getcompiduser = (from y in _context.CompanyClaim
                              where y.UserId == getuser
                              select y.CompanyId).Single();
@@ -1432,21 +1499,49 @@ namespace sopman.Controllers
                             select new RegisterSOPUserViewModel { CompanyId = x.CompanyId, JobTitleId = x.JobTitleId, JobTitle = x.JobTitle }).ToList();
             ViewBag.jobtitle = jobtitle;
 
+
+            //SOP Template
+            var allowcodelim = (from i in _context.SOPTopTemplates
+                               where i.CompanyId == compid
+                                select i.SOPAllowCodeLimit).Single();
+
+            var codeprefix = (from i in _context.SOPTopTemplates
+                              where i.CompanyId == compid
+                              select i.SOPCodePrefix).Single();
+
+            var codesuffix = (from i in _context.SOPTopTemplates
+                              where i.CompanyId == compid
+                              select i.SOPCodeSuffix).Single();
+
+            var namelimit = (from i in _context.SOPTopTemplates
+                              where i.CompanyId == compid
+                             select i.SOPNameLimit).Single();
+
             SettingsViewModel savesettings = new SettingsViewModel()
             {
                 SOPStartNumber = sopstartnum,
                 SOPNumberFormat = selsopformat,
+                SOPAllowCodeLimit = allowcodelim,
+                SOPCodePrefix = codeprefix,
+                SOPCodeSuffix = codesuffix,
+                SOPNameLimit = namelimit
             };
+
+            //Form Forward
+            string companyid = "Settings" + Uri.EscapeUriString("?=") + ViewBag.compid;
+            string newurl = companyid.Replace("%3F%3D", "?=");
+            ViewBag.newurl = newurl;
+
 
             return View(savesettings);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Settings(int CompanyId, IFormFile file, [Bind("SOPStartNumber,SOPNumberFormat,Logo")]ApplicationDbContext.CompanyInfo comp)
+        public async Task<IActionResult> Settings(int CompanyId, IFormFile file, [Bind("SOPStartNumber,SOPNumberFormat,Logo")]ApplicationDbContext.CompanyInfo comp,[Bind("TopTempId,SOPNameLimit,SOPCodePrefix,SOPCodeSuffix,SOPAllowCodeLimit,ClientId,UserId")] ApplicationDbContext.SOPTopTemplate toptemp)
         {var getuser = _userManager.GetUserId(User);
 
             var compid = CompanyId;
-
+            ViewBag.compid = compid;
             var getcompiduser = (from y in _context.CompanyClaim
                                  where y.UserId == getuser
                                  select y.CompanyId).Single();
@@ -1511,20 +1606,41 @@ namespace sopman.Controllers
 
 
             var getthecompid = _context.TheCompanyInfo.FirstOrDefault(x => x.CompanyId == CompanyId);
+            var getthesettingsid = _context.SOPTopTemplates.FirstOrDefault(x => x.CompanyId == CompanyId);
 
             Console.WriteLine(getthecompid);
             var getsopnum = Request.Form["SOPStartNumber"];
             var getdigits = Request.Form["SOPNumberFormat"];
+            var getsuffix = Request.Form["SOPCodeSuffix"];
+            var getprefix = Request.Form["SOPCodePrefix"];
+            var getcharlimit = Request.Form["SOPNameLimit"];
+            var userlimit = Request.Form["SOPAllowCodeLimit"];
+
+            int charint = int.Parse(getcharlimit);
 
             Console.WriteLine(getsopnum);
 
+            //SOP Template
+            var allowcodelim = (from i in _context.SOPTopTemplates
+                                where i.CompanyId == compid
+                                select i.SOPAllowCodeLimit).Single();
+
+            var codeprefix = (from i in _context.SOPTopTemplates
+                              where i.CompanyId == compid
+                              select i.SOPCodePrefix).Single();
+
+            var codesuffix = (from i in _context.SOPTopTemplates
+                              where i.CompanyId == compid
+                              select i.SOPCodeSuffix).Single();
+
+            var namelimit = (from i in _context.SOPTopTemplates
+                             where i.CompanyId == compid
+                             select i.SOPNameLimit).Single();
+            
             if(ModelState.IsValid){
 
-                if (file == null || file.Length == 0) {
-                    return Content("file not selected");
-                }
-
-                else{
+                // General
+                if (file == null || file.Length == 0) {}else{
                     var logopath = Path.Combine(
                     Directory.GetCurrentDirectory(),
                     "Uploads/CompanyLogos",
@@ -1535,21 +1651,28 @@ namespace sopman.Controllers
                     {
                         await file.CopyToAsync(stream);
                     }
+                    var logopathform = file.FileName;
+                    getthecompid.Logo = logopathform;
                 }
-                   
-
-
-
-                var logopathform = file.FileName;
 
                 getthecompid.SOPStartNumber = getsopnum;
                 getthecompid.SOPNumberFormat = getdigits;
-                getthecompid.Logo = logopathform;
                 _context.TheCompanyInfo.Update(getthecompid);
+
+                // SOP Template
+                getthesettingsid.SOPNameLimit = charint;
+                getthesettingsid.SOPCodeSuffix = getsuffix;
+                getthesettingsid.SOPCodePrefix = getprefix;
+                getthesettingsid.SOPAllowCodeLimit = userlimit;
+                _context.SOPTopTemplates.Update(getthesettingsid);
 
                 _context.SaveChanges();
             }
 
+            string companyid = "Settings" + Uri.EscapeUriString("?=") + ViewBag.compid.ToString();
+            string newurl = companyid.Replace("%3F%3D", "?=");
+
+            ViewBag.newurl = newurl;
 
             return View(savesettings);
         }
@@ -1659,6 +1782,27 @@ namespace sopman.Controllers
                                select new SOPOverView { ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
             ViewBag.processtmps = processtmps;
 
+
+            var res = (from i in _context.SOPRACIRes
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId , Status = i.Status}).ToList();
+            ViewBag.res = res;
+
+            var acc = (from i in _context.SOPRACIAcc
+                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.acc = acc;
+
+            var cons = (from i in _context.SOPRACICon
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+            ViewBag.cons = cons;
+            var infi = (from i in _context.SOPRACIInf
+                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+
+            ViewBag.infi = infi;
+
+            var deps = (from i in _context.Departments
+                        select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
+
+            ViewBag.deps = deps;
             return View();
         }
 
@@ -1819,11 +1963,20 @@ namespace sopman.Controllers
                           where w.SOPTemplateID == gettopid
                           select w.ExpireDate).SingleOrDefault();
 
+            var projectId = (from p in _context.NewInstance
+                             where p.InstanceId == getexe
+                             select p.ProjectId).Single();
+
+            var proj = (from p in _context.Projects
+                        where p.ProjectId == projectId
+                        select p.ProjectName).Single();
+
             ViewBag.expire = expire;
             ViewBag.instref = instref;
             ViewBag.toptemp = toptemp;
             ViewBag.getid = getexe;
             ViewBag.gettopid = gettopid;
+            ViewBag.proj = proj;
             Console.WriteLine("TopID");
             Console.WriteLine(ViewBag.gettopid);
             var temp = (from i in _context.SOPNewTemplate
