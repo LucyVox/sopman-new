@@ -255,6 +255,7 @@ namespace sopman.Controllers
                               where i.CompanyId == getcompid
                               select i.TopTempId).Single();
 
+
             var getsopnewsname = (from i in _context.SOPNewTemplate
                                   where i.TopTempId == gettoptemp
                                   select new TasksViewModel{TempName = i.TempName, SOPTemplateID = i.SOPTemplateID, }).ToList();
@@ -295,6 +296,7 @@ namespace sopman.Controllers
                           select new TasksViewModel { ExecuteSopID = p.ExecuteSopID, SectionId = p.SectionId}).ToList();
 
             ViewBag.exesop = exesop;
+
             return View();
         }
         [HttpPost]
@@ -2971,13 +2973,14 @@ namespace sopman.Controllers
 
             ViewBag.infi = infi;
 
-            processtmps.Count();
 
 
-            List<string> countstatus = new List<string>();
+
+            int completeProcesses = 0;
+
             foreach (var item in processtmps)
             {
-                bool rescomplete, acccomplete, concomplete, infcomplete; 
+                bool rescomplete = false, acccomplete = false, concomplete = false, infcomplete = false; 
                 foreach (var sub in acc)
                 {
                     if (sub.valuematch == item.valuematch)
@@ -2986,7 +2989,7 @@ namespace sopman.Controllers
                          var thecount = sub.Status;
 
                         if (thecount == status){
-                            
+                            acccomplete = true;
                         }
                     }
                 }
@@ -2999,7 +3002,7 @@ namespace sopman.Controllers
 
                         if (thecount == status)
                         {
-                            
+                            rescomplete = true;
                         }
                     }
                 }
@@ -3012,7 +3015,7 @@ namespace sopman.Controllers
 
                         if (thecount == status)
                         {
-                            
+                            concomplete = true;
                         }
                     }
                 }
@@ -3025,33 +3028,19 @@ namespace sopman.Controllers
 
                         if (thecount == status)
                         {
-                            
+                            infcomplete = true;
                         }
                     }
                 }
-            }
-            Console.WriteLine(countstatus.Count());
 
-            List<string> rescountstatus = new List<string>();
-            foreach (var item in processtmps)
-            {
-                
+                if(rescomplete && acccomplete && concomplete && infcomplete)
+                {
+                    completeProcesses++;
+                }
             }
-            Console.WriteLine(rescountstatus.Count());
 
-            List<string> concountstatus = new List<string>();
-            foreach (var item in processtmps)
-            {
-                
-            }
-            Console.WriteLine(concountstatus.Count());
-
-            List<string> infcountstatus = new List<string>();
-            foreach (var item in processtmps)
-            {
-                
-            }
-            Console.WriteLine(infcountstatus.Count());
+            double percentageComplete = (completeProcesses / processtmps.Count()) * 100;
+            ViewBag.percentageComplete = percentageComplete;
 
 
             var deps = (from i in _context.Departments
