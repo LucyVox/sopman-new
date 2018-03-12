@@ -40,10 +40,10 @@
                             <th>@Html.DisplayFor(modelItem => item.SOPCode)</th>
                             <th>@Html.DisplayFor(modelItem => item.ExpireDate)</th>
                             <th>
-                                <button class="btn btn-secondary h-100 w-100" type="button" id="list-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-secondary position-relative h-100 w-100" type="button" id="list-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   <i class="material-icons">menu</i>
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="list-menu">
+                                <div class="dropdown-menu px-1" aria-labelledby="list-menu">
                                     <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/CreateInstance?=@item.SOPTemplateID">Create instance</a></div>       
                                     <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/EditMainSOP?=@item.SOPTemplateID">Edit SOP</a></div>       
                                 </div>
