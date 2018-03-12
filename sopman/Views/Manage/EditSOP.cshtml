@@ -128,7 +128,9 @@
                                 int accCount = 1;
                                 int conCount = 1;
                                 int infCount = 1;
-                            
+                                int sopprocid = item.SOPTemplateProcessID;
+                                var hiddenname = "hidden" + sopprocid;
+                                <input type="hidden" name="@hiddenname" value="@sopprocid"> 
                                 <div class="card section-count container @protype process-@value">
                                     <div class="card-header row" role="tab" id="headingOne">
                                         <div class="col-12 col-md-1 count-col">

@@ -69,10 +69,7 @@ namespace sopman
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            //file upload
-            services.AddSingleton<IFileProvider>(
-                new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "Uploads")));
+
 
             services.AddMvc();
             services.AddSingleton<IConfiguration>(Configuration);

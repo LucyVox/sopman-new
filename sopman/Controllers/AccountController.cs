@@ -658,7 +658,7 @@ namespace sopman.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult RegisterDepartment()
+        public ActionResult RegisterDepartment()
         {
 
             return View();
@@ -699,7 +699,7 @@ namespace sopman.Controllers
             var orderVM = new RegisterJobTitleViewModel();
             var getuser = _userManager.GetUserId(User);
 
-            var compid = (from i in _context.TheCompanyInfo
+            var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 

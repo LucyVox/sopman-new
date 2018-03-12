@@ -65,6 +65,7 @@ namespace sopman.Models.ManageViewModels
         public string InstanceId { get; set; }
         public DateTime editDate { get; set; }
 
+
         public class aList {
             public List<string> ProcessFiles { get; set; }
             public string ProcessName { get; set; }
@@ -82,6 +83,9 @@ namespace sopman.Models.ManageViewModels
         public List<RACIRESPick> RACIRes { get; set; } 
 
         public int RACIResID { get; set; }
+        public int RACIAccID { get; set; }
+        public int RACIConID { get; set; }
+        public int RACIInfID { get; set; }
         public string DepartmentId { get; set; }
         public string JobTitleId { get; set; }
         public string DepartmentName { get; set; }

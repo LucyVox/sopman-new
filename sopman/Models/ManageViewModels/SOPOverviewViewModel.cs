@@ -11,6 +11,7 @@ namespace sopman.Models.ManageViewModels
 {
     public class SOPOverView
     {
+        public int SOPTemplateProcessID { get; set; }
         public int SectionId { get; set; }
         public string SectionText { get; set; }
         public string valuematch { get; set; }

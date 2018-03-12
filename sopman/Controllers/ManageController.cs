@@ -1133,18 +1133,18 @@ namespace sopman.Controllers
 
 
             var res = (from i in _context.SOPRACIRes
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+                       select new ProcessOutput { RACIResID = i.RACIResID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
             ViewBag.res = res;
 
             var acc = (from i in _context.SOPRACIAcc
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+                       select new ProcessOutput { RACIAccID = i.RACIAccID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
             ViewBag.acc = acc;
 
             var cons = (from i in _context.SOPRACICon                       
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+                        select new ProcessOutput { RACIConID = i.RACIConID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
             ViewBag.cons = cons;
              var infi = (from i in _context.SOPRACIInf
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+                         select new ProcessOutput {RACIInfID = i.RACIInfID,  SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
 
             ViewBag.infi = infi;
 
@@ -1152,6 +1152,7 @@ namespace sopman.Controllers
                             where i.CompanyId == theuser
                             select new ProcessOutput { ClaimId = i.ClaimId, FirstName = i.FirstName, SecondName = i.SecondName, JobTitleId = i.JobTitleId }).ToList();
             ViewBag.userlist = userlist;
+
             ViewBag.selectlist = new SelectList(userlist, "ClaimId", "FirstName");
 
 
@@ -1233,18 +1234,18 @@ namespace sopman.Controllers
 
             ViewBag.process = process;
             var res = (from i in _context.SOPRACIRes
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+                       select new ProcessOutput { RACIResID = i.RACIResID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
             ViewBag.res = res;
 
             var acc = (from i in _context.SOPRACIAcc
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+                       select new ProcessOutput { RACIAccID = i.RACIAccID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
             ViewBag.acc = acc;
 
             var cons = (from i in _context.SOPRACICon
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+                        select new ProcessOutput { RACIConID = i.RACIConID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
             ViewBag.cons = cons;
             var infi = (from i in _context.SOPRACIInf
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
+                        select new ProcessOutput { RACIInfID = i.RACIInfID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId }).ToList();
 
             ViewBag.infi = infi;
 
@@ -1293,76 +1294,114 @@ namespace sopman.Controllers
                     {
                         if (sub.valuematch == item.valuematch)
                         {
+                            int resedid = sub.RACIResID;
+                            var getidofcon = Request.Form["resid-hidden" + resedid];
 
-                            var dbcon = _context.SOPRACIRes.FirstOrDefault(x => x.valuematch == item.valuematch);
+                            string changeid = resedid.ToString();
 
-                            var status = "Pending";
+                            if (getidofcon == changeid)
+                            {
+                                var dbcon = _context.SOPRACIRes.FirstOrDefault(x => x.RACIResID == resedid);
 
-                            var sel = Request.Form[sub.valuematch + "-RES"];
-                            Console.WriteLine(sel);
-                            int onevalue = int.Parse(sel);
+                                var status = "Pending";
+                                int resid = sub.RACIResID;
+                                Console.WriteLine("Resid" + resid);
+                                var sel = Request.Form[sub.valuematch + "-RES-" + resid];
+                                Console.WriteLine("Value from Res dropdown");
+                                Console.WriteLine(sel);
+                                int onevalue = int.Parse(sel);
 
-                            dbcon.Status = status;
-                            dbcon.UserId = onevalue;
-                            dbcon.InstanceId = getid;
-                            _context.SOPRACIRes.Update(dbcon);
-                            _context.SaveChanges();
+                                dbcon.Status = status;
+                                dbcon.UserId = onevalue;
+                                dbcon.InstanceId = getid;
+                                _context.SOPRACIRes.Update(dbcon);
+                                _context.SaveChanges();
+                            }
+
                         }
                     }
                     foreach (var sub in (ViewBag.cons))
                     {
+                        
                         if (sub.valuematch == item.valuematch)
                         {
-                            var dbconcon = _context.SOPRACICon.FirstOrDefault(x => x.valuematch == item.valuematch);
-                            var statuscon = "Pending";
+                            int conedid = sub.RACIInfID;
+                            var getidofcon = Request.Form["conid-hidden" + conedid];
 
-                            var selcon = Request.Form[sub.valuematch + "-CON"];
-                            Console.WriteLine(selcon);
-                            int onevalueacc = int.Parse(selcon);
+                            string changeid = conedid.ToString();
 
-                            dbconcon.Status = statuscon;
-                            dbconcon.UserId = onevalueacc;
-                            dbconcon.InstanceId = getid;
-                            _context.SOPRACICon.Update(dbconcon);
-                            _context.SaveChanges();
+                            if (getidofcon == changeid)
+                            {
+                                var dbconcon = _context.SOPRACICon.FirstOrDefault(x => x.RACIConID == conedid);
+                                var statuscon = "Pending";
+                                int conid = sub.RACIConID;
+
+                                var selcon = Request.Form[sub.valuematch + "-CON-" + conid];
+                                Console.WriteLine(selcon);
+                                int onevalueacc = int.Parse(selcon);
+
+                                dbconcon.Status = statuscon;
+                                dbconcon.UserId = onevalueacc;
+                                dbconcon.InstanceId = getid;
+                                _context.SOPRACICon.Update(dbconcon);
+                                _context.SaveChanges();
+                            }
+
                         }
                     }
                     foreach (var sub in (ViewBag.acc))
                     {
                         if (sub.valuematch == item.valuematch)
                         {
-                            var dbconacc = _context.SOPRACIAcc.FirstOrDefault(x => x.valuematch == item.valuematch);
-                            var statusacc = "Pending";
+                            int accid = sub.RACIAccID;
+                            var getidofacc = Request.Form["accid-hidden" + accid];
+                            Console.WriteLine("Value of Hidden");
+                            Console.WriteLine(getidofacc);
+                            Console.WriteLine(sub.RACIAccID);
 
-                            var selacc = Request.Form[sub.valuematch + "-ACC"];
-                            Console.WriteLine(selacc);
-                            int onevalueacc = int.Parse(selacc);
+                            string changeid = accid.ToString();
 
-                            dbconacc.Status = statusacc;
-                            dbconacc.UserId = onevalueacc;
-                            dbconacc.InstanceId = getid;
-                            _context.SOPRACIAcc.Update(dbconacc);
-                            _context.SaveChanges();
+                            if(getidofacc == changeid){
+                                var dbconacc = _context.SOPRACIAcc.FirstOrDefault(x => x.RACIAccID == accid);
+                                var statusacc = "Pending";
+                                var selacc = Request.Form[sub.valuematch + "-ACC-" + accid];
+                                Console.WriteLine("Value from dropdown:");
+                                Console.WriteLine(selacc);
+                                int onevalueacc = int.Parse(selacc);
 
+                                dbconacc.Status = statusacc;
+                                dbconacc.UserId = onevalueacc;
+                                dbconacc.InstanceId = getid;
+                                _context.SOPRACIAcc.Update(dbconacc);
+                                _context.SaveChanges();
+                            }
                         }
                     }
                     foreach (var sub in (ViewBag.infi))
                     {
                         if (sub.valuematch == item.valuematch)
                         {
-                            var dbconinf = _context.SOPRACIInf.FirstOrDefault(x => x.valuematch == item.valuematch);
-                            var statuscon = "Pending";
+                            int infiID = sub.RACIInfID;
+                            var getidofcon = Request.Form["infiid-hidden" + infiID];
 
-                            var selcon = Request.Form[sub.valuematch + "-INF"];
-                            Console.WriteLine(selcon);
-                            int onevaluecon = int.Parse(selcon);
+                            string changeid = infiID.ToString();
 
-                            dbconinf.Status = statuscon;
-                            dbconinf.UserId = onevaluecon;
-                            dbconinf.InstanceId = getid;
-                            _context.SOPRACIInf.Update(dbconinf);
-                            _context.SaveChanges();
+                            if (getidofcon == changeid)
+                            {
+                                var dbconinf = _context.SOPRACIInf.FirstOrDefault(x => x.RACIInfID == infiID);
+                                var statuscon = "Pending";
+                                int infid = sub.RACIInfID;
 
+                                var selcon = Request.Form[sub.valuematch + "-INF-" + infid];
+                                Console.WriteLine(selcon);
+                                int onevaluecon = int.Parse(selcon);
+
+                                dbconinf.Status = statuscon;
+                                dbconinf.UserId = onevaluecon;
+                                dbconinf.InstanceId = getid;
+                                _context.SOPRACIInf.Update(dbconinf);
+                                _context.SaveChanges();
+                            }
                         }
                     }
                     _context.SaveChanges();
@@ -1804,16 +1843,18 @@ namespace sopman.Controllers
                         Directory.GetCurrentDirectory(),
                         "Uploads/" + firstid + secondid);
 
-                    ProcessOutput.aList filesList = new ProcessOutput.aList();
-                    filesList.ProcessName = item.ProcessName;
+                    if(Directory.Exists(path)){
+                        ProcessOutput.aList filesList = new ProcessOutput.aList();
+                        filesList.ProcessName = item.ProcessName;
 
-                    filesList.ProcessFiles = new List<string>();
-                    foreach (string file in Directory.EnumerateFiles(path, "*"))
-                    {
-                        filesList.ProcessFiles.Add(file);
+                        filesList.ProcessFiles = new List<string>();
+                        foreach (string file in Directory.EnumerateFiles(path, "*"))
+                        {
+                            filesList.ProcessFiles.Add(file);
+                        }
+
+                        anotherlist.Add(filesList);
                     }
-
-                    anotherlist.Add(filesList);
                 }
             }
             ViewBag.files = anotherlist;
@@ -2083,7 +2124,7 @@ namespace sopman.Controllers
 
             var processtmps = (from i in _context.SOPProcessTempls
                                where i.SOPTemplateID == gettopid
-                               select new SOPOverView {SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
+                               select new SOPOverView {SOPTemplateProcessID = i.SOPTemplateProcessID, SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
 
 
             ViewBag.processtmps = processtmps;
@@ -2172,16 +2213,20 @@ namespace sopman.Controllers
                         Directory.GetCurrentDirectory(),
                         "Uploads/" + firstid + secondid);
 
-                    ProcessOutput.aList filesList = new ProcessOutput.aList();
-                    filesList.ProcessName = item.ProcessName;
-
-                    filesList.ProcessFiles = new List<string>();
-                    foreach (string file in Directory.EnumerateFiles(path, "*"))
+                    if (Directory.Exists(path))
                     {
-                        filesList.ProcessFiles.Add(file);
+                        ProcessOutput.aList filesList = new ProcessOutput.aList();
+                        filesList.ProcessName = item.ProcessName;
+
+                        filesList.ProcessFiles = new List<string>();
+                        foreach (string file in Directory.EnumerateFiles(path, "*"))
+                        {
+                            filesList.ProcessFiles.Add(file);
+                        }
+
+                        anotherlist.Add(filesList);
                     }
 
-                    anotherlist.Add(filesList);
                 }
             }
             ViewBag.files = anotherlist;
@@ -2314,7 +2359,7 @@ namespace sopman.Controllers
 
             var processtmps = (from i in _context.SOPProcessTempls
                                where i.SOPTemplateID == gettopid
-                               select new SOPOverView {SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
+                               select new SOPOverView {SOPTemplateProcessID = i.SOPTemplateProcessID, SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
 
 
             ViewBag.processtmps = processtmps;
@@ -2387,11 +2432,10 @@ namespace sopman.Controllers
                 var thetempid = gettopid;
                 foreach (var item in processtmps)
                 {
-                    Console.WriteLine(item.ProcessDesc);
+                   
 
                     if (item.SOPTemplateID == thetempid)
                     {
-                        Console.WriteLine(item.SOPTemplateID + thetempid);
                         ViewBag.Date = item.DueDate;
                         ViewBag.externDoc = item.ExternalDocument;
 
@@ -2401,29 +2445,50 @@ namespace sopman.Controllers
                             Directory.GetCurrentDirectory(),
                             "Uploads/" + firstid + secondid);
 
-                        ProcessOutput.aList filesList = new ProcessOutput.aList();
-                        filesList.ProcessName = item.ProcessName;
+                        if(Directory.Exists(path)){
+                            ProcessOutput.aList filesList = new ProcessOutput.aList();
+                            filesList.ProcessName = item.ProcessName;
 
-                        filesList.ProcessFiles = new List<string>();
-                        foreach (string file in Directory.EnumerateFiles(path, "*"))
-                        {
-                            filesList.ProcessFiles.Add(file);
+                            filesList.ProcessFiles = new List<string>();
+                            foreach (string file in Directory.EnumerateFiles(path, "*"))
+                            {
+                                filesList.ProcessFiles.Add(file);
+                            }
+
+                            anotherlist.Add(filesList);
                         }
 
-                        anotherlist.Add(filesList);
+                        int sopprocid = item.SOPTemplateProcessID;
+                        Console.WriteLine("item SOPTemplateProcessID:" + sopprocid);
+                        var hiddenname = Request.Form["hidden" + sopprocid]; 
+                        Console.WriteLine("hidden value:" + hiddenname);
+                        int hiddenint = int.Parse(hiddenname);
+
+                        if(hiddenint == item.SOPTemplateProcessID){
+
+                            int showid = item.SOPTemplateProcessID;
+                            Console.WriteLine("show id:" + showid);
+
+                            var getnameofdiv = item.valuematch;
+                            var getdiv = Request.Form["desc-" + getnameofdiv];
+                            Console.WriteLine("item valuematch:" + item.valuematch);
+                            Console.WriteLine("New text:" + getdiv);
+
+                            var dbprocesstemps = _context.SOPProcessTempls.FirstOrDefault(x => x.SOPTemplateProcessID == hiddenint);
+                            dbprocesstemps.ProcessDesc = getdiv;
+                            _context.SOPProcessTempls.Update(dbprocesstemps);
+                            _context.SaveChanges();
+                        }
+
                     }
 
-                    var getnameofdiv = item.valuematch;
-
-                    var getdiv = Request.Form["desc-" + getnameofdiv];
-
-                    _context.SOPProcessTempls.Update(sopprocess);
-                    _context.SaveChanges();
                 }
                 ViewBag.files = anotherlist;
-
             }
-            return View();
+            string url1 = Url.Content("SOPs" + Uri.EscapeUriString("?=") + ExecuteSopID);
+            string newurl = url1.Replace("%3F%3D", "?=");
+
+            return new RedirectResult(newurl);
         }
 
         [HttpGet]
@@ -2643,16 +2708,20 @@ namespace sopman.Controllers
                         Directory.GetCurrentDirectory(),
                         "Uploads/" + firstid + secondid);
 
-                    ProcessOutput.aList filesList = new ProcessOutput.aList();
-                    filesList.ProcessName = item.ProcessName;
-
-                    filesList.ProcessFiles = new List<string>();
-                    foreach (string file in Directory.EnumerateFiles(path, "*"))
+                    if (Directory.Exists(path))
                     {
-                        filesList.ProcessFiles.Add(file);
+                        ProcessOutput.aList filesList = new ProcessOutput.aList();
+                        filesList.ProcessName = item.ProcessName;
+
+                        filesList.ProcessFiles = new List<string>();
+                        foreach (string file in Directory.EnumerateFiles(path, "*"))
+                        {
+                            filesList.ProcessFiles.Add(file);
+                        }
+
+                        anotherlist.Add(filesList);
                     }
 
-                    anotherlist.Add(filesList);
                 }
             }
             ViewBag.files = anotherlist;
