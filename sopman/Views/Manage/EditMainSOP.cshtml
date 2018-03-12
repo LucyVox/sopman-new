@@ -51,7 +51,7 @@
                                         if(item.valuematch == subitem.valuematch){
                                             if(item.NewTempId == @ViewBag.gettopid){
                                                 <input type="hidden" name="hiiden-line-@item.SubSecId" value="@item.SubSecId">
-                                                <input class="form-control" type="text" value="@item.SingleLinkTextBlock" name="line-@item.SubSecId">
+                                                <input class="form-control my-2" type="text" value="@item.SingleLinkTextBlock" name="line-@item.SubSecId">
                                             }
                                         }
                                     }
@@ -88,7 +88,7 @@
                                         if(item.valuematch == subitem.valuematch){
                                            if(item.NewTempId == @ViewBag.gettopid){
                                                 <input type="hidden" name="hiiden-mult-@item.SubSecId" value="@item.SubSecId">
-                                                <textarea class="form-control" name="text-@item.SubSecId">@item.MultilineTextBlock</textarea>
+                                                <textarea class="form-control my-2" name="text-@item.SubSecId">@item.MultilineTextBlock</textarea>
                                             }
                                         }
                                     }
@@ -103,18 +103,39 @@
                                     <!--  Name of sop section. -->
                                     foreach(var subitem in (ViewBag.thesecs)){
                                         if(subitem.valuematch == item.ValuematchEdited){
-                                            <p>@subitem.SectionText</p>
-                                        }
-                                    }
-                                    <p>@item.EditDate.ToString("dd/MM/yyyy")</p>
-                                    <p>@item.TextEdited</p>
 
-                                    <!--  Name of user who edited.. -->
-                                    foreach(var name in (ViewBag.resiuser)){
-                                        if(name.UserId == item.UserId){
-                                            <p>@name.FirstName @name.SecondName</p>
+                                            <div class="card">
+                                                <div class="card-header">New Edit</div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">@subitem.SectionText edited</h5>
+
+                                                    <h6 class="card-subtitle mb-2 text-muted">Edited by
+                                                        <!--  Name of user who edited.. -->
+                                                            @foreach(var name in (ViewBag.resiuser)){
+                                                                if(name.UserId == item.UserId){
+                                                                    <span>@name.FirstName&nbsp;@name.SecondName</span>
+                                                                }
+                                                            }
+                                                    on @item.EditDate.ToString("dd/MM/yyyy")</h6>
+                                                    <p class="card-text">@item.TextEdited</p>
+                                                </div>
+                                            </div>
+
+                            
                                         }
                                     }
+
+
+
+
+
+
+
+
+
+
+
+                            
                                 }
                         </div>
                     </div>
