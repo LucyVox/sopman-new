@@ -228,6 +228,26 @@ namespace sopman.Data.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("sopman.Data.ApplicationDbContext+EditedSop", b =>
+                {
+                    b.Property<int>("EditedID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("EditDate");
+
+                    b.Property<string>("SOPID");
+
+                    b.Property<string>("TextEdited");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("ValuematchEdited");
+
+                    b.HasKey("EditedID");
+
+                    b.ToTable("EditSOP");
+                });
+
             modelBuilder.Entity("sopman.Data.ApplicationDbContext+EntMultilinkTextSec", b =>
                 {
                     b.Property<int>("SubSecId")

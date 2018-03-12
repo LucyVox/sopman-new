@@ -34,6 +34,7 @@ namespace sopman.Models.SetupViewModels
     }
     public class LineChild
     {
+        public int SubSecId { get; set; }
         public string SectionText { get; set; }
         public string SingleLinkTextBlock { get; set; }
         public string valuematch { get; set; }

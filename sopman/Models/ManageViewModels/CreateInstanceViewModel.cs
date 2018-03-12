@@ -94,6 +94,17 @@ namespace sopman.Models.ManageViewModels
         public string SecondName { get; set; }
         public int ClaimId { get; set; }
     }
+    public class versionHistory {
+        public string SOPID { get; set; }
+        public string ValuematchEdited { get; set; }
+        public string TextEdited { get; set; }
+        public DateTime EditDate { get; set; }
+        public string UserId { get; set; }
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
+        public int ClaimId { get; set; }
+
+    }
     public class CommentsView {
 
         public int CommentId { get; set; }

@@ -350,6 +350,17 @@ namespace sopman.Data
         }
         public DbSet<SOPTemplateProcesses> SOPProcessTempls { get; set; }
 
+        public class EditedSop
+        {
+            [Key]
+            public int EditedID { get; set; }
+            public string SOPID { get; set; }
+            public string ValuematchEdited { get; set; }
+            public string TextEdited { get; set; }
+            public DateTime EditDate { get; set; }
+            public string UserId { get; set; }
+        }
+        public DbSet<EditedSop> EditSOP { get; set; }
 
         public class LiveSOP
         {

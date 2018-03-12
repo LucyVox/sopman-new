@@ -2501,6 +2501,12 @@ namespace sopman.Controllers
 
             ViewBag.loggedin = getuserid;
 
+            var gettempname = (from y in _context.SOPNewTemplate
+                               where y.SOPTemplateID == SOPTemplateID
+                               select y.TempName).Single();
+
+            ViewBag.gettempname = gettempname;
+
             var getuserinfo = (from i in _context.CompanyClaim
                                where i.UserId == getuser
                                select new SOPOverView { FirstName = i.FirstName, SecondName = i.SecondName }).ToList();
@@ -2512,75 +2518,25 @@ namespace sopman.Controllers
             var exeid = SOPTemplateID;
             ViewBag.exeid = exeid;
 
-            var getexe = (from i in _context.ExecutedSop
-                          where i.ExecuteSopID == exeid
-                          select i.SectionId).Single();
-
-
-            var gettopid = (from y in _context.NewInstance
-                            where y.InstanceId == getexe
-                            select y.SOPTemplateID).Single();
-
-
-            var instref = (from y in _context.NewInstance
-                           where y.InstanceId == getexe
-                           select y.InstanceRef).Single();
-
             var toptemp = (from w in _context.SOPTopTemplates
                            where w.CompanyId == compid
                            select w.TopTempId).Single();
-
-            var expire = (from w in _context.SOPNewTemplate
-                          where w.SOPTemplateID == gettopid
-                          select w.ExpireDate).SingleOrDefault();
-
-            var projectId = (from p in _context.NewInstance
-                             where p.InstanceId == getexe
-                             select p.ProjectId).Single();
-
-            var proj = (from p in _context.Projects
-                        where p.ProjectId == projectId
-                        select p.ProjectName).Single();
-
-            ViewBag.expire = expire;
-            ViewBag.instref = instref;
-            ViewBag.toptemp = toptemp;
-            ViewBag.getid = getexe;
-            ViewBag.gettopid = gettopid;
-            ViewBag.proj = proj;
-            Console.WriteLine("TopID");
-            Console.WriteLine(ViewBag.gettopid);
-            var temp = (from i in _context.SOPNewTemplate
-                        where i.SOPTemplateID == gettopid
-                        select i.TempName).Single();
-
-            var thecode = (from i in _context.SOPNewTemplate
-                           where i.SOPTemplateID == gettopid
-                           select i.SOPCode).Single();
-
-            var intref = (from y in _context.NewInstance
-                          where y.InstanceId == getexe
-                          select y.InstanceRef).Single();
-
-            ViewBag.temp = temp;
-            ViewBag.thecode = thecode;
-            ViewBag.intref = intref;
-
+            
             var getsecs = (from i in _context.SOPSectionCreate
                            where i.TopTempId == toptemp
                            select new SopTemplate { SectionText = i.SectionText, valuematch = i.valuematch }).ToList();
 
             var getsin = (from i in _context.UsedSingleLinkText
                           join p in _context.SOPSectionCreate on i.valuematch equals p.valuematch
-                          select new LineChild { SingleLinkTextBlock = i.SingleLinkTextBlock, valuematch = p.valuematch, NewTempId = i.NewTempId, }).ToList();
+                          select new LineChild {SubSecId = i.SubSecId, SingleLinkTextBlock = i.SingleLinkTextBlock, valuematch = p.valuematch, NewTempId = i.NewTempId, }).ToList();
 
             var getmul = (from i in _context.UsedMultilineText
                           join p in _context.SOPSectionCreate on i.valuematch equals p.valuematch
-                          select new LineChild { MultilineTextBlock = i.MultilineTextBlock, valuematch = p.valuematch, NewTempId = i.NewTempId }).ToList();
+                          select new LineChild {SubSecId = i.SubSecId, MultilineTextBlock = i.MultilineTextBlock, valuematch = p.valuematch, NewTempId = i.NewTempId }).ToList();
 
             var gettabs = (from i in _context.UsedTable
                            join p in _context.SOPSectionCreate on i.valuematch equals p.valuematch
-                           select new LineChild { TableHTML = i.TableHTML, valuematch = p.valuematch, NewTempId = i.NewTempId }).ToList();
+                           select new LineChild {SubSecId = i.SubSecId, TableHTML = i.TableHTML, valuematch = p.valuematch, NewTempId = i.NewTempId }).ToList();
 
             var gettabscols = (from i in _context.UsedTableCols
                                join p in _context.SOPSectionCreate on i.tableval equals p.valuematch
@@ -2589,6 +2545,8 @@ namespace sopman.Controllers
             var gettabsrows = (from i in _context.UsedTableRows
                                join p in _context.SOPSectionCreate on i.tableval equals p.valuematch
                                select new SOPOverView { RowText = i.RowText, valuematch = p.valuematch, tableval = p.valuematch, NewTempId = i.NewTempId }).ToList();
+
+            ViewBag.gettopid = SOPTemplateID;
 
             ViewBag.thesecs = getsecs;
             ViewBag.thesin = getsin;
@@ -2617,12 +2575,6 @@ namespace sopman.Controllers
             ViewBag.resiinfuser = resiinfuser;
             ViewBag.allusers = allusers;
 
-            var processtmps = (from i in _context.SOPProcessTempls
-                               where i.SOPTemplateID == gettopid
-                               select new SOPOverView { SOPTemplateProcessID = i.SOPTemplateProcessID, SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
-
-
-            ViewBag.processtmps = processtmps;
 
             var ifrescomp = (from i in _context.RACIResComplete
                              where i.InstanceID == exeid
@@ -2686,45 +2638,14 @@ namespace sopman.Controllers
 
             ViewBag.deps = deps;
 
-            var comments = (from i in _context.Comments
-                            where i.ExecuteSopID == exeid
-                            select new CommentsView { CommentId = i.CommentId, TheComment = i.TheComment, PostTime = i.PostTime }).ToList();
+            var gethistory = (from i in _context.EditSOP
+                              where i.SOPID == SOPTemplateID
+                              select new versionHistory { SOPID = i.SOPID, ValuematchEdited = i.ValuematchEdited, TextEdited = i.TextEdited, EditDate = i.EditDate, UserId = i.UserId }).ToList();
 
-            ViewBag.comments = comments;
-
-            List<ProcessOutput.aList> anotherlist = new List<ProcessOutput.aList>();
-            var thetempid = gettopid;
-            foreach (var item in processtmps)
-            {
-                if (item.SOPTemplateID == thetempid)
-                {
-                    Console.WriteLine(item.SOPTemplateID + thetempid);
-                    ViewBag.Date = item.DueDate;
-                    ViewBag.externDoc = item.ExternalDocument;
-
-                    var firstid = getexe;
-                    var secondid = item.valuematch;
-                    var path = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "Uploads/" + firstid + secondid);
-
-                    if (Directory.Exists(path))
-                    {
-                        ProcessOutput.aList filesList = new ProcessOutput.aList();
-                        filesList.ProcessName = item.ProcessName;
-
-                        filesList.ProcessFiles = new List<string>();
-                        foreach (string file in Directory.EnumerateFiles(path, "*"))
-                        {
-                            filesList.ProcessFiles.Add(file);
-                        }
-
-                        anotherlist.Add(filesList);
-                    }
-
-                }
-            }
-            ViewBag.files = anotherlist;
+            ViewBag.gethistory = gethistory;
+            var alltheusers = (from u in _context.CompanyClaim
+                            select new versionHistory {UserId = u.UserId, FirstName = u.FirstName, SecondName = u.SecondName, ClaimId = u.ClaimId }).ToList();
+            ViewBag.resiuser = alltheusers;
             return View();
         }
 
@@ -2748,58 +2669,10 @@ namespace sopman.Controllers
                           select i.CompanyId).Single();
             var exeid = SOPTemplateID;
 
-            var getexe = (from i in _context.ExecutedSop
-                          where i.ExecuteSopID == exeid
-                          select i.SectionId).Single();
-
-
-            var gettopid = (from y in _context.NewInstance
-                            where y.InstanceId == getexe
-                            select y.SOPTemplateID).Single();
-
-            var instref = (from y in _context.NewInstance
-                           where y.InstanceId == getexe
-                           select y.InstanceRef).Single();
 
             var toptemp = (from w in _context.SOPTopTemplates
                            where w.CompanyId == compid
                            select w.TopTempId).Single();
-
-            var expire = (from w in _context.SOPNewTemplate
-                          where w.SOPTemplateID == gettopid
-                          select w.ExpireDate).SingleOrDefault();
-
-            var projectId = (from p in _context.NewInstance
-                             where p.InstanceId == getexe
-                             select p.ProjectId).Single();
-
-            var proj = (from p in _context.Projects
-                        where p.ProjectId == projectId
-                        select p.ProjectName).Single();
-
-            ViewBag.expire = expire;
-            ViewBag.instref = instref;
-            ViewBag.toptemp = toptemp;
-            ViewBag.getid = getexe;
-            ViewBag.gettopid = gettopid;
-            ViewBag.proj = proj;
-            Console.WriteLine("TopID");
-            Console.WriteLine(ViewBag.gettopid);
-            var temp = (from i in _context.SOPNewTemplate
-                        where i.SOPTemplateID == gettopid
-                        select i.TempName).Single();
-
-            var thecode = (from i in _context.SOPNewTemplate
-                           where i.SOPTemplateID == gettopid
-                           select i.SOPCode).Single();
-
-            var intref = (from y in _context.NewInstance
-                          where y.InstanceId == getexe
-                          select y.InstanceRef).Single();
-
-            ViewBag.temp = temp;
-            ViewBag.thecode = thecode;
-            ViewBag.intref = intref;
 
             var getsecs = (from i in _context.SOPSectionCreate
                            where i.TopTempId == toptemp
@@ -2807,15 +2680,15 @@ namespace sopman.Controllers
 
             var getsin = (from i in _context.UsedSingleLinkText
                           join p in _context.SOPSectionCreate on i.valuematch equals p.valuematch
-                          select new LineChild { SingleLinkTextBlock = i.SingleLinkTextBlock, valuematch = p.valuematch, NewTempId = i.NewTempId, }).ToList();
+                          select new LineChild {SubSecId = i.SubSecId,  SingleLinkTextBlock = i.SingleLinkTextBlock, valuematch = p.valuematch, NewTempId = i.NewTempId, }).ToList();
 
             var getmul = (from i in _context.UsedMultilineText
                           join p in _context.SOPSectionCreate on i.valuematch equals p.valuematch
-                          select new LineChild { MultilineTextBlock = i.MultilineTextBlock, valuematch = p.valuematch, NewTempId = i.NewTempId }).ToList();
+                          select new LineChild {SubSecId = i.SubSecId,  MultilineTextBlock = i.MultilineTextBlock, valuematch = p.valuematch, NewTempId = i.NewTempId }).ToList();
 
             var gettabs = (from i in _context.UsedTable
                            join p in _context.SOPSectionCreate on i.valuematch equals p.valuematch
-                           select new LineChild { TableHTML = i.TableHTML, valuematch = p.valuematch, NewTempId = i.NewTempId }).ToList();
+                           select new LineChild {SubSecId = i.SubSecId,  TableHTML = i.TableHTML, valuematch = p.valuematch, NewTempId = i.NewTempId }).ToList();
 
             var gettabscols = (from i in _context.UsedTableCols
                                join p in _context.SOPSectionCreate on i.tableval equals p.valuematch
@@ -2832,155 +2705,95 @@ namespace sopman.Controllers
             ViewBag.gettabscols = gettabscols;
             ViewBag.gettabsrows = gettabsrows;
 
-            var resiuser = (from u in _context.RACIResUser
-                            select new SOPOverView { RACIResChosenID = u.RACIResChosenID, RACIResID = u.RACIResID, UserId = u.UserId, soptoptempid = u.soptoptempid, Status = u.Status }).ToList();
-
-            var resiaccuser = (from u in _context.RACIAccUser
-                               select new SOPOverView { RACIAccChosenID = u.RACIAccChosenID, RACIAccID = u.RACIAccID, UserId = u.UserId, soptoptempid = u.soptoptempid, Status = u.Status }).ToList();
-
-            var resiconuser = (from u in _context.RACIConUser
-                               select new SOPOverView { RACIConChosenID = u.RACIConChosenID, RACIConID = u.RACIConID, UserId = u.UserId, soptoptempid = u.soptoptempid, Status = u.Status }).ToList();
-
-            var resiinfuser = (from u in _context.RACIInfUser
-                               select new SOPOverView { RACIInfChosenID = u.RACIInfChosenID, RACIInfID = u.RACIInfID, UserId = u.UserId, soptoptempid = u.soptoptempid, Status = u.Status }).ToList();
-
-            var allusers = (from u in _context.CompanyClaim
-                            select new SOPOverView { FirstName = u.FirstName, SecondName = u.SecondName, ClaimId = u.ClaimId }).ToList();
-            ViewBag.resiuser = resiuser;
-            ViewBag.resiaccuser = resiaccuser;
-            ViewBag.resiconuser = resiconuser;
-            ViewBag.resiinfuser = resiinfuser;
-            ViewBag.allusers = allusers;
-
-            var processtmps = (from i in _context.SOPProcessTempls
-                               where i.SOPTemplateID == gettopid
-                               select new SOPOverView { SOPTemplateProcessID = i.SOPTemplateProcessID, SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
-
-
-            ViewBag.processtmps = processtmps;
-
-            var ifrescomp = (from i in _context.RACIResComplete
-                             where i.InstanceID == exeid
-                             select new SOPOverView { RACIResChosenID = i.RACIResChosenID, StatusComplete = i.StatusComplete, InstanceID = i.InstanceID }).ToList();
-            ViewBag.ifrescomp = ifrescomp;
-
-            var ifresres = (from i in _context.RACIResRecusal
-                            where i.InstanceID == exeid
-                            select new SOPOverView { RACIResChosenID = i.RACIResChosenID, StatusRecusal = i.StatusRecusal, InstanceID = i.InstanceID }).ToList();
-            ViewBag.ifresres = ifresres;
-
-            var ifacccomp = (from i in _context.RACIAccComplete
-                             where i.InstanceID == exeid
-                             select new SOPOverView { RACIAccChosenID = i.RACIAccChosenID, StatusComplete = i.StatusComplete, InstanceID = i.InstanceID }).ToList();
-            ViewBag.ifacccomp = ifacccomp;
-
-            var ifaccres = (from i in _context.RACIAccRecusal
-                            where i.InstanceID == exeid
-                            select new SOPOverView { RACIAccChosenID = i.RACIAccChosenID, StatusRecusal = i.StatusRecusal, InstanceID = i.InstanceID }).ToList();
-            ViewBag.ifaccres = ifaccres;
-
-            var ifconcomp = (from i in _context.RACIConComplete
-                             where i.InstanceID == exeid
-                             select new SOPOverView { RACIConChosenID = i.RACIConChosenID, StatusComplete = i.StatusComplete, InstanceID = i.InstanceID }).ToList();
-            ViewBag.ifconcomp = ifconcomp;
-
-            var ifconres = (from i in _context.RACIConRecusal
-                            where i.InstanceID == exeid
-                            select new SOPOverView { RACIConChosenID = i.RACIConChosenID, StatusRecusal = i.StatusRecusal, InstanceID = i.InstanceID }).ToList();
-            ViewBag.ifconres = ifconres;
-
-            var ifinfcomp = (from i in _context.RACIInfComplete
-                             where i.InstanceID == exeid
-                             select new SOPOverView { RACIInfChosenID = i.RACIInfChosenID, StatusComplete = i.StatusComplete, InstanceID = i.InstanceID }).ToList();
-            ViewBag.ifinfcomp = ifinfcomp;
-
-            var ifinfres = (from i in _context.RACIInfRecusal
-                            where i.InstanceID == exeid
-                            select new SOPOverView { RACIConChosenID = i.RACIInfChosenID, StatusRecusal = i.StatusRecusal, InstanceID = i.InstanceID }).ToList();
-            ViewBag.ifinfres = ifinfres;
-
-
-            var res = (from i in _context.SOPRACIRes
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
-            ViewBag.res = res;
-
-            var acc = (from i in _context.SOPRACIAcc
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
-            ViewBag.acc = acc;
-
-            var cons = (from i in _context.SOPRACICon
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
-            ViewBag.cons = cons;
-            var infi = (from i in _context.SOPRACIInf
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
-
-            ViewBag.infi = infi;
-
-            var deps = (from i in _context.Departments
-                        select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
-
-            ViewBag.deps = deps;
 
             if (ModelState.IsValid)
             {
-                List<ProcessOutput.aList> anotherlist = new List<ProcessOutput.aList>();
-                var thetempid = gettopid;
-                foreach (var item in processtmps)
+                foreach (var subitem in getsecs)
                 {
-
-
-                    if (item.SOPTemplateID == thetempid)
+                    foreach (var item in getsin)
                     {
-                        ViewBag.Date = item.DueDate;
-                        ViewBag.externDoc = item.ExternalDocument;
-
-                        var firstid = getexe;
-                        var secondid = item.valuematch;
-                        var path = Path.Combine(
-                            Directory.GetCurrentDirectory(),
-                            "Uploads/" + firstid + secondid);
-
-                        if (Directory.Exists(path))
+                        if (item.valuematch == subitem.valuematch)
                         {
-                            ProcessOutput.aList filesList = new ProcessOutput.aList();
-                            filesList.ProcessName = item.ProcessName;
-
-                            filesList.ProcessFiles = new List<string>();
-                            foreach (string file in Directory.EnumerateFiles(path, "*"))
+                            if (item.NewTempId == SOPTemplateID)
                             {
-                                filesList.ProcessFiles.Add(file);
+                                var gethidden = Request.Form["hiiden-line-" + item.SubSecId];
+                                Console.WriteLine(gethidden);
+                                int gettableid = item.SubSecId;
+                                int changeto = int.Parse(gethidden);
+                                if (gettableid == changeto)
+                                {
+                                    var getline = Request.Form["line-" + item.SubSecId];
+
+                                    var getcurrentinput = (from p in _context.UsedSingleLinkText
+                                                           where p.SubSecId == changeto
+                                                           select p.SingleLinkTextBlock).Single();
+
+                                    Console.WriteLine(getline);
+
+                                    if(getcurrentinput != getline){
+                                        ApplicationDbContext.EditedSop edited = new ApplicationDbContext.EditedSop();
+                                        edited.TextEdited = getcurrentinput;
+                                        edited.SOPID = SOPTemplateID;
+                                        edited.ValuematchEdited = item.valuematch;
+                                        edited.EditDate = DateTime.Now;
+                                        edited.UserId = _userManager.GetUserId(User);
+                                        _context.Add(edited);
+                                        _context.SaveChanges();
+
+                                        var dbconnection = _context.UsedSingleLinkText.FirstOrDefault(x => x.SubSecId == changeto);
+                                        dbconnection.SingleLinkTextBlock = getline;
+                                        _context.UsedSingleLinkText.Update(dbconnection);
+                                        _context.SaveChanges();
+                                    }
+                                    else { }
+                                }
+
                             }
-
-                            anotherlist.Add(filesList);
                         }
-
-                        int sopprocid = item.SOPTemplateProcessID;
-                        Console.WriteLine("item SOPTemplateProcessID:" + sopprocid);
-                        var hiddenname = Request.Form["hidden" + sopprocid];
-                        Console.WriteLine("hidden value:" + hiddenname);
-                        int hiddenint = int.Parse(hiddenname);
-
-                        if (hiddenint == item.SOPTemplateProcessID)
-                        {
-
-                            int showid = item.SOPTemplateProcessID;
-                            Console.WriteLine("show id:" + showid);
-
-                            var getnameofdiv = item.valuematch;
-                            var getdiv = Request.Form["desc-" + getnameofdiv];
-                            Console.WriteLine("item valuematch:" + item.valuematch);
-                            Console.WriteLine("New text:" + getdiv);
-
-                            var dbprocesstemps = _context.SOPProcessTempls.FirstOrDefault(x => x.SOPTemplateProcessID == hiddenint);
-                            dbprocesstemps.ProcessDesc = getdiv;
-                            _context.SOPProcessTempls.Update(dbprocesstemps);
-                            _context.SaveChanges();
-                        }
-
                     }
+                    foreach (var item in getmul)
+                    {
+                        if (item.valuematch == subitem.valuematch)
+                        {
+                            if (item.NewTempId == SOPTemplateID)
+                            {
+                                var gethidden = Request.Form["hiiden-mult-" + item.SubSecId];
+                                Console.WriteLine(gethidden);
+                                int gettableid = item.SubSecId;
+                                int changeto = int.Parse(gethidden);
+                                if (gettableid == changeto)
+                                {
+                                    var getline = Request.Form["text-" + item.SubSecId];
+
+                                    var getcurrentinput = (from p in _context.UsedMultilineText
+                                                           where p.SubSecId == changeto
+                                                           select p.MultilineTextBlock).Single();
+                                    if (getcurrentinput != getline)
+                                    {
+                                        ApplicationDbContext.EditedSop edited = new ApplicationDbContext.EditedSop();
+                                        edited.TextEdited = getcurrentinput;
+                                        edited.SOPID = SOPTemplateID;
+                                        edited.ValuematchEdited = item.valuematch;
+                                        edited.EditDate = DateTime.Now;
+                                        edited.UserId = _userManager.GetUserId(User);
+                                        _context.Add(edited);
+                                        _context.SaveChanges();
+
+
+                                        var dbconnection = _context.UsedMultilineText.FirstOrDefault(x => x.SubSecId == changeto);
+                                        dbconnection.MultilineTextBlock = getline;
+                                        _context.UsedMultilineText.Update(dbconnection);
+                                        _context.SaveChanges();
+                                    }
+                                }
+                            }
+                        }
+                    }   
 
                 }
-                ViewBag.files = anotherlist;
+
+
+
             }
             string url1 = Url.Content("/Manage/SOPTemplates");
             string newurl = url1.Replace("%3F%3D", "?=");
