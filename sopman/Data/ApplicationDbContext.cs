@@ -347,6 +347,8 @@ namespace sopman.Data
             public string ProcessDesc { get; set; }
 
             public string valuematch { get; set; }
+
+            public string processStatus { get; set; }
         }
         public DbSet<SOPTemplateProcesses> SOPProcessTempls { get; set; }
 

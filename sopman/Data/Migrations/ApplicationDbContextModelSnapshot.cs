@@ -959,6 +959,8 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("SOPTemplateID");
 
+                    b.Property<string>("processStatus");
+
                     b.Property<string>("valuematch");
 
                     b.HasKey("SOPTemplateProcessID");

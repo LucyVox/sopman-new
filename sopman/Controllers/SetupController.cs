@@ -878,6 +878,8 @@ namespace sopman.Controllers
                 var desc = item.ProcessDesc;
                 soppro.ProcessDesc = desc;
 
+                soppro.processStatus = "Pending";
+
                 var getid = item.valuematch;
                 soppro.valuematch = getid;
 

@@ -21,33 +21,182 @@
                             </tr>
                         </thead>
                         <tbody> 
-                            @foreach(var item in (@ViewBag.newtemps)){
-                                foreach(var sub in (@ViewBag.getexe)){
-                                    foreach(var ist in (@ViewBag.getinst)){
-                                        if(ist.SOPTemplateID == item.SOPTemplateID){
-                                            if(sub.SectionId == ist.InstanceId){
-                                                foreach(var proc in (@ViewBag.processtmps)) {
-                                                    if(proc.SOPTemplateID == ist.SectionId){
-                                                        foreach(var res in (ViewBag.res)){
-                                                            if(res.valuematch == proc.valuematch){
-                                                                <tr>
-                                                                <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@item.TempName</a></th>
-                                                                @foreach(var proj in (ViewBag.theprojects)){
-                                                                    if(ist.ProjectId == proj.ProjectId){
-                                                                         <th>@proj.ProjectName</th>
-                                                                    }
-                                                                }
-                                                                 <th>@ist.InstanceExpire</th>
-                                                            </tr>
+                            @foreach(var res in (ViewBag.racirespro)){
+                                if(res.UserId == (ViewBag.getuserid)){
+                                    <tr class="res-user">
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                foreach(var exe in (ViewBag.exesop)){
+                                                    if(exe.SectionId == inst.InstanceId){
+                                                        <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@inst.InstanceRef</a></td>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @foreach(var proj in (ViewBag.getinstances)){
+                                            if(proj.InstanceId == res.InstanceId){
+                                                foreach(var project in (ViewBag.projects)){
+                                                    if(proj.ProjectId == project.ProjectId){
+                                                        <td><a href="/Manage/ViewProject?=@proj.ProjectId">@project.Projectname</a></td>
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                foreach(var item in (ViewBag.processSteps)){
+                                                    if(res.soptoptempid == item.SOPTemplateID){
+                                                        foreach(var exe in (ViewBag.exesop)){
+                                                            if(exe.SectionId == inst.InstanceId){
+                                                                <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a></td>
                                                             }
                                                         }
                                                     }
-                                                }   
-                                               }
+                                                }
                                             }
                                         }
-                                    }
-                               }
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                <td>@inst.ExpireDate</td>
+                                            }
+                                        }
+                                        <td>@res.Status</td>
+                                    </tr>
+                                }
+                            }
+                            @foreach(var res in (ViewBag.raciaccpro)){
+                                if(res.UserId == (ViewBag.getuserid)){
+                                    <tr class="acc-user">
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                foreach(var exe in (ViewBag.exesop)){
+                                                    if(exe.SectionId == inst.InstanceId){
+                                                        <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@inst.InstanceRef</a></td>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @foreach(var proj in (ViewBag.getinstances)){
+                                            if(proj.InstanceId == res.InstanceId){
+                                                foreach(var project in (ViewBag.projects)){
+                                                    if(proj.ProjectId == project.ProjectId){
+                                                        <td><a href="/Manage/ViewProject?=@proj.ProjectId">@project.Projectname</a></td>
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                foreach(var item in (ViewBag.processSteps)){
+                                                    if(res.soptoptempid == item.SOPTemplateID){
+                                                        foreach(var exe in (ViewBag.exesop)){
+                                                            if(exe.SectionId == inst.InstanceId){
+                                                                <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a></td>
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                <td>@inst.ExpireDate</td>
+                                            }
+                                        }
+                                        <td>@res.Status</td>
+                                    </tr>
+                                }
+                            } 
+                            @foreach(var res in (ViewBag.raciconpro)){
+                                if(res.UserId == (ViewBag.getuserid)){
+                                    <tr class="con-user">
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                foreach(var exe in (ViewBag.exesop)){
+                                                    if(exe.SectionId == inst.InstanceId){
+                                                        <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@inst.InstanceRef</a></td>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @foreach(var proj in (ViewBag.getinstances)){
+                                            if(proj.InstanceId == res.InstanceId){
+                                                foreach(var project in (ViewBag.projects)){
+                                                    if(proj.ProjectId == project.ProjectId){
+                                                        <td><a href="/Manage/ViewProject?=@proj.ProjectId">@project.Projectname</a></td>
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                foreach(var item in (ViewBag.processSteps)){
+                                                    if(res.soptoptempid == item.SOPTemplateID){
+                                                        foreach(var exe in (ViewBag.exesop)){
+                                                            if(exe.SectionId == inst.InstanceId){
+                                                                <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a></td>
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                <td>@inst.ExpireDate</td>
+                                            }
+                                        }
+                                        <td>@res.Status</td>
+                                    </tr>
+                                }
+                            } 
+                             @foreach(var res in (ViewBag.raciinfpro)){
+                                if(res.UserId == (ViewBag.getuserid)){
+                                    <tr class="inf-user">
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                foreach(var exe in (ViewBag.exesop)){
+                                                    if(exe.SectionId == inst.InstanceId){
+                                                        <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@inst.InstanceRef</a></td>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @foreach(var proj in (ViewBag.getinstances)){
+                                            if(proj.InstanceId == res.InstanceId){
+                                                foreach(var project in (ViewBag.projects)){
+                                                    if(proj.ProjectId == project.ProjectId){
+                                                        <td><a href="/Manage/ViewProject?=@proj.ProjectId">@project.Projectname</a></td>
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                foreach(var item in (ViewBag.processSteps)){
+                                                    if(res.soptoptempid == item.SOPTemplateID){
+                                                        foreach(var exe in (ViewBag.exesop)){
+                                                            if(exe.SectionId == inst.InstanceId){
+                                                                <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a></td>
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @foreach(var inst in (ViewBag.getinstances)){
+                                            if(inst.InstanceId == res.InstanceId){
+                                                <td>@inst.ExpireDate</td>
+                                            }
+                                        }
+                                        <td>@res.Status</td>
+                                    </tr>
+                                }
+                            } 
                         </tbody>
                     </table>
                 </div>

@@ -241,81 +241,60 @@ namespace sopman.Controllers
             Console.WriteLine(getu);
             ViewBag.loggedinuser = getu;
 
-            var comp = (from i in _context.CompanyClaim
-                        where i.UserId == getu
-                        select i.CompanyId).Single();
+            var getuserid = (from i in _context.CompanyClaim
+                             where i.UserId == getu
+                             select i.ClaimId).Single();
 
-            var top = (from i in _context.SOPTopTemplates
-                       where i.CompanyId == comp
-                       select i.TopTempId).Single();
+            ViewBag.getuserid = getuserid;
 
-            Console.WriteLine("top:");
-            Console.WriteLine(top);
+            var getcompid = (from i in _context.CompanyClaim
+                             where i.UserId == getu
+                             select i.CompanyId).Single();
 
-            var claimid = (from t in _context.CompanyClaim
-                           where t.UserId == getu
-                           select t.ClaimId).Single();
-            ViewBag.claimid = claimid;
+            var gettoptemp = (from i in _context.SOPTopTemplates
+                              where i.CompanyId == getcompid
+                              select i.TopTempId).Single();
 
-            var newtemps = (from t in _context.SOPNewTemplate
-                            where t.TopTempId == top
-                            select new SOPTemplateList { SOPTemplateID = t.SOPTemplateID, TempName = t.TempName, SOPCode = t.SOPCode, ExpireDate = t.ExpireDate }).ToList();
+            var getsopnewsname = (from i in _context.SOPNewTemplate
+                                  where i.TopTempId == gettoptemp
+                                  select new TasksViewModel{TempName = i.TempName, SOPTemplateID = i.SOPTemplateID, }).ToList();
 
-            ViewBag.newtemps = newtemps;
+            ViewBag.getsopnewsname = getsopnewsname;
 
-            var getinst = (from y in _context.NewInstance
-                           select new SOPTemplateList { SOPTemplateID = y.SOPTemplateID, InstanceExpire = y.InstanceExpire, ProjectId = y.ProjectId, InstanceRef = y.InstanceRef, InstanceId = y.InstanceId }).ToList();
+            var getinstances = (from i in _context.NewInstance
+                                select new TasksViewModel {InstanceId = i.InstanceId, SOPTemplateID = i.SOPTemplateID, ProjectId = i.ProjectId, ExpireDate = i.InstanceExpire, InstanceRef = i.InstanceRef }).ToList();
+            ViewBag.getinstances = getinstances;
 
-            var getexe = (from y in _context.ExecutedSop
-                          select new SOPTemplateList { ExecuteSopID = y.ExecuteSopID, SectionId = y.SectionId, UserId = y.UserId }).ToList();
-            ViewBag.getinst = getinst;
-            ViewBag.getexe = getexe;
-         
-            var processtmps = (from i in _context.SOPProcessTempls
-                               select new SOPOverView { SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
+            var processSteps = (from p in _context.SOPProcessTempls
+                                select new TasksViewModel{ SOPTemplateID = p.SOPTemplateID, ProcessName = p.ProcessName }).ToList();
 
-            ViewBag.processtmps = processtmps;
+            ViewBag.processSteps = processSteps;
 
-            ViewBag.User = top;
-            ViewBag.getinst = getinst;
-            ViewBag.getexe = getexe;
+            var pojects = (from o in _context.Projects
+                           select new TasksViewModel { ProjectId = o.ProjectId, Projectname = o.ProjectName }).ToList();
 
-            var theprojects = (from x in _context.Projects
-                               where x.CompId == comp
-                               select new SOPTemplateList { ProjectId = x.ProjectId, ProjectName = x.ProjectName }).ToList();
+            ViewBag.projects = pojects;
 
-            ViewBag.theprojects = theprojects;
+            var racirespro = (from p in _context.SOPRACIRes
+                              select new TasksViewModel { InstanceId = p.InstanceId, RACIResID = p.RACIResID, soptoptempid = p.soptoptempid, Status = p.Status, UserId = p.UserId }).ToList();
+            ViewBag.racirespro = racirespro;
 
-            var getprocess = (from x in _context.SOPInstanceProcesses
-                              select new ProcessOutput { DueDate = x.DueDate, valuematch = x.valuematch, SOPTemplateID = x.SOPTemplateID }).ToList();
+            var raciaccpro = (from p in _context.SOPRACIAcc
+                              select new TasksViewModel { InstanceId = p.InstanceId, RACIAccID = p.RACIAccID, soptoptempid = p.soptoptempid, Status = p.Status, UserId = p.UserId }).ToList();
+            ViewBag.raciaccpro = raciaccpro;
 
-            ViewBag.getprocess = getprocess;
+            var raciconpro = (from p in _context.SOPRACICon
+                              select new TasksViewModel { InstanceId = p.InstanceId, RACIConID = p.RACIConID, soptoptempid = p.soptoptempid, Status = p.Status, UserId = p.UserId }).ToList();
+            ViewBag.raciconpro = raciconpro;
 
-            var res = (from i in _context.SOPRACIRes
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, InstanceId = i.InstanceId }).ToList();
-            ViewBag.res = res;
+            var raciinfpro = (from p in _context.SOPRACIInf
+                              select new TasksViewModel { InstanceId = p.InstanceId, RACIInfID = p.RACIInfID, soptoptempid = p.soptoptempid, Status = p.Status, UserId = p.UserId }).ToList();
+            ViewBag.raciinfpro = raciinfpro;
 
-            var acc = (from i in _context.SOPRACIAcc
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, InstanceId = i.InstanceId }).ToList();
-            ViewBag.acc = acc;
+            var exesop = (from p in _context.ExecutedSop
+                          select new TasksViewModel { ExecuteSopID = p.ExecuteSopID, SectionId = p.SectionId}).ToList();
 
-            var cons = (from i in _context.SOPRACICon
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, InstanceId = i.InstanceId }).ToList();
-            ViewBag.cons = cons;
-            var infi = (from i in _context.SOPRACIInf
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, InstanceId = i.InstanceId, }).ToList();
-
-            ViewBag.infi = infi;
-
-            var deps = (from i in _context.Departments
-                        select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
-
-
-            if (getu == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
+            ViewBag.exesop = exesop;
             return View();
         }
         [HttpPost]
@@ -826,6 +805,8 @@ namespace sopman.Controllers
                                select new SOPTemplateList { ProjectId = x.ProjectId, ProjectName = x.ProjectName }).ToList();
 
             ViewBag.theprojects = theprojects;
+
+
 
             return View();
         }
@@ -2989,6 +2970,89 @@ namespace sopman.Controllers
                         select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
 
             ViewBag.infi = infi;
+
+            processtmps.Count();
+
+
+            List<string> countstatus = new List<string>();
+            foreach (var item in processtmps)
+            {
+                bool rescomplete, acccomplete, concomplete, infcomplete; 
+                foreach (var sub in acc)
+                {
+                    if (sub.valuematch == item.valuematch)
+                    {
+                        var status = "Complete";
+                         var thecount = sub.Status;
+
+                        if (thecount == status){
+                            
+                        }
+                    }
+                }
+                foreach (var sub in res)
+                {
+                    if (sub.valuematch == item.valuematch)
+                    {
+                        var status = "Complete";
+                        var thecount = sub.Status;
+
+                        if (thecount == status)
+                        {
+                            
+                        }
+                    }
+                }
+                foreach (var sub in cons)
+                {
+                    if (sub.valuematch == item.valuematch)
+                    {
+                        var status = "Complete";
+                        var thecount = sub.Status;
+
+                        if (thecount == status)
+                        {
+                            
+                        }
+                    }
+                }
+                foreach (var sub in infi)
+                {
+                    if (sub.valuematch == item.valuematch)
+                    {
+                        var status = "Complete";
+                        var thecount = sub.Status;
+
+                        if (thecount == status)
+                        {
+                            
+                        }
+                    }
+                }
+            }
+            Console.WriteLine(countstatus.Count());
+
+            List<string> rescountstatus = new List<string>();
+            foreach (var item in processtmps)
+            {
+                
+            }
+            Console.WriteLine(rescountstatus.Count());
+
+            List<string> concountstatus = new List<string>();
+            foreach (var item in processtmps)
+            {
+                
+            }
+            Console.WriteLine(concountstatus.Count());
+
+            List<string> infcountstatus = new List<string>();
+            foreach (var item in processtmps)
+            {
+                
+            }
+            Console.WriteLine(infcountstatus.Count());
+
 
             var deps = (from i in _context.Departments
                         select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
