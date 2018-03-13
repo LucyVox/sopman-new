@@ -19,23 +19,23 @@
                 <p>Expiry Date: @ViewBag.expire</p>
             </div>
             <hr class="white-divider"/>
-            <div class="col-12 col-md-8">
+            <div class="col-12 col-md-7">
                 <h1>@ViewBag.temp </h1>
                 <p class="theproject">Project: <a href="">@ViewBag.proj</a></p>
             </div>
-            <div class="col-12 col-md-2">
+            <div class="col-12 col-md-3 d-flex align-items-center text-center">
                 <style>
                     circle {
-                        fill: #456074;
-                        stroke: #fff;
+                        fill: #96C9DB;
+                        stroke: #456074;
                         stroke-width: 32;
                         transition: .5s;
                     }
                 </style>
-                <svg viewBox="0 0 10 10">
+                <svg class="mx-auto" viewBox="0 0 10 10" height="120">
                         <circle r="5" cx="5" cy="5" stroke-dasharray="@ViewBag.percentageComplete 100"></circle>
                     </svg>
-                @ViewBag.percentageComplete%
+                <h5 class="mx-auto">@ViewBag.percentageComplete%<br /><span class="h6 text-muted">Complete</span></h5>
             </div>
             <div class="col-12 col-md-2 text-right">
                     <input type="submit" class="btn" value="Save" />

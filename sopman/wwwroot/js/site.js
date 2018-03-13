@@ -7,6 +7,11 @@ $(document).ready(function() {
         $(".side-menu").addClass("hide");
     });
 
+    $(".shaded-bg").click(function(){
+        $(".side-menu").removeClass("show");
+        $(".side-menu").addClass("hide");
+    });
+
     $('input[name=radiolimit]').click(function(){
         if ($(this).is(':checked')) {
             $('.limit-form').removeAttr("disabled"); 

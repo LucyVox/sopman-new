@@ -102,7 +102,7 @@ a {
 .side-menu {
     position: absolute;
     left: 0;
-    z-index: 10;
+    z-index: 16;
     height: 100%;
     top: 0;
     width: 0px;

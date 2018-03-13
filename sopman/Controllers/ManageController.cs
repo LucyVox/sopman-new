@@ -297,6 +297,7 @@ namespace sopman.Controllers
 
             ViewBag.exesop = exesop;
 
+            
             return View();
         }
         [HttpPost]
