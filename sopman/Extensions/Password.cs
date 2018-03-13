@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 namespace sopman.Extensions
 {
     public static class Password
