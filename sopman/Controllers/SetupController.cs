@@ -1054,9 +1054,12 @@ namespace sopman.Controllers
             else
             {
                 var userId = _userManager.GetUserId(User);
-                var path = Path.Combine(
+                /* var path = Path.Combine(
                     Directory.GetCurrentDirectory(),
                     "Uploads/CSV",
+                    userId + "-" + file.FileName); */
+                var path = Path.Combine(
+                    "~/uploads/CSV",
                     userId + "-" + file.FileName);
                 Console.WriteLine("CHRIS");
                 Console.WriteLine(path, file.FileName);
@@ -1073,10 +1076,13 @@ namespace sopman.Controllers
         public ActionResult CSVMap()
         {
             var filePath = Request.Query["file"];
-            var path = Path.Combine(
+            /* var path = Path.Combine(
                     Directory.GetCurrentDirectory(),
                     "Uploads/CSV",
-                    filePath);
+                    filePath); */
+            var path = Path.Combine(
+                "~/uploads/CSV",
+                filePath;
 
             int failed = 0;
             List<CSVMapModel> rows = new List<CSVMapModel>();
