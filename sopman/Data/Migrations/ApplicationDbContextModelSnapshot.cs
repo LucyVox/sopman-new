@@ -140,6 +140,18 @@ namespace sopman.Data.Migrations
                     b.ToTable("ArchivedInstacned");
                 });
 
+            modelBuilder.Entity("sopman.Data.ApplicationDbContext+ArchivedSOP", b =>
+                {
+                    b.Property<int>("ArchiveId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("SOPTemplateId");
+
+                    b.HasKey("ArchiveId");
+
+                    b.ToTable("ArchiveASOP");
+                });
+
             modelBuilder.Entity("sopman.Data.ApplicationDbContext+ClaimComp", b =>
                 {
                     b.Property<int>("ClaimId")
@@ -336,6 +348,8 @@ namespace sopman.Data.Migrations
                 {
                     b.Property<string>("ExecuteSopID")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("SOPStatus");
 
                     b.Property<string>("SectionId");
 

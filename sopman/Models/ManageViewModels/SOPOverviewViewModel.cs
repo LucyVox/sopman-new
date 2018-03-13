@@ -36,7 +36,7 @@ namespace sopman.Models.ManageViewModels
         public int ClaimId { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
-
+        public string processStatus { get; set; }
         public int RACIResChosenID { get; set; }
         public string RACIResID { get; set; }
         public int RACIAccChosenID { get; set; }
@@ -45,7 +45,6 @@ namespace sopman.Models.ManageViewModels
         public string RACIInfID { get; set; }
         public int RACIConChosenID { get; set; }
         public string RACIConID { get; set; }
-
         public int UserId { get; set; }
         public string NewTempId { get; set; }
         public string StatusRecusal { get; set; }

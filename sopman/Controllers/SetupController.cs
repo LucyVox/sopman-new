@@ -896,7 +896,7 @@ namespace sopman.Controllers
                 ApplicationDbContext.SOPTemplateProcesses soppro = new ApplicationDbContext.SOPTemplateProcesses();
 
                 soppro.ProcessType = "SubProcess";
-
+                soppro.processStatus = "Pending";
                 var name = item.ProcessName;
                 soppro.ProcessName = name;
 

@@ -648,6 +648,7 @@ namespace sopman.Data
 
             public string SectionId { get; set; }
             public string UserId { get; set; }
+            public string SOPStatus { get; set; }
         }
         public DbSet<ExecuteSop> ExecutedSop { get; set; }
 
@@ -671,6 +672,15 @@ namespace sopman.Data
         }
 
         public DbSet<Archived> ArchivedInstacned { get; set; }
+
+        public class ArchivedSOP
+        {
+            [Key]
+            public int ArchiveId { get; set; }
+            public string SOPTemplateId { get; set; }
+        }
+
+        public DbSet<ArchivedSOP> ArchiveASOP { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
