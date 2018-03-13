@@ -1617,3 +1617,11 @@ table thead th {
     top: 50%;
     transform: translateY(-50%);
 }
+
+.progress {
+    background-color: #456074;
+}
+
+.progress-bar {
+    background-color: #96C9DB;
+}
