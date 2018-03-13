@@ -7,26 +7,46 @@
     <div class="row header">
         <div class="col-12">
             <h1>Define your organisation</h1>
-            <div class="alert alert-danger" role="alert">
-                  CSV requires strict data input. Your file needs to contain the following headings:
+            <h6>Please upload a CSV with your users, including their department and job title.</h6>
+            <div class="alert alert-warning" role="alert">
+                  CSV requires strict data input.
                 </div>
-            <ul>
-                <li>Email</li>
-                <li>FirstName</li>
-                <li>SecondName</li>
-                <li>Department</li>
-                <li>JobTitle</li>
-            </ul>
             <div class="alert alert-danger" role="alert">
-            Please note: the headings must be spelt correctly, with no spaces, and are case-sensitive.
-                </div>
+            Your CSV <b>must</b> contain the following headings. The headings are case-sensitive, must be spelt correctly and have no spaces.
+            </div>
+
+            <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Email</th>
+      <th scope="col">FirstName</th>
+      <th scope="col">SecondName</th>
+      <th scope="col">JobTitle</th>
+      <th scope="col">Department</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>example@email.com</td>
+      <td>Michael</td>
+      <td>Jackson</td>
+      <td>King of Pop</td>
+      <td>Music</td>
+    </tr>
+  </tbody>
+</table>
+            
+
+            
+
+            <hr />
         </div>
     </div>
-    <div class="row">
+    <div class="row py-3">
         <div class="col-12">
             <form action="" method="post" enctype="multipart/form-data">
               
-              <label for="file">Filename:</label>
+              <label for="file">Select your csv file</label>
               <input type="file" name="file" id="file" />
 
               <input type="submit" />
