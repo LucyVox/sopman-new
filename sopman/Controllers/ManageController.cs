@@ -1309,10 +1309,15 @@ namespace sopman.Controllers
                         
                         if (sub.valuematch == item.valuematch)
                         {
-                            int conedid = sub.RACIInfID;
+                            int conedid = sub.RACIConID;
                             var getidofcon = Request.Form["conid-hidden" + conedid];
 
                             string changeid = conedid.ToString();
+
+
+
+                            Console.WriteLine("Hidden value");
+                            Console.WriteLine(changeid);
 
                             if (getidofcon == changeid)
                             {
@@ -1320,7 +1325,10 @@ namespace sopman.Controllers
                                 var statuscon = "Pending";
                                 int conid = sub.RACIConID;
 
+                                Console.WriteLine(dbconcon.valuematch);
+
                                 var selcon = Request.Form[sub.valuematch + "-CON-" + conid];
+                                Console.WriteLine("Dropdown value:");
                                 Console.WriteLine(selcon);
                                 int onevalueacc = int.Parse(selcon);
 
@@ -2959,18 +2967,18 @@ namespace sopman.Controllers
 
 
             var res = (from i in _context.SOPRACIRes
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+                       select new ProcessOutput { RACIResID = i.RACIResID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.res = res;
 
             var acc = (from i in _context.SOPRACIAcc
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+                       select new ProcessOutput { RACIAccID = i.RACIAccID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.acc = acc;
 
             var cons = (from i in _context.SOPRACICon
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+                        select new ProcessOutput { RACIConID = i.RACIConID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.cons = cons;
             var infi = (from i in _context.SOPRACIInf
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status }).ToList();
+                        select new ProcessOutput { RACIInfID = i.RACIInfID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
 
             ViewBag.infi = infi;
 
@@ -3256,18 +3264,18 @@ namespace sopman.Controllers
             ViewBag.ifinfres = ifinfres;
 
             var res = (from i in _context.SOPRACIRes
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
+                       select new ProcessOutput {RACIResID = i.RACIResID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.res = res;
 
             var acc = (from i in _context.SOPRACIAcc
-                       select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
+                       select new ProcessOutput {RACIAccID = i.RACIAccID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.acc = acc;
 
             var cons = (from i in _context.SOPRACICon
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
+                        select new ProcessOutput {RACIConID = i.RACIConID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
             ViewBag.cons = cons;
             var infi = (from i in _context.SOPRACIInf
-                        select new ProcessOutput { SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
+                        select new ProcessOutput {RACIInfID = i.RACIInfID, SOPTemplateID = i.soptoptempid, valuematch = i.valuematch, JobTitleId = i.JobTitleId, DepartmentId = i.DepartmentId, UserId = i.UserId, Status = i.Status, editDate = i.editDate }).ToList();
 
             ViewBag.infi = infi;
 
@@ -3282,6 +3290,72 @@ namespace sopman.Controllers
 
             ViewBag.comments = comments;
 
+            int completeProcesses = 0;
+
+            foreach (var item in processtmps)
+            {
+                bool rescomplete = false, acccomplete = false, concomplete = false, infcomplete = false;
+                foreach (var sub in acc)
+                {
+                    if (sub.valuematch == item.valuematch)
+                    {
+                        var status = "Complete";
+                        var thecount = sub.Status;
+
+                        if (thecount == status)
+                        {
+                            acccomplete = true;
+                        }
+                    }
+                }
+                foreach (var sub in res)
+                {
+                    if (sub.valuematch == item.valuematch)
+                    {
+                        var status = "Complete";
+                        var thecount = sub.Status;
+
+                        if (thecount == status)
+                        {
+                            rescomplete = true;
+                        }
+                    }
+                }
+                foreach (var sub in cons)
+                {
+                    if (sub.valuematch == item.valuematch)
+                    {
+                        var status = "Complete";
+                        var thecount = sub.Status;
+
+                        if (thecount == status)
+                        {
+                            concomplete = true;
+                        }
+                    }
+                }
+                foreach (var sub in infi)
+                {
+                    if (sub.valuematch == item.valuematch)
+                    {
+                        var status = "Complete";
+                        var thecount = sub.Status;
+
+                        if (thecount == status)
+                        {
+                            infcomplete = true;
+                        }
+                    }
+                }
+
+                if (rescomplete && acccomplete && concomplete && infcomplete)
+                {
+                    completeProcesses++;
+                }
+            }
+
+            double percentageComplete = (completeProcesses / processtmps.Count()) * 100;
+            ViewBag.percentageComplete = percentageComplete;
 
             if (ModelState.IsValid)
             {
@@ -3310,13 +3384,14 @@ namespace sopman.Controllers
                                             where i.valuematch == item.valuematch
                                             select i.valuematch).First();
 
-
                             foreach (var name in allusers)
                             {
                                 if (item.UserId == name.ClaimId)
                                 {
                                     var updateres = _context.SOPRACIRes.FirstOrDefault(x => x.soptoptempid == gettopid && x.valuematch == getvalue && x.UserId == item.UserId);
-                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIResChosenID + item.valuematch;
+                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIResID + item.valuematch;
+                                    Console.WriteLine("namenospace");
+                                    Console.WriteLine(namenospace);
                                     string firstname = name.FirstName;
                                     var getname = Request.Form["signature-" + namenospace];
                                     var getrecuse = Request.Form["recuse-" + namenospace];
@@ -3329,6 +3404,9 @@ namespace sopman.Controllers
                                     {
                                         updateres.Status = "Recused";
                                         updateres.editDate = DateTime.Now;
+                                    }
+                                    else {
+                                        updateres.Status = "Pending";
                                     }
                                     _context.SOPRACIRes.Update(updateres);
                                     _context.SaveChanges();
@@ -3349,7 +3427,7 @@ namespace sopman.Controllers
                                 if (item.UserId == name.ClaimId)
                                 {
                                     var updateacc = _context.SOPRACIAcc.FirstOrDefault(x => x.soptoptempid == gettopid && x.valuematch == getvalue && x.UserId == item.UserId);
-                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIAccChosenID + item.valuematch;
+                                    var namenospace = "acc" + name.FirstName + name.SecondName + item.RACIAccID + item.valuematch;
                                     string firstname = name.FirstName;
                                     var getname = Request.Form["signature-" + namenospace];
                                     var getrecuse = Request.Form["recuse-" + namenospace];
@@ -3363,7 +3441,10 @@ namespace sopman.Controllers
                                         updateacc.Status = "Recused";
                                         updateacc.editDate = DateTime.Now;
                                     }
-
+                                    else
+                                    {
+                                        updateacc.Status = "Pending";
+                                    }
                                     _context.SOPRACIAcc.Update(updateacc);
                                     _context.SaveChanges();
                                     Console.WriteLine(getname);
@@ -3385,7 +3466,7 @@ namespace sopman.Controllers
                                 if (item.UserId == name.ClaimId)
                                 {
                                     var updatecon = _context.SOPRACICon.FirstOrDefault(x => x.soptoptempid == gettopid && x.valuematch == getvalue && x.UserId == item.UserId);
-                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIConChosenID + item.valuematch;
+                                    var namenospace = "infi" + name.FirstName + name.SecondName + item.RACIConID + item.valuematch;
                                     string firstname = name.FirstName;
                                     var getname = Request.Form["signature-" + namenospace];
                                     var getrecuse = Request.Form["recuse-" + namenospace];
@@ -3398,7 +3479,10 @@ namespace sopman.Controllers
                                         updatecon.Status = "Recused";
                                         updatecon.editDate = DateTime.Now;
                                     }
-
+                                    else
+                                    {
+                                        updatecon.Status = "Pending";
+                                    }
                                     _context.SOPRACICon.Update(updatecon);
                                     _context.SaveChanges();
 
@@ -3420,7 +3504,7 @@ namespace sopman.Controllers
                                 if (item.UserId == name.ClaimId)
                                 {
                                     var updateinf = _context.SOPRACIInf.FirstOrDefault(x => x.soptoptempid == gettopid && x.valuematch == getvalue && x.UserId == item.UserId);
-                                    var namenospace = "resp" + name.FirstName + name.SecondName + item.RACIInfChosenID + item.valuematch;
+                                    var namenospace = "cons" + name.FirstName + name.SecondName + item.RACIInfID + item.valuematch;
                                     string firstname = name.FirstName;
                                     var getname = Request.Form["signature-" + namenospace];
                                     var getrecuse = Request.Form["recuse-" + namenospace];
@@ -3433,6 +3517,10 @@ namespace sopman.Controllers
                                     {
                                         updateinf.Status = "Recused";
                                         updateinf.editDate = DateTime.Now;
+                                    }
+                                    else
+                                    {
+                                        updateinf.Status = "Pending";
                                     }
                                     _context.SOPRACIInf.Update(updateinf);
                                     _context.SaveChanges();

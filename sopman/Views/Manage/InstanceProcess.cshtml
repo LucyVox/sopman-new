@@ -64,7 +64,7 @@
                                                         @foreach(var data in (ViewBag.res)){
                                                             var dropname = item.valuematch + "-RES-";
                                                              int resid = data.RACIResID;
-                                                            if(data.valuematch == item.valuematch){
+                                                            if((data.SOPTemplateID == item.SOPTemplateID) && (item.valuematch == data.valuematch)){
                                                                 var resdropdown = dropname + resid;
                                                                 var hiddename = "resid-hidden" + resid;
                                                                 <input type="hidden" name="@hiddename" value="@resid">
@@ -103,11 +103,11 @@
                                                             @foreach(var data in (ViewBag.acc)){
                                                                 var dropname =  item.valuematch + "-ACC-" + 12;
                                                                 int accid =  data.RACIAccID;
-                                                                if(data.SOPTemplateID == item.SOPTemplateID){
+                                                                if((data.SOPTemplateID == item.SOPTemplateID) && (item.valuematch == data.valuematch)){
                                                                     var newdropdown = item.valuematch + "-ACC-" + accid;
                                                                     var hiddename = "accid-hidden" + accid;
                                                                     <input type="hidden" name="@hiddename" value="@accid">
-                                                                    <div class="row">
+                                                                    <div class="row row-">
                                                                         <div class="col-12 col-md-12 pick-person">
                                                                             <div class="row">
                                                                                 <div class="col-12 col-md-6">
@@ -142,7 +142,7 @@
                                                             @foreach(var data in (ViewBag.cons)){
                                                                 var dropname = item.valuematch + "-CON-";
                                                                 int conid = data.RACIConID;
-                                                                if(data.SOPTemplateID == item.SOPTemplateID){
+                                                                if((data.SOPTemplateID == item.SOPTemplateID) && (item.valuematch == data.valuematch)){
                                                                     var coname = dropname + conid;
                                                                     var hiddename = "conid-hidden" + conid;
                                                                     <input type="hidden" name="@hiddename" value="@conid">
@@ -181,7 +181,7 @@
                                                             @foreach(var data in (ViewBag.infi)){
                                                                 var dropname = item.valuematch + "-INF-";
                                                                 int infname = data.RACIInfID;
-                                                                if(data.SOPTemplateID == item.SOPTemplateID){
+                                                                if((data.SOPTemplateID == item.SOPTemplateID) && (item.valuematch == data.valuematch)){
                                                                     var infdrop = dropname + infname;
                                                                     var hiddename = "infiid-hidden" + infname;
                                                                     <input type="hidden" name="@hiddename" value="@infname">

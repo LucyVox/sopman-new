@@ -65,7 +65,6 @@ namespace sopman.Models.ManageViewModels
         public string InstanceId { get; set; }
         public DateTime editDate { get; set; }
 
-
         public class aList {
             public List<string> ProcessFiles { get; set; }
             public string ProcessName { get; set; }

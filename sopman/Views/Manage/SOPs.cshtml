@@ -185,7 +185,7 @@
                                                                 <!-- Getting the first and second name from users -->
                                                                 @foreach(var name in (ViewBag.allusers)){
                                                                     if(sub.UserId == name.ClaimId){
-                                                                        var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIResChosenID + item.valuematch;
+                                                                        var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIResID + item.valuematch;
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
                                                                             <h3 class="h5">@resCount</h3>
                                                                         </div>
@@ -209,12 +209,6 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-
-
-                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
-                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
-
-
                                                                                 <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
                                                                                 <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
 
@@ -280,7 +274,7 @@
                                                                 <!-- Getting the first and second name from users -->
                                                                 @foreach(var name in (ViewBag.allusers)){
                                                                     if(sub.UserId == name.ClaimId){
-                                                                        var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIAccChosenID + item.valuematch;
+                                                                        var namenospace = "acc" + name.FirstName + name.SecondName + sub.RACIAccID + item.valuematch;
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
                                                                             <h3 class="h5">@accCount</h3>
                                                                         </div>
@@ -369,7 +363,7 @@
                                                                 <!-- Getting the first and second name from users -->
                                                                 @foreach(var name in (ViewBag.allusers)){
                                                                     if(sub.UserId == name.ClaimId){
-                                                                        var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIConChosenID + item.valuematch;
+                                                                        var namenospace = "cons" + name.FirstName + name.SecondName + sub.RACIConID + item.valuematch;
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
                                                                             <h3 class="h5">@conCount</h3>
                                                                         </div>
@@ -458,7 +452,7 @@
                                                                 <!-- Getting the first and second name from users -->
                                                                 @foreach(var name in (ViewBag.allusers)){
                                                                     if(sub.UserId == name.ClaimId){
-                                                                        var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIInfChosenID + item.valuematch;
+                                                                        var namenospace = "infi" + name.FirstName + name.SecondName + sub.RACIInfID + item.valuematch;
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
                                                                             <h3 class="h5">@infCount</h3>
                                                                         </div>
