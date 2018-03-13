@@ -1633,3 +1633,12 @@ thead {
     color: #868e96;
     font-weight: 400
 }
+
+.status-btn {
+    display:none;
+}
+    .status-btn.Complete {
+        display:block;
+    }
+
+

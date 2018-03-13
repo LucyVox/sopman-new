@@ -17,7 +17,7 @@ namespace sopman.Models.ManageViewModels
         public int CompId { get; set; }
         public string ProjectName { get; set; }
         public string UserId { get; set; }
-
+        public string InstancedId { get; set; }
         public int countnum { get; set; }
         public DateTime creationdate { get; set; }
     }

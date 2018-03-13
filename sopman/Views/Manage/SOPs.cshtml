@@ -44,8 +44,11 @@
                 <h5 class="mx-auto">@ViewBag.percentageComplete%<br /><span class="h6 text-muted">Complete</span></h5>
             </div>
             <div class="col-12 col-md-2 text-right">
-                    <input type="submit" class="btn white-btn mod-btn" value="Save" />
-                    <a class="btn white-btn mod-btn" href="/Manage/EditSOP?=@ViewBag.exeid">Modify</a>
+                <input type="submit" class="btn white-btn mod-btn" value="Save" />
+                <a class="btn white-btn mod-btn" href="/Manage/EditSOP?=@ViewBag.exeid">Modify</a>
+                <div class="lower-btn">
+                    <a class="btn white-btn mod-btn status-btn @ViewBag.sopstatus" href="/Manage/ArchiveInstance?=@ViewBag.exeid">Archive</a>
+                </div>    
             </div>
             <hr class="invisible-divider"/>
             <div class="col-12">

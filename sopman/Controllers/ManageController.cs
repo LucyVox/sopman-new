@@ -358,6 +358,25 @@ namespace sopman.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult ArchiveInstance(string ExecuteSopID)
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ArchiveInstance(string ExecuteSopID, [Bind("SOPTemplateId")]ApplicationDbContext.Archived archive)
+        {
+
+            archive.InstancedId = ExecuteSopID;
+            _context.Add(archive);
+            _context.SaveChanges();
+
+            return View();
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendVerificationEmail(IndexViewModel model)
@@ -811,6 +830,10 @@ namespace sopman.Controllers
                             select new SOPTemplateList { SOPTemplateID = t.SOPTemplateID, TempName = t.TempName, SOPCode = t.SOPCode, ExpireDate = t.ExpireDate }).ToList();
 
             ViewBag.newtemps = newtemps;
+
+            var getarchive = (from a in _context.ArchivedInstacned
+                              select new SOPTemplateList { InstancedId = a.InstancedId }).ToList();
+            ViewBag.getarchive = getarchive;
 
             var getinst = (from y in _context.NewInstance
                            select new SOPTemplateList { SOPTemplateID = y.SOPTemplateID, InstanceExpire = y.InstanceExpire, ProjectId = y.ProjectId, InstanceRef = y.InstanceRef, InstanceId = y.InstanceId }).ToList();
@@ -3185,8 +3208,10 @@ namespace sopman.Controllers
             if (complete)
             {
                 var getexesop = _context.ExecutedSop.FirstOrDefault(x => x.ExecuteSopID == exeid);
-
-
+                getexesop.SOPStatus = "Complete";
+                ViewBag.sopstatus = getexesop.SOPStatus;
+                _context.ExecutedSop.Update(getexesop);
+                _context.SaveChanges();
                 //Sendgrid - send to main user. 
             }	
             var deps = (from i in _context.Departments
@@ -3519,9 +3544,15 @@ namespace sopman.Controllers
                     complete = false;
                 }
             }
-            if (complete) {
+            if (complete)
+            {
+                var getexesop = _context.ExecutedSop.FirstOrDefault(x => x.ExecuteSopID == exeid);
+                getexesop.SOPStatus = "Complete";
+
+                _context.ExecutedSop.Update(getexesop);
+                _context.SaveChanges();
                 //Sendgrid - send to main user. 
-            }
+            }   
 
             if (ModelState.IsValid)
             {
