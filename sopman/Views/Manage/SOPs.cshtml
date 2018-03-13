@@ -44,8 +44,8 @@
                 <h5 class="mx-auto">@ViewBag.percentageComplete%<br /><span class="h6 text-muted">Complete</span></h5>
             </div>
             <div class="col-12 col-md-2 text-right">
-                    <input type="submit" class="btn" value="Save" />
-                    <a class="white-btn mod-btn" href="/Manage/EditSOP?=@ViewBag.exeid">Modify</a>
+                    <input type="submit" class="btn white-btn mod-btn" value="Save" />
+                    <a class="btn white-btn mod-btn" href="/Manage/EditSOP?=@ViewBag.exeid">Modify</a>
             </div>
             <hr class="invisible-divider"/>
             <div class="col-12">
@@ -636,7 +636,7 @@
 
                                 <div class="row mt-3">
                                     <div class="col-12">
-                                        <textarea class="w-100" placeholder="Add a comment" name="newcomment"></textarea>
+                                        <textarea class="w-100 p-2" placeholder="Add a comment" name="newcomment"></textarea>
                                     </div>
                                     <div class="col-12 d-flex flex-row-reverse">
                                         <button type="submit" value="post" class="btn btn-secondary">POST</button>
@@ -712,12 +712,12 @@
                                                                                 <input type="text" class="hidden-value raci-number-@namenospace" value="@sub.Status" name="sop-number-@namenospace">
                                                                                 <h5>@sub.Status</h5>
                                                                             </div>
-                                                                            <div class="col-12 col-md-6 sop-person">
-                                                                                <h4>@name.FirstName @name.SecondName</h4>
+                                                                            <div class="col-12 col-md-6 sop-person d-flex flex-column align-items-center">
+                                                                                <h4 class="h5">@name.FirstName @name.SecondName</h4>
                                                                                 <!-- Getting the department -->    
                                                                                 @foreach(var dep in (ViewBag.deps)){
                                                                                     if(sub.DepartmentId == dep.DepartmentId){
-                                                                                        <p>@dep.DepartmentName</p>
+                                                                                        <p class="mb-0">@dep.DepartmentName</p>
                                                                                     }
                                                                                 }
                                                                             </div>
@@ -808,12 +808,12 @@
                                                                                 <input type="text" class="hidden-value raci-number-@namenospace" value="@sub.Status" name="sop-number-@namenospace">
                                                                                 <h5>@sub.Status</h5>
                                                                             </div>
-                                                                            <div class="col-12 col-md-6 sop-person">
-                                                                                <h4>@name.FirstName @name.SecondName</h4>
+                                                                            <div class="col-12 col-md-6 sop-person d-flex flex-column align-items-center">
+                                                                                <h4 class="h5">@name.FirstName @name.SecondName</h4>
                                                                                 <!-- Getting the department -->    
                                                                                 @foreach(var dep in (ViewBag.deps)){
                                                                                     if(sub.DepartmentId == dep.DepartmentId){
-                                                                                        <p>@dep.DepartmentName</p>
+                                                                                        <p class="mb-0">@dep.DepartmentName</p>
                                                                                     }
                                                                                 }
                                                                             </div>
@@ -904,12 +904,12 @@
                                                                             <input type="text" class="hidden-value raci-number-@namenospace" value="@sub.Status" name="sop-number-@namenospace">
                                                                             <h5>@sub.Status</h5>
                                                                         </div>
-                                                                        <div class="col-12 col-md-6 sop-person">
-                                                                            <h4>@name.FirstName @name.SecondName</h4>
+                                                                        <div class="col-12 col-md-6 sop-person d-flex flex-column align-items-center">
+                                                                            <h4 class="h5">@name.FirstName @name.SecondName</h4>
                                                                             <!-- Getting the department -->    
                                                                             @foreach(var dep in (ViewBag.deps)){
                                                                                 if(sub.DepartmentId == dep.DepartmentId){
-                                                                                    <p>@dep.DepartmentName</p>
+                                                                                    <p class="mb-0">@dep.DepartmentName</p>
                                                                                 }
                                                                             }
                                                                         </div>
@@ -1001,12 +1001,12 @@
                                                                                     <input type="text" class="hidden-value raci-number-@namenospace" value="@sub.Status" name="sop-number-@namenospace">
                                                                                     <h5>@sub.Status</h5>
                                                                                 </div>
-                                                                                <div class="col-12 col-md-6 sop-person">
-                                                                                    <h4>@name.FirstName @name.SecondName</h4>
+                                                                                <div class="col-12 col-md-6 sop-person d-flex flex-column align-items-center">
+                                                                                    <h4 class="h5">@name.FirstName @name.SecondName</h4>
                                                                                     <!-- Getting the department -->    
                                                                                     @foreach(var dep in (ViewBag.deps)){
                                                                                         if(sub.DepartmentId == dep.DepartmentId){
-                                                                                            <p>@dep.DepartmentName</p>
+                                                                                            <p class="mb-0">@dep.DepartmentName</p>
                                                                                         }
                                                                                     }
                                                                                 </div>
