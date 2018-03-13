@@ -1,6 +1,7 @@
 ﻿@{
     var rows = @ViewBag.Rows;
     int failed = @ViewBag.Failed;
+    string file = @ViewBag.File;
 }
 <div class="container py-3">
     @if(failed > 0){
@@ -8,7 +9,27 @@
             <b>Warning!</b>&nbsp;Number of failed records: @failed. Make sure all fields are populated.
         </div>
     }
-    <h2 class="h6">Data Preview:</h2>
+    <div class="row my-3">
+
+        <div class="col-12 d-flex flex-row-reverse">
+            <form>
+                @Html.ActionLink("Proceed", 
+                        "SubmitCSV",   //
+                        "Setup",
+                        new { file = @file },
+
+                        new { @class = "btn btn-secondary" }
+                        )
+                @Html.ActionLink("Cancel", 
+                        "OrgStructure",   //
+                        "Setup",
+                        null,
+                        new { @class = "btn btn-danger" }
+                        )
+            </form>
+        </div>
+    </div>
+    <h2 class="h6"><b>Data Preview:</b></h2>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -32,8 +53,5 @@
             }
             </tbody>
     </table>
-    <form>
-        <button style="display:none" type="submit" class="btn btn-secondary">Proceed</button>
-        <button style="display:none" type="button" class="btn btn-danger">Cancel</button>
-    </form>
+
 </div>

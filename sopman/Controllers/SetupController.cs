@@ -1108,7 +1108,7 @@ namespace sopman.Controllers
             }
             ViewBag.Rows = rows;
             ViewBag.Failed = failed;
-            TempData["csv"] = path;
+            ViewBag.File = filePath;
             return View();
         }
 
@@ -1210,6 +1210,113 @@ namespace sopman.Controllers
 
             }
             return RedirectToAction("CSVMap", path);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SubmitCSV(RegisterSopCreatorViewModel model, [Bind("ClaimId,FirstName,SecondName,CompanyId")] ApplicationDbContext.ClaimComp compclaim)
+        {
+            ViewBag.File = Request.Query["file"];
+
+
+            var currentuser = await _userManager.GetUserAsync(User);
+            var user_id = currentuser.Id;
+            var modules = (from i in _context.CompanyClaim
+                           where i.UserId == user_id
+                           select i.CompanyId).Single();
+            var filePath = Request.Query["file"];
+            var path = Path.Combine(
+                   Directory.GetCurrentDirectory(),
+                   "Uploads/CSV",
+                   filePath);
+
+            int failed = 0;
+            List<CSVMapModel> rows = new List<CSVMapModel>();
+            using (StreamReader sr = new StreamReader(path))
+            {
+                CsvHelper.CsvReader csv = new CsvHelper.CsvReader(sr);
+                csv.Read();
+                csv.ReadHeader();
+                while (csv.Read())
+                {
+                    try
+                    {
+                        var record = csv.GetRecord<CSVMapModel>();
+                        if (String.IsNullOrEmpty(record.Department) || String.IsNullOrEmpty(record.Email) || String.IsNullOrEmpty(record.JobTitle) || String.IsNullOrEmpty(record.FirstName) || String.IsNullOrEmpty(record.SecondName))
+                        {
+                            failed++;
+                        }
+                        else
+                        {
+                            rows.Add(record);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }
+            ViewBag.Rows = rows;
+            ViewBag.Failed = failed;
+
+            foreach (var row in rows)
+            {
+                var user = new ApplicationUser { UserName = row.Email, Email = row.Email };
+                // await _userManager.AddToRoleAsync(user, "SOPCreator");
+                var result = await _userManager.CreateAsync(user, Extensions.Password.Generate(32, 12));
+
+                _context.CompanyClaim.Select(u => u.UserId);
+                var newuserid = user.Id;
+                compclaim.UserId = newuserid;
+
+                _context.CompanyClaim.Select(u => u.DepartmentId);
+                var selected = Request.Form["DepartmentId"];
+                compclaim.DepartmentId = selected;
+
+                _context.CompanyClaim.Select(u => u.JobTitleId);
+                var seljob = Request.Form["JobTitleId"];
+                compclaim.JobTitleId = seljob;
+
+                _context.CompanyClaim.Select(u => u.CompanyId);
+                compclaim.CompanyId = modules;
+
+                _context.Add(compclaim);
+
+                // If we got this far, the process succeeded
+                var apiKey = _configuration.GetSection("SENDGRID_API_KEY").Value;
+                Console.WriteLine(apiKey);
+
+                var client = new SendGridClient(apiKey);
+
+
+                var loggedInEmail = _userManager.GetUserName(User);
+                var newUserEmail = model.Email;
+                var newUserPassword = model.Password;
+                var firstName = Request.Form["FirstName"];
+                var secondName = Request.Form["SecondName"];
+
+                var msg = new SendGridMessage()
+                {
+                    From = new EmailAddress(loggedInEmail, "SOPMan"),
+                    Subject = "You have been registered as a SOPMan Creator",
+                    PlainTextContent = "Hello, " + firstName + " " + secondName,
+                    HtmlContent = "Hello, " + firstName + " " + secondName + ",<br>Your username is: " + newUserEmail + "<br>Your password is: " + newUserPassword
+                };
+                Console.WriteLine(msg);
+                msg.AddTo(new EmailAddress(newUserEmail, firstName + " " + secondName));
+                var response = await client.SendEmailAsync(msg);
+                Console.WriteLine(response);
+
+                await _context.SaveChangesAsync();
+
+            }
+
+
+
+
+
+            return View();
         }
     }  
 }

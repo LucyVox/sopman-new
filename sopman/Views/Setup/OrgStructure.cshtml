@@ -7,17 +7,31 @@
     <div class="row header">
         <div class="col-12">
             <h1>Define your organisation</h1>
-            <p>User instuctions here. Accepted file types and file size limits etc.</p>
+            <div class="alert alert-danger" role="alert">
+                  CSV requires strict data input. Your file needs to contain the following headings:
+                </div>
+            <ul>
+                <li>Email</li>
+                <li>FirstName</li>
+                <li>SecondName</li>
+                <li>Department</li>
+                <li>JobTitle</li>
+            </ul>
+            <div class="alert alert-danger" role="alert">
+            Please note: the headings must be spelt correctly, with no spaces, and are case-sensitive.
+                </div>
         </div>
     </div>
     <div class="row">
-        <form action="" method="post" enctype="multipart/form-data">
-          
-          <label for="file">Filename:</label>
-          <input type="file" name="file" id="file" />
+        <div class="col-12">
+            <form action="" method="post" enctype="multipart/form-data">
+              
+              <label for="file">Filename:</label>
+              <input type="file" name="file" id="file" />
 
-          <input type="submit" />
-        </form>
+              <input type="submit" />
+            </form>
+        </div>
     </div>
 </div>
 
