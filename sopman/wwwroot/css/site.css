@@ -1617,18 +1617,3 @@ table thead th {
     top: 50%;
     transform: translateY(-50%);
 }
-
-.progress {
-    background-color: #456074;
-    height: 0.5rem;
-}
-
-.progress-bar {
-    background-color: #96C9DB;
-}
-
-thead {
-    font-size: 10pt;
-    color: #868e96;
-    font-weight: 400;
-}
