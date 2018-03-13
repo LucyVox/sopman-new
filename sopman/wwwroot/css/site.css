@@ -1642,3 +1642,9 @@ thead {
     }
 
 
+@media print {
+    /* Your styles here */
+    .tab-content > .tab-pane {
+        display: block
+    }
+}

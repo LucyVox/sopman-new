@@ -1082,7 +1082,7 @@ namespace sopman.Controllers
                     filePath); */
             var path = Path.Combine(
                 "~/uploads/CSV",
-                filePath;
+                filePath);
 
             int failed = 0;
             List<CSVMapModel> rows = new List<CSVMapModel>();
