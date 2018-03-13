@@ -338,7 +338,6 @@ namespace sopman.Controllers
             StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));
         }
-
         [HttpGet]
         public ActionResult ArchiveSOP(string SOPTemplateID)
         {
@@ -3170,8 +3169,7 @@ namespace sopman.Controllers
             double percentageComplete = (completeProcesses / processcount) * 100;
             ViewBag.percentageComplete = Math.Round(percentageComplete,2);
             Console.WriteLine(ViewBag.percentageComplete);
-
-            var getoverstatus = (from i in _context.SOPProcessTempls
+			var getoverstatus = (from i in _context.SOPProcessTempls
                                  where i.SOPTemplateID == gettopid
                                  select i.processStatus).ToList();
 
@@ -3190,9 +3188,7 @@ namespace sopman.Controllers
 
 
                 //Sendgrid - send to main user. 
-            }
-
-
+            }	
             var deps = (from i in _context.Departments
                         select new ProcessOutput { DepartmentId = i.DepartmentId, DepartmentName = i.DepartmentName }).ToList();
 
@@ -3359,7 +3355,7 @@ namespace sopman.Controllers
 
             var processtmps = (from i in _context.SOPProcessTempls
                                where i.SOPTemplateID == gettopid
-                               select new SOPOverView {SOPTemplateProcessID = i.SOPTemplateProcessID, SOPTemplateID = i.SOPTemplateID, processStatus = i.processStatus, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
+                               select new SOPOverView {SOPTemplateProcessID = i.SOPTemplateProcessID, SOPTemplateID = i.SOPTemplateID, ProcessName = i.ProcessName, ProcessDesc = i.ProcessDesc, valuematch = i.valuematch, ProcessType = i.ProcessType }).ToList();
 
 
             ViewBag.processtmps = processtmps;
@@ -3435,8 +3431,6 @@ namespace sopman.Controllers
 
             foreach (var item in processtmps)
             {
-                Console.WriteLine("Process Id");
-                Console.WriteLine(item.SOPTemplateProcessID);
                 bool rescomplete = false, acccomplete = false, concomplete = false, infcomplete = false;
                 foreach (var sub in acc)
                 {
@@ -3497,7 +3491,6 @@ namespace sopman.Controllers
                 {
                     completeProcesses++;
                     Console.WriteLine(completeProcesses);
-
                     var gettempstatus = _context.SOPProcessTempls.FirstOrDefault(x => x.valuematch == item.valuematch && x.SOPTemplateProcessID == item.SOPTemplateProcessID);
 
                     Console.WriteLine("Process Status");
@@ -3507,7 +3500,6 @@ namespace sopman.Controllers
 
                     _context.SOPProcessTempls.Update(gettempstatus);
                     _context.SaveChanges();
-
                 }
             }
             Console.WriteLine(processtmps.Count());
@@ -3515,8 +3507,8 @@ namespace sopman.Controllers
             double percentageComplete = (completeProcesses / processcount) * 100;
             ViewBag.percentageComplete = Math.Round(percentageComplete, 2);
             Console.WriteLine(ViewBag.percentageComplete);
-
-            var getoverstatus = (from i in _context.SOPProcessTempls
+				
+			var getoverstatus = (from i in _context.SOPProcessTempls
                                 where i.SOPTemplateID == gettopid
                                  select i.processStatus).ToList();
 
