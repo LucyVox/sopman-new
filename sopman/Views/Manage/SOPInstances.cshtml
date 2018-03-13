@@ -32,10 +32,10 @@
                         <thead>
                             <tr>
                                 <th>SOP Name</th>
-                            <th>SOP Instance</th>
-                            <th>Project</th>
-                            <th>Expire Date</th>
-                            <th>Progress</th>
+                                <th>SOP Instance</th>
+                                <th>Project</th>
+                                <th>Expire Date</th>
+                                <th>Progress</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,8 +54,79 @@
                                                 }
                                                 <th>@ist.InstanceExpire</th>
                                                 <th>
+                                                   @{
+                                                        double completeProcesses = 0;
+                                                        int counter = 0;
+                                                    } 
+                                                    @foreach(var data in (ViewBag.processtmps)){
+                                                        if(data.SOPTemplateID == ist.SOPTemplateID){
+                                                            bool rescomplete = false, acccomplete = false, concomplete = false, infcomplete = false; 
+                                                            foreach (var perc in (ViewBag.res))
+                                                            {
+                                                                if (perc.valuematch == data.valuematch)
+                                                                {
+                                                                    var status = "Complete";
+                                                                    var thecount = perc.Status;
+                                                                    if (thecount == status){
+                                                                        acccomplete = true;
+                                                                    }
+                                                                }
+                                                            }
+                                                            foreach (var perc in (ViewBag.acc))
+                                                            {
+                                                                if (perc.valuematch == data.valuematch)
+                                                                {
+                                                                    var status = "Complete";
+                                                                    var thecount = perc.Status;
+
+                                                                    if (thecount == status)
+                                                                    {
+                                                                        rescomplete = true;
+                                                                    }
+                                                                }
+                                                            }
+                                                            foreach (var perc in (ViewBag.cons))
+                                                            {
+                                                                if (perc.valuematch == data.valuematch)
+                                                                {
+                                                                    var status = "Complete";
+                                                                    var thecount = perc.Status;
+
+                                                                    if (thecount == status)
+                                                                    {
+                                                                        concomplete = true;
+                                                                    }
+                                                                }
+                                                            }
+                                                            foreach (var perc in (ViewBag.infi))
+                                                            {
+                                                                if (perc.valuematch == data.valuematch)
+                                                                {
+                                                                    var status = "Complete";
+                                                                    var thecount = perc.Status;
+
+                                                                    if (thecount == status)
+                                                                    {
+                                                                        infcomplete = true;
+                                                                    }
+                                                                }
+                                                            }
+                                                            counter++;
+                                                            if(rescomplete && acccomplete && concomplete && infcomplete)
+                                                            {
+                                                                completeProcesses++;
+                                                                Console.WriteLine(completeProcesses);
+                                                            }
+                                                        }
+                                                    }
+                                                   @{
+                                                        double processcount = counter;
+                                                        double percentageComplete = (completeProcesses / processcount) * 100;
+                                                        percentageComplete = Math.Round(percentageComplete,2);
+                                                    }
+                                                                        
                                                     <div class="progress">
-                                                      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                      <div class="progress-bar" role="progressbar" style="width: @percentageComplete%" aria-valuenow="@percentageComplete" aria-valuemin="0" aria-valuemax="100"></div>
                                                     </div>
                                                 </th>
                                             </tr>

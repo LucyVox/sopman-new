@@ -31,10 +31,16 @@
                         stroke-width: 32;
                         transition: .5s;
                     }
+                     .pie {
+                      width: 100px;
+                      background: #96C9DB;
+                      border-radius: 50%;
+                    }   
                 </style>
-                <svg class="mx-auto" viewBox="0 0 10 10" height="120">
-                        <circle r="5" cx="5" cy="5" stroke-dasharray="@ViewBag.percentageComplete 100"></circle>
-                    </svg>
+                <svg viewBox="0 0 64 64" class="pie">
+                    <circle r="25%" cx="50%" cy="50%" style="stroke-dasharray: @ViewBag.percentageComplete 100">
+                    </circle>
+                </svg>
                 <h5 class="mx-auto">@ViewBag.percentageComplete%<br /><span class="h6 text-muted">Complete</span></h5>
             </div>
             <div class="col-12 col-md-2 text-right">
