@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model IndexViewModel
 @foreach(var item in (ViewBag.theprojects)){
-    <tr>
+    <tr class="my-projects">
         <th scope="row">@item.ProjectName</th>
         <th><a href="/Manage/ViewProject?=@item.ProjectId">Go to project</a></th>
     </tr>

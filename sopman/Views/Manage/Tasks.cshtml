@@ -2,28 +2,53 @@
 @{
     ViewData["Title"] = "My Tasks";
 }
-<div class="container people-div">
-    <div class="row">
-        <div class="col-12">
-            <div class="row">
-                <div class="col-12 col-md-4">
-                    
+<div class="container body-content">
+    <div class="container sop-builder">
+        <div class="row header-dark-grey pb-4">
+            <div class="dropdown ml-3">
+                <button class="btn btn-secondary d-flex" type="button" id="active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Active<i class="material-icons ml-5">menu</i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="active">
+                    <a class="dropdown-item show-all-sop" href="#">All</a>                
+                    <a class="dropdown-item im-responsive" href="#">I am responsible</a>
+                    <a class="dropdown-item im-accountable" href="#">I am accountable</a>
+                    <a class="dropdown-item im-consulting" href="#">I am consulting</a>
+                    <a class="dropdown-item im-informed" href="#">I am informed</a>
                 </div>
-                <div class="col-12">
-                    <table id="tasks-table" class="table list-table">
-                        <thead>
-                            <tr>
-                                <th>Instance</th>
-                                <th>Project</th>
-                                <th>Process Step</th>
-                                <th>Due Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody> 
+            </div>
+            <div class="dropdown ml-3">
+                <button class="btn btn-secondary d-flex" type="button" id="active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Status<i class="material-icons ml-5">menu</i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="active">
+                    <a class="dropdown-item status-all" href="#">All</a>                
+                    <a class="dropdown-item is-complete" href="#">Complete</a>
+                    <a class="dropdown-item is-pending" href="#">Pending</a>
+                    <a class="dropdown-item is-recused" href="#">Recused</a>
+                </div>
+            </div>
+        </div>
+        <div class="row header-white">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                    </div>
+                    <div class="col-12">
+                        <table id="tasks-table" class="table list-table">
+                            <thead>
+                                <tr>
+                                    <th>Instance</th>
+                                    <th>Project</th>
+                                    <th>Process Step</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody> 
                             @foreach(var res in (ViewBag.racirespro)){
                                 if(res.UserId == (ViewBag.getuserid)){
-                                    <tr class="res-user">
+                                    <tr class="res-user status-@res.Status tablerow">
                                         @foreach(var inst in (ViewBag.getinstances)){
                                             if(inst.InstanceId == res.InstanceId){
                                                 foreach(var exe in (ViewBag.exesop)){
@@ -48,7 +73,7 @@
                                                 foreach(var item in (ViewBag.processSteps)){
                                                     if(res.soptoptempid == item.SOPTemplateID){
                                                         foreach(var exe in (ViewBag.exesop)){
-                                                            if(exe.SectionId == inst.InstanceId){
+                                                            if((exe.SectionId == inst.InstanceId) && (res.valuematch == item.valuematch)){
                                                                 <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a></td>
                                                             }
                                                         }
@@ -67,7 +92,7 @@
                             }
                             @foreach(var res in (ViewBag.raciaccpro)){
                                 if(res.UserId == (ViewBag.getuserid)){
-                                    <tr class="acc-user">
+                                    <tr class="acc-user status-@res.Status tablerow">
                                         @foreach(var inst in (ViewBag.getinstances)){
                                             if(inst.InstanceId == res.InstanceId){
                                                 foreach(var exe in (ViewBag.exesop)){
@@ -92,10 +117,11 @@
                                                 foreach(var item in (ViewBag.processSteps)){
                                                     if(res.soptoptempid == item.SOPTemplateID){
                                                         foreach(var exe in (ViewBag.exesop)){
-                                                            if(exe.SectionId == inst.InstanceId){
-                                                                <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a></td>
+                                                            if((exe.SectionId == inst.InstanceId) && (res.valuematch == item.valuematch)){
+                                                               <td> <a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a> </td>
                                                             }
                                                         }
+                                                       
                                                     }
                                                 }
                                             }
@@ -111,7 +137,7 @@
                             } 
                             @foreach(var res in (ViewBag.raciconpro)){
                                 if(res.UserId == (ViewBag.getuserid)){
-                                    <tr class="con-user">
+                                    <tr class="con-user status-@res.Status tablerow">
                                         @foreach(var inst in (ViewBag.getinstances)){
                                             if(inst.InstanceId == res.InstanceId){
                                                 foreach(var exe in (ViewBag.exesop)){
@@ -136,7 +162,7 @@
                                                 foreach(var item in (ViewBag.processSteps)){
                                                     if(res.soptoptempid == item.SOPTemplateID){
                                                         foreach(var exe in (ViewBag.exesop)){
-                                                            if(exe.SectionId == inst.InstanceId){
+                                                            if((exe.SectionId == inst.InstanceId) && (res.valuematch == item.valuematch)){
                                                                 <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a></td>
                                                             }
                                                         }
@@ -155,7 +181,7 @@
                             } 
                              @foreach(var res in (ViewBag.raciinfpro)){
                                 if(res.UserId == (ViewBag.getuserid)){
-                                    <tr class="inf-user">
+                                    <tr class="inf-user status-@res.Status tablerow">
                                         @foreach(var inst in (ViewBag.getinstances)){
                                             if(inst.InstanceId == res.InstanceId){
                                                 foreach(var exe in (ViewBag.exesop)){
@@ -180,7 +206,7 @@
                                                 foreach(var item in (ViewBag.processSteps)){
                                                     if(res.soptoptempid == item.SOPTemplateID){
                                                         foreach(var exe in (ViewBag.exesop)){
-                                                            if(exe.SectionId == inst.InstanceId){
+                                                            if((exe.SectionId == inst.InstanceId) && (res.valuematch == item.valuematch)){
                                                                 <td><a href="/Manage/SOPs?=@exe.ExecuteSopID">@item.ProcessName</a></td>
                                                             }
                                                         }
@@ -197,14 +223,14 @@
                                     </tr>
                                 }
                             } 
-                        </tbody>
-                    </table>
+                            </tbody>
+                         </table>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
-</div>
+</div>  
 <script>
     $(document).ready(function() {
         $('#tasks-table').DataTable( {
@@ -214,6 +240,35 @@
             "columnDefs": [
                 { "orderable": false, "targets": 4 }
             ]
+        });
+     });
+    $(document).ready(function() {
+        $( ".im-responsive" ).click(function() {
+            $("tr.tablerow").not(".res-user").hide();
+        });
+        $( ".im-accountable" ).click(function() {
+            $("tr.tablerow").not(".acc-user").hide();
+        });
+        $( ".im-consulting" ).click(function() {
+            $("tr.tablerow").not(".con-user").hide();
+        });
+        $( ".im-informed" ).click(function() {
+            $("tr.tablerow").not(".inf-user").hide();
+        });
+        $( ".show-all-sop" ).click(function() {
+            $("tr.tablerow").show();
+        });
+        $( ".is-complete" ).click(function() {
+            $("tr.tablerow").not(".status-Complete").hide();
+        });
+        $( ".is-pending" ).click(function() {
+            $("tr.tablerow").not(".status-Pending").hide();
+        });
+        $( ".is-recused" ).click(function() {
+            $("tr.tablerow").not(".status-Recused").hide();
+        });
+        $( ".status-all" ).click(function() {
+            $("tr.tablerow").show();
         });
      });
 </script>

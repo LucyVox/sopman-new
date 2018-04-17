@@ -13,7 +13,7 @@
     <div class="container sop-builder">
         <div class="row header-dark-grey">
             <div class="col-12 col-md-10">
-                <h1>@ViewBag.gettempname</h1>
+                <input class="form-control my-2" type="text" value="@ViewBag.gettempname" name="the-templatename" placeholder="Template name" >
             </div>
             <div class="col-12 col-md-2 text-right">
                     <input type="submit" class="btn" value="Save" />
@@ -35,10 +35,8 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="overview" role="tabpanel">
                         @foreach(var subitem in (ViewBag.thesecs)){
-
                             sectioncount++;
                             tasks++;
-                        
                             <div class="row section-count">
                                 <div class="col-12 col-md-1 header-left">
                                     <div class="number"><h3 class="h5">@sectioncount</h3></div>
@@ -97,13 +95,11 @@
                         }
                      </div>
                     <div class="tab-pane" id="docs" role="tabpanel">
-                            <div class="col-12">
+                            <div class="col-12 history-info">
                                 @foreach(var item in (@ViewBag.gethistory)){
-
                                     <!--  Name of sop section. -->
                                     foreach(var subitem in (ViewBag.thesecs)){
                                         if(subitem.valuematch == item.ValuematchEdited){
-
                                             <div class="card">
                                                 <div class="card-header">New Edit</div>
                                                 <div class="card-body">
@@ -120,22 +116,8 @@
                                                     <p class="card-text">@item.TextEdited</p>
                                                 </div>
                                             </div>
-
-                            
                                         }
                                     }
-
-
-
-
-
-
-
-
-
-
-
-                            
                                 }
                         </div>
                     </div>
@@ -206,8 +188,11 @@
         });
     
     });
-
-    
+    $(document).ready(function() {
+        if( $('.history-info').is(':empty') ) {
+            $('.history-info').append("<h3>There is no history</h3>");
+        };
+    });
 </script>
 
 

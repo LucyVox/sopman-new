@@ -12,6 +12,8 @@ namespace sopman.Models.ManageViewModels
     public class CreateInstanceViewModel
     {
         public string SOPTemplateID { get; set; }
+
+        [Required]
         public string TempName { get; set; }
         public string SOPCode { get; set; }
 
@@ -25,6 +27,7 @@ namespace sopman.Models.ManageViewModels
 
         public string ProjectId { get; set; }
 
+        [Required]
         public string ProjectName { get; set; }
         public List<ProjectsList> Projects { get; set; }
     }
@@ -51,6 +54,7 @@ namespace sopman.Models.ManageViewModels
 
     public class ProcessOutput
     {
+        public int SOPTemplateProcessID { get; set; }
         public string SOPTemplateID { get; set; }
         public int RACIResChosenID { get; set; }
         public int RACIAccChosenID { get; set; }
@@ -70,7 +74,7 @@ namespace sopman.Models.ManageViewModels
             public string ProcessName { get; set; }
         }
 
-
+        [Required]
         [DataType(DataType.Date)]
         public string DueDate { get; set; }
         public string ExternalDocument { get; set; }

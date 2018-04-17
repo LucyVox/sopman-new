@@ -20,6 +20,7 @@
     @using (Html.BeginForm("CompanySetup", "Setup", FormMethod.Post, 
     new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
     {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="row">
             <div class="col-12 col-md-12">
                 <h4>Some more info about you</h4>
@@ -57,7 +58,8 @@
                 <h4>@Html.LabelFor(m => m.Logo, new { @class = "col-md-12 control-label" })</h4>
             </div>
             <div class="col-12 col-md-6">
-                <input type="file" name="file" />
+                <input type="file" name="file" data-val-required="A Logo is required"/>
+                @Html.ValidationMessageFor(m=>m.FileURL)    
             </div>
             <div class="col-12 col-md-4">
                 <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Upload your company logo, try to use a png with a transparent background as the logo will be used at the top of the page.">
@@ -75,18 +77,16 @@
             </div>
             <div class="col-12 col-md-12">
                 <div class="row pad-top">
-                    <div class="col-12 col-md-4">
-                        @Html.LabelFor(m => m.SOPNumberFormat, new { @class = "col-md-12 control-label" })
-                        @Html.DropDownListFor(m => m.SOPNumberFormat, items, new { @class = "form-control" })
-                    </div>
-                    <div class="col-12 col-md-3">
-                        @Html.LabelFor(m => m.SOPStartNumber, new { @class = "col-md-12 control-label" })
-                        @Html.TextBoxFor(m => m.SOPStartNumber, new { @class = "form-control" })
-                    </div>
-                    <div class="col-12 col-md-5">
-                        <button type="button" class="btn btn-secondary padding-top-help builder-tooltip" data-toggle="tooltip" data-placement="right" title="Upload your company logo, try to use a png with a transparent background as the logo will be used at the top of the page.">
-                            <i class="material-icons">help</i>
-                         </button>
+                    <div class="buttons-div">
+                        <button id="add-number" class="number" type="button">Add Number</button>
+                        <button id="add-character" class="character" type="button">Add Character</button>
+                        <button id="add-dash" class="dash" type="button">Add Dash</button>
+                        <button id="add-space" class="space" type="button">Add Space</button>
+                        <button id="add-comma" class="comma" type="button">Add Comma</button>
+                        <div class="number-formatting">
+
+                                
+                        </div>
                     </div>
                 </div>
             </div>
@@ -100,5 +100,57 @@
         </div>
     }
 </div>
-
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var url = '@Url.Action("AddNumber")';
+            var urltwo = '@Url.Action("AddCharacter")';
+            var urlthree = '@Url.Action("AddDash")';
+            var urlfour = '@Url.Action("AddSpace")';
+            var urlfive = '@Url.Action("AddComma")';
+            var form = $('form');
+            var recipients = $('.number-formatting');
+            $('#add-number').click(function() {
+                $.get(url, function(response) {
+                    recipients.append(response);
+                    // Reparse the validator for client side validation
+                    form.data('validator', null);
+                    $.validator.unobtrusive.parse(form);
+                });
+            });  
+            $('#add-character').click(function() {
+                $.get(urltwo, function(response) {
+                    recipients.append(response);
+                    // Reparse the validator for client side validation
+                    form.data('validator', null);
+                    $.validator.unobtrusive.parse(form);
+                });
+            });  
+            $('#add-dash').click(function() {
+                $.get(urlthree, function(response) {
+                    recipients.append(response);
+                    // Reparse the validator for client side validation
+                    form.data('validator', null);
+                    $.validator.unobtrusive.parse(form);
+                });
+            }); 
+            $('#add-space').click(function() {
+                $.get(urlfour, function(response) {
+                    recipients.append(response);
+                    // Reparse the validator for client side validation
+                    form.data('validator', null);
+                    $.validator.unobtrusive.parse(form);
+                });
+            }); 
+            $('#add-comma').click(function() {
+                $.get(urlfive, function(response) {
+                    recipients.append(response);
+                    // Reparse the validator for client side validation
+                    form.data('validator', null);
+                    $.validator.unobtrusive.parse(form);
+                });
+            }); 
+        });       
+    </script>
+}
 

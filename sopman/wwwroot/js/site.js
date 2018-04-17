@@ -41,7 +41,9 @@ $(document).ready(function() {
 
     $('.tick-img.true img').attr('src', '/images/tick.png');
 
-
+    $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
 });  
     
 

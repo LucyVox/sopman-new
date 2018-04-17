@@ -1,4 +1,5 @@
 ﻿@model sopman.Models.SetupViewModels.SopTemplate
+@using HtmlHelpers.BeginCollectionItemCore
 <div class="row">
     <div class="col-12 label">
        @Html.LabelFor(m => m.TempName, new { @class = "col-md-12 control-label" })
@@ -15,7 +16,21 @@
        @Html.LabelFor(m => m.SOPCode, new { @class = "col-md-12 control-label" })
     </div>
     <div class="col-12 col-md-6">
-        @Html.TextBoxFor(m => m.SOPCode, new { @class = "form-control limit-form"})
+        <div class="sop-code-format">
+            @foreach(var code in (ViewBag.getsopcode)){
+                if(code.InputValue == "space"){
+                    <input type="text" class="add-to-code hide-space form-control limit-form" name="InputValue-@code.SOPNumberingId" maxlength="1" value=" "> 
+                }if(code.InputValue == "-"){
+                    <input type="text" class="add-to-code hide-dash form-control limit-form" name="InputValue-@code.SOPNumberingId" maxlength="1" value="-"> 
+                }if(code.InputValue == ","){
+                    <input type="text" class="add-to-code hide-comma form-control limit-form" name="InputValue-@code.SOPNumberingId" maxlength="1" value=","> 
+                }if(code.InputValue == "A"){
+                    <input type="text" class="add-to-code form-control limit-form" name="InputValue-@code.SOPNumberingId" maxlength="1" value="@code.InputValue"> 
+                }if(code.InputValue == "0"){
+                    <input type="text" class="add-to-code form-control limit-form" name="InputValue-@code.SOPNumberingId" maxlength="1" value="@code.InputValue"> 
+                }
+            }
+        </div>
     </div>
     <div class="col-12 col-md-6 tool-left">
         <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="Enter the code for this SOP">
@@ -34,4 +49,13 @@
         </button>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    });
+</script>
+
 

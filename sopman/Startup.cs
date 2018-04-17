@@ -14,7 +14,9 @@ using Microsoft.AspNetCore.Http;
 using sopman.Data;
 using sopman.Models;
 using sopman.Services;
-
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 namespace sopman
 {
     public class Startup
@@ -70,12 +72,12 @@ namespace sopman
             services.AddTransient<IEmailSender, EmailSender>();
 
 
-
             services.AddMvc();
             services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             services.AddSingleton<IConfiguration>(Configuration);
+            services.AddCors();
 
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,7 +107,10 @@ namespace sopman
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-
+            app.UseCors(builder =>
+                        builder.WithOrigins("https://sopman.blob.core.windows.net")
+                       .AllowAnyHeader()
+                );
 
             CreateRoles(serviceProvider).Wait();
         }

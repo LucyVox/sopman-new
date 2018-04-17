@@ -34,6 +34,7 @@ namespace sopman.Models.SetupViewModels
         public int SingleLinkTextID { get; set; }
         public string UserId { get; set; }
         public string SingleLinkTextBlock { get; set; }
+
         public int MultilineTextID { get; set; }
 
         [DataType(DataType.MultilineText)]
@@ -57,6 +58,7 @@ namespace sopman.Models.SetupViewModels
         public int SectionId { get; set; }
         public int SingleLinkTextID { get; set; }
         public string UserId { get; set; }
+        [Required]
         public string SingleLinkTextBlock { get; set; }
         public string PreviousFieldId { get; set; }
         public string valuematch { get; set; }
@@ -64,6 +66,7 @@ namespace sopman.Models.SetupViewModels
     public class MultilineViewModel
     {
         public int MultilineTextID { get; set; }
+        [Required]
         public string MultilineTextBlock { get; set; }
         public string PreviousFieldId { get; set; }
         public string valuematch { get; set; }
@@ -71,6 +74,7 @@ namespace sopman.Models.SetupViewModels
     public class TableViewModel
     {
         public int TableSecID { get; set; }
+        [Required]
         public string TableHTML { get; set; }
         public string PreviousFieldId { get; set; }
         public string valuematch { get; set; }

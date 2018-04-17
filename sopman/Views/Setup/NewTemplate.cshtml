@@ -4,6 +4,7 @@
     ViewData["Title"] = "New Template";
 
 }
+
 @using (Html.BeginForm("NewTemplate", "Setup", FormMethod.Post)){
 <div class="container sop-builder">
     <div class="row header-white">
@@ -12,6 +13,12 @@
         </div>
         <div class="col-12 rest-of-form">
             
+        </div>
+        <div class="col-12">
+            <hr>
+        </div>
+        <div class="col-12 approvers-of-form">
+            <a class="btn btn-default add-approver">Add Approver</a>
         </div>
         <div class="col-12">
             <hr>
@@ -75,15 +82,15 @@
                         @foreach(var subitem in (ViewBag.GetSin)){
                             if(subitem.valuematch == item.valuematch){
                                 var text = @subitem.SingleLinkTextBlock.Replace(" ", "");
-                                <input class="form-control limit-form" type="text" name="SingleLinkTextBlock-@text" value="@subitem.SingleLinkTextBlock" >
+                                <input class="form-control limit-form" type="text" name="SingleLinkTextBlock-@text" placeholder="@subitem.SingleLinkTextBlock" >
                             }
                         } 
                         @foreach(var subitem in (ViewBag.GetMul)){
                             if(subitem.valuematch == item.valuematch){
                                 var text = @subitem.MultilineTextBlock.Replace(" ", "");
-                                <textarea name="MultilineTextBlock-@text" class="form-control limit-form">@subitem.MultilineTextBlock</textarea>   
+                                <textarea name="MultilineTextBlock-@text" class="form-control limit-form" placeholder="@subitem.MultilineTextBlock"> </textarea>   
                             }
-                        }  
+                        }
                     </div>
                 }
                 <div class="form-group bottom-row submit-row">
@@ -109,5 +116,18 @@
             $.validator.unobtrusive.parse(form); 
         }); 
     });
+    $(document).ready(function () {
+            var urlapp = '@Url.Action("AddApprover")';
+            var form = $('form');
+            var recipientstwo = $('.approvers-of-form');
+            $('.add-approver').click(function() {
+                $.post(urlapp, function(response) {
+                    recipientstwo.append(response);
+                    // Reparse the validator for client side validation
+                    form.data('validator', null);
+                    $.validator.unobtrusive.parse(form);
+                });
+            });  
+        });
 </script>
 }

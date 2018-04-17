@@ -1,0 +1,424 @@
+﻿@model IEnumerable<sopman.Models.ManageViewModels.SOPOverView> 
+@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "View SOP " + @ViewBag.gettempname;
+    int sectioncount = 0;
+    int subsectioncount = 0;
+    int tasks = 0; // A second section counter to reset the count for the 'Tasks' tab
+    int documentsProcesses = 1;
+}
+<div class="container body-content">
+    <div class="container sop-builder">
+        <div class="row header-dark-grey">
+            <div class="col-12 col-md-10">
+                <h1>@ViewBag.gettempname</h1>
+                <h3>Status: @ViewBag.gettempstatus</h3>
+            </div>
+            <div class="col-12 col-md-2 text-right">
+                <a class="white-btn" href="/Manage/SOPTemplates">Back</a>
+                <a class="white-btn lower-btn" href="/Manage/EditMainSOP?=@ViewBag.gettopid">Edit SOP</a>
+            </div>
+            <hr class="invisible-divider"/>
+            <div class="col-12">
+                <ul class="nav nav-temp nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">SOP Overview</a>
+                    </li>
+                    <li class="nav-item ml-2">
+                        <a class="nav-link" data-toggle="tab" href="#process" role="tab">Process Steps</a>
+                    </li>
+                    <li class="nav-item ml-2">
+                        <a class="nav-link" data-toggle="tab" href="#approvers" role="tab">Approvers</a>
+                    </li>
+                    <li class="nav-item ml-2">
+                        <a class="nav-link" data-toggle="tab" href="#docs" role="tab">Version History</a>
+                    </li> 
+                </ul>
+            </div>
+        </div>
+        <div class="row white-row">
+            <div class="col-12">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="overview" role="tabpanel">
+                        @foreach(var subitem in (ViewBag.thesecs)){
+                            sectioncount++;
+                            tasks++;
+                            <div class="row section-count">
+                                <div class="col-12 col-md-1 header-left">
+                                    <div class="number"><h3 class="h5">@sectioncount</h3></div>
+                                </div>
+                                <div class="col-12 col-md-11 header-right">
+                                    <h2>@subitem.SectionText</h2>
+                                </div>
+                                <div class="col-12 the-secs">
+                                   @foreach(var item in (ViewBag.thesin)){
+                                        if(item.valuematch == subitem.valuematch){
+                                            if(item.NewTempId == @ViewBag.gettopid){
+                                                <h3>@item.SingleLinkTextBlock</h3>
+                                            }
+                                        }
+                                    }
+                                    @foreach(var item in (ViewBag.gettabs)){
+                                        if(item.valuematch == subitem.valuematch){
+                                            if(item.NewTempId == @ViewBag.gettopid){
+                                                <h3>@item.TableHTML</h3>
+                                                <div class="col-12">
+                                                    <div class="table sop-table">
+                                                        <div class="col-count">
+                                                        @foreach(var col in (ViewBag.gettabscols)){
+                                                            if((col.tableval == subitem.valuematch) && (col.NewTempId == ViewBag.gettopid)){
+                                                                <div class="inner-cols">
+                                                                    <h3>@col.ColText</h3>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        </div>
+                                                        <div class="row-count">
+                                                        @foreach(var col in (ViewBag.gettabsrows)){
+                                                            if((col.tableval == subitem.valuematch) && (col.NewTempId == ViewBag.gettopid)){
+                                                                <div class="inner-rows">
+                                                                    <h3>@col.RowText</h3>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                             }
+                                        }
+                                    }
+                                    @foreach(var item in (ViewBag.getmul)){
+                                        if(item.valuematch == subitem.valuematch){
+                                           if(item.NewTempId == @ViewBag.gettopid){
+                                                <p>@item.MultilineTextBlock</p>
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="process" role="tabpanel">
+                        <div id="accordion" role="tablist">
+                            @foreach(var item in (ViewBag.processtmps)){
+                                var nameshort = item.ProcessName.Replace(" ", "");
+                                var protype = item.ProcessType;
+                                var value = item.valuematch;
+
+                                string number;
+                                if(protype == "SubProcess")
+                                {
+                                    number = sectioncount.ToString() + "." + subsectioncount.ToString();
+                                    subsectioncount++;
+                                    
+                                }
+                                else
+                                {
+                                    sectioncount++;
+                                    number = sectioncount.ToString();
+                                    subsectioncount = 1;
+                                }
+
+                                int resCount = 1;
+                                int accCount = 1;
+                                int conCount = 1;
+                                int infCount = 1;
+                                <div class="card container @protype process-@value">
+                                    <div class="card-header row" role="tab" id="headingOne">
+                                        <div class="col-12 col-md-1 count-col pending-left">
+                                           <div class="number"><h3>@number</h3></div>
+                                        </div>
+                                        <div class="col-12 col-md-11 padding-left-zero">
+                                            <div class="row header-row">
+                                                <div class="col-12 col-md-10">
+                                                     <h3>@item.ProcessName</h3>
+                                                </div>
+                                                <div class="col-12 col-md-2 text-right">
+                                                    <a data-toggle="collapse" class="collapsed font-14" href="#collapse-@nameshort" role="button" aria-expanded="false" aria-controls="collapseOne">
+                                                        SHOW DETAIL
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 status-row">
+                                            <div class="row pending-status">
+                                                <div class="col-12 col-md-1">
+                                                </div>
+                                                <div class="col-11 status-is-pending static-status">
+                                                    <p class="the-proc-status">Pending</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="collapse-@nameshort" class="container collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body row">
+                                            <div class="col-12 col-md-12">
+                                                <p>@item.ProcessDesc</p>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Responsible</h4>
+                                                    </div>
+                                                    @foreach(var sub in (ViewBag.res)){
+                                                        if(sub.valuematch == item.valuematch){  
+                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                <div class="row">
+                                                                    <div class="col-12 col-md-1 sop-number">
+                                                                        <h3>@resCount</h3>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-3 sop-status d-flex align-items-center">
+                                                                        <h5>Pending</h5>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                        <p class="sop-person-info">
+                                                                            @foreach(var dep in (ViewBag.deps)){
+                                                                                if(sub.DepartmentId == dep.DepartmentId){
+                                                                                <strong>@dep.DepartmentName</strong>
+                                                                                }
+                                                                            }
+                                                                            @foreach(var job in (ViewBag.getjobs)){
+                                                                                if(job.JobTitleId == sub.JobTitleId) {
+                                                                                    @job.JobTitle
+                                                                                }
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        resCount++;
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Accountable</h4>
+                                                    </div>
+                                                    @foreach(var sub in (ViewBag.acc)){
+                                                        if(sub.valuematch == item.valuematch){
+                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                <div class="row">
+                                                                    <div class="col-12 col-md-1 sop-number">
+                                                                        <h3>@resCount</h3>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-3 sop-status d-flex align-items-center">
+                                                                        <h5>Pending</h5>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                        <p class="sop-person-info">
+                                                                            @foreach(var dep in (ViewBag.deps)){
+                                                                                if(sub.DepartmentId == dep.DepartmentId){
+                                                                                <strong>@dep.DepartmentName</strong>
+                                                                                }
+                                                                            }
+                                                                            @foreach(var job in (ViewBag.getjobs)){
+                                                                                if(job.JobTitleId == sub.JobTitleId) {
+                                                                                    @job.JobTitle
+                                                                                }
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            accCount++;
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Consulted</h4>
+                                                    </div>
+                                                    @foreach(var sub in (ViewBag.cons)){
+                                                        if(sub.valuematch == item.valuematch){
+                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                <div class="row">
+                                                                    <div class="col-12 col-md-1 sop-number">
+                                                                        <h3>@resCount</h3>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-3 sop-status d-flex align-items-center">
+                                                                        <h5>Pending</h5>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                        <p class="sop-person-info">
+                                                                            @foreach(var dep in (ViewBag.deps)){
+                                                                                if(sub.DepartmentId == dep.DepartmentId){
+                                                                                <strong>@dep.DepartmentName</strong>
+                                                                                }
+                                                                            }
+                                                                            @foreach(var job in (ViewBag.getjobs)){
+                                                                                if(job.JobTitleId == sub.JobTitleId) {
+                                                                                    @job.JobTitle
+                                                                                }
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            conCount++;
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-12 raci-info">
+                                                        <h4>Informed</h4>
+                                                    </div>
+                                                    @foreach(var sub in (ViewBag.infi)){
+                                                        if(sub.valuematch == item.valuematch){
+                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                <div class="row">
+                                                                    <div class="col-12 col-md-1 sop-number">
+                                                                        <h3>@resCount</h3>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-3 sop-status d-flex align-items-center">
+                                                                        <h5>Pending</h5>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-6 sop-person d-flex flex-column justify-content-center">
+                                                                        <p class="sop-person-info">
+                                                                            @foreach(var dep in (ViewBag.deps)){
+                                                                                if(sub.DepartmentId == dep.DepartmentId){
+                                                                                <strong>@dep.DepartmentName</strong>
+                                                                                }
+                                                                            }
+                                                                            @foreach(var job in (ViewBag.getjobs)){
+                                                                                if(job.JobTitleId == sub.JobTitleId) {
+                                                                                    @job.JobTitle
+                                                                                }
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            infCount++;
+                                                        }
+                                                    }
+                                                </div>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="approvers" role="tabpanel">
+                        @using (Html.BeginForm()) {   
+                        <div class="col-12 approvers-section">
+                            @foreach(var item in (ViewBag.theapprovers)){
+                                int resCount = 1;
+                                foreach(var user in (ViewBag.allusers)){
+                                    if(item.UserId == user.ClaimId){
+                                        var namenospace = "approve" + user.FirstName + user.SecondName + item.UserId;
+                                        <div class="card status-@item.ApproverStatus">
+                                            <div class="card-body approver-card approver-row row">
+                                                <div class="col-12 col-md-1 count-col">
+                                                    <h3>@resCount</h3>
+                                                </div>
+                                                <div class="col-12 col-md-3">
+                                                    <p>@item.ApproverStatus</p>
+                                                </div>
+                                                <div class="col-12 col-md-7">
+                                                    <p>@user.FirstName @user.SecondName
+                                                        @foreach(var dep in (ViewBag.deppartments)){
+                                                            if(user.DepartmentId == dep.DepartmentId){
+                                                                <span>@dep.DepartmentName</span>
+                                                            }
+                                                        }
+                                                    </p>
+                                                </div>
+                                                <div class="col-12 col-md-1">
+                                                    <div class="dropdown h-100">
+                                                        <button class="btn btn-secondary h-100 w-100" type="button" id="@namenospace" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="material-icons">menu</i>
+                                                          </button>
+                                                          <div class="dropdown-menu" aria-labelledby="@namenospace">
+                                                            @if((item.UserId == ViewBag.loggedin) && (item.ApproverStatus == "Pending")){
+                                                                <div class="approve user-@item.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Approve SOP</p></div>
+                                                            }else {
+                                                                 <div class="approve faded user-@item.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Approve SOP</p></div>
+                                                            }
+                                                          </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="comp-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h5 class="modal-title">Approve this SOP</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                    <p>Add signature</p>
+                                                    <input type="text" name="signature-@namenospace" placeholder="please type your name" class="signature">
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <input type="submit" class="btn" value="Complete Task" />
+                                                  </div>
+                                                </div>
+                                              </div>
+                                        </div>
+                                        resCount++;
+                                    }
+                                }
+                            }
+                        </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="docs" role="tabpanel">
+                        <div class="col-12 history-div">
+                            @foreach(var item in (@ViewBag.gethistory)){
+                                <!--  Name of sop section. -->
+                                foreach(var subitem in (ViewBag.thesecs)){
+                                    if(subitem.valuematch == item.ValuematchEdited){
+                                        <div class="card">
+                                            <div class="card-header">New Edit</div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">@subitem.SectionText edited</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">Edited by
+                                                    <!--  Name of user who edited.. -->
+                                                        @foreach(var name in (ViewBag.resiuser)){
+                                                            if(name.UserId == item.UserId){
+                                                                <span>@name.FirstName&nbsp;@name.SecondName</span>
+                                                            }
+                                                        }
+                                                        on @item.EditDate.ToString("dd/MM/yyyy")</h6>
+                                                        <p class="card-text">@item.TextEdited</p>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+     </div>
+</div>
+
+    
+<script>
+    $(document).ready(function() {
+        if( $('.history-div').is(':empty') ) {
+            console.log("no history");
+            $('.history-div').append("<h3>There is no history</h3>");
+        };b
+        
+    });
+    $(document).ready(function () {
+        var divname = "cols-";
+        var count = $(".table .inner-cols").length;
+        var content = divname+count;
+        $(".inner-cols").addClass(content);
+        $(".inner-rows").addClass(content);
+    });
+</script>
+    

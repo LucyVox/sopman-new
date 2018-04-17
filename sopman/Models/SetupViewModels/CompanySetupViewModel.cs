@@ -23,6 +23,13 @@ namespace sopman.Models.SetupViewModels
         [FileExtensions(Extensions = "jpg,jpeg")]
         public IFormFile Logo { get; set; }
 
+        [Required]
+        [Display(Name = "Logo Upload")]
+        [FileExtensions(Extensions = "jpg,jpeg, png")]
+        public IFormFile File { get; set; }
+
+
+        public string FileURL { get; set; }
         //public string Logo { get; set; }
 
         [Display(Name = "SOP Number Format")]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Web;
 using System.Data;
@@ -27,13 +27,20 @@ using sopman.Services;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using CsvHelper;
-
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 namespace sopman.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]
     public class SetupController : Controller
     {
+
+        CloudStorageAccount storageAccount = new CloudStorageAccount(
+        new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(
+                "sopman",
+                "RCmOo1xCGu7FIx0wZ3H4wNK4Y0MNtcj5chzAMWlU2GQjC/ehnsiSD9MTuHFGCUDf2sPguMByyX7VrjlQpq4/FA=="), true);
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -61,7 +68,14 @@ namespace sopman.Controllers
             if (_context.CompanyClaim.Any(o => o.UserId == getuser))
             {
                 ViewBag.Class = "true";
-
+                var comp = (from i in _context.CompanyClaim
+                            where i.UserId == getuser
+                            select i.CompanyId).Single();
+                ViewBag.comp = comp;
+                var logostring = (from i in _context.TheCompanyInfo
+                                  where i.CompanyId == comp
+                                  select i.Logo).Single();
+                ViewBag.logostring = logostring;
                 var theid = (from m in _context.CompanyClaim
                              where m.UserId == getuser
                              select m.CompanyId).Single();
@@ -85,10 +99,15 @@ namespace sopman.Controllers
             var user = await _userManager.GetUserAsync(User);
             var user_id = user.Id;
 
+
             var modules = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
-
+            
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == modules
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
 
             return View();
@@ -100,6 +119,36 @@ namespace sopman.Controllers
 
              return View(model); */
 
+        }
+
+        [HttpGet]
+        public PartialViewResult AddNumber()
+        {
+            return PartialView("_AddNumber", new SOPCodeBuilder());
+        }
+
+        [HttpGet]
+        public PartialViewResult AddCharacter()
+        {
+            return PartialView("_AddCharacter", new SOPCodeBuilder());
+        }
+
+        [HttpGet]
+        public PartialViewResult AddDash()
+        {
+            return PartialView("_AddDash", new SOPCodeBuilder());
+        }
+
+        [HttpGet]
+        public PartialViewResult AddSpace()
+        {
+            return PartialView("_AddSpace", new SOPCodeBuilder());
+        }
+
+        [HttpGet]
+        public PartialViewResult AddComma()
+        {
+            return PartialView("_AddComma", new SOPCodeBuilder());
         }
 
         [HttpGet]
@@ -118,20 +167,39 @@ namespace sopman.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SOPAdmin")]
-        public async Task<IActionResult> CompanySetup([Bind("Id,Name,Logo,SOPNumberFormat,SOPStartNumber,UserId")] ApplicationDbContext.CompanyInfo company, [Bind("ClaimId,CompanyId,UserId,FirstName,SecondName")] ApplicationDbContext.ClaimComp claim)
+        public async Task<IActionResult> CompanySetup([Bind("Id,Name,Logo,SOPNumberFormat,SOPStartNumber,UserId")] ApplicationDbContext.CompanyInfo company, IFormFile file,  [Bind("ClaimId,CompanyId,UserId,FirstName,SecondName")] ApplicationDbContext.ClaimComp claim, [Bind(Prefix = "SOPCode")]IEnumerable<SOPCodeBuilder> sopcodebuild)
         {
             var user = await _userManager.GetUserAsync(User);
 
-
             if (ModelState.IsValid)
             {
+
+                var getname = Request.Form["Name"];
+                var getfile = Request.Form["file"];
+
+                if(file != null){
+                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                    CloudBlobContainer container = blobClient.GetContainerReference("logos");
+
+                    await container.CreateIfNotExistsAsync();
+
+                    await container.SetPermissionsAsync(new BlobContainerPermissions
+                    {
+                        PublicAccess = BlobContainerPublicAccessType.Blob
+                    });
+
+                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(getname + "logo" + file.FileName);
+
+                    await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+                    _context.TheCompanyInfo.Select(u => u.Logo);
+                    company.Logo = getname + "logo" + file.FileName;
+                }
+
+
                 _context.TheCompanyInfo.Select(u => u.UserId);
                 var user_id = user.Id;
                 company.UserId = user_id;
                 claim.UserId = user_id;
-
-                _context.TheCompanyInfo.Select(u => u.Logo);
-                var file = company.Logo;
 
                 _context.CompanyClaim.Select(u => u.CompanyId);
                 var comp_id = company.CompanyId;
@@ -143,19 +211,73 @@ namespace sopman.Controllers
                 _context.TheCompanyInfo.Select(u => u.SOPNumberFormat);
                 var sopfrom = Request.Form["SOPNumberFormat"];
                 company.SOPNumberFormat = sopfrom;
-
-
+               
                 _context.Add(company);
                 await _context.SaveChangesAsync();
                 var getid = (from i in _context.TheCompanyInfo
                              where i.UserId == user_id
                              select i.CompanyId).Single();
-                
+
                 _context.CompanyClaim.Select(u => u.CompanyId);
                 claim.CompanyId = getid;
 
                 _context.Add(claim);
                 await _context.SaveChangesAsync();
+
+                foreach(var item in sopcodebuild){
+
+                    ApplicationDbContext.SOPNumbering number = new ApplicationDbContext.SOPNumbering();
+
+                    var getcompid = (from i in _context.TheCompanyInfo
+                                     where i.UserId == user_id
+                                     select i.CompanyId).Single();
+
+                    number.CompanyId = getcompid;
+
+                    if(item.InputValue == "0"){
+                        var numbervalue = "0";
+                        number.InputValue = numbervalue;
+                        Console.WriteLine("Number:");
+                        Console.WriteLine(number.InputValue);
+                        _context.Add(number);
+                    }
+                    if (item.InputValue == "A")
+                    {
+                        var charvalue = "A";
+                        number.InputValue = charvalue;
+                        Console.WriteLine("Character:");
+                        Console.WriteLine(number.InputValue);
+                        _context.Add(number);
+                    }
+                    if (item.InputValue == "-")
+                    {
+                        var dashvalue = "-";
+                        number.InputValue = dashvalue;
+                        Console.WriteLine("Dash:");
+                        Console.WriteLine(number.InputValue);
+                        _context.Add(number);
+                    }
+                    if (item.InputValue == "space")
+                    {
+                        var spacevalue = "space";
+                        number.InputValue = spacevalue;
+                        Console.WriteLine("Space:");
+                        Console.WriteLine(number.InputValue);
+                        _context.Add(number);
+                    }
+                    if (item.InputValue == ",")
+                    {
+                        var commavalue = ",";
+                        number.InputValue = commavalue;
+                        Console.WriteLine("Comma:");
+                        Console.WriteLine(number.InputValue);
+                        _context.Add(number);
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+
                 return RedirectToAction("SetupIndex", "Setup");
             }
             return View(company);
@@ -179,6 +301,11 @@ namespace sopman.Controllers
             var modules = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == modules
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var usermod = (from i in _context.CompanyClaim
                            where i.UserId == user_id
@@ -237,6 +364,16 @@ namespace sopman.Controllers
         [HttpGet]
         public ActionResult SOPTopTemplateBuilder()
         {
+            var getu = _userManager.GetUserId(User);
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getu
+                        select i.CompanyId).Single();
+            ViewBag.comp = comp;
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
             List<Section> model = new List<Section>();
             return View(model);
         }
@@ -248,6 +385,15 @@ namespace sopman.Controllers
             var top = (from i in _context.SOPTopTemplates
                        where i.UserId == theuser
                        select i.TopTempId).Single();
+
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == theuser
+                        select i.CompanyId).Single();
+            ViewBag.comp = comp;
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             Console.WriteLine(top);
             if (ModelState.IsValid)
@@ -306,15 +452,21 @@ namespace sopman.Controllers
                     var tablename = sub.TableHTML;
                     newtable.TableHTML = tablename;
 
+                    Console.WriteLine(tablename);
+
                     var getvalue = sub.valuematch;
                     newtable.valuematch = getvalue;
 
                     _context.Add(newtable);
                 }
                 _context.SaveChanges();
-                return RedirectToAction("SetupIndex", "Setup");
             }
-            return View(soptop);
+            string url1 = Url.Content("/Setup/SetupIndex");
+            string newurl = url1.Replace("%3F%3D", "?=");
+
+            Console.WriteLine(newurl);
+
+            return new RedirectResult(newurl);
         }
 
         public ActionResult TemplateForm()
@@ -366,7 +518,50 @@ namespace sopman.Controllers
 
         public ActionResult AddTemp()
         {
+            var getu = _userManager.GetUserId(User);
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getu
+                        select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
+            var getsopcode = (from i in _context.SOPNumberProcess
+                              where i.CompanyId == comp
+                              select new SOPCodeBuilder { InputValue = i.InputValue, SOPNumberingId = i.SOPNumberingId }).ToList();
+            ViewBag.getsopcode = getsopcode;
             return PartialView("_SectionOutput", new SopTemplate());
+        }
+
+        public ActionResult AddApprover()
+        {
+            var orderVM = new SopTemplate();
+
+            var getu = _userManager.GetUserId(User);
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getu
+                        select i.CompanyId).Single();
+            
+
+            orderVM.Approver = new List<AddApprover>();
+
+            var allusers = (from u in _context.CompanyClaim
+                            where u.CompanyId == comp
+                            select new AddApprover { FirstName = u.FirstName, SecondName = u.SecondName, ClaimId = u.ClaimId }).ToList();
+            ViewBag.allusers = allusers;
+            foreach (var items in allusers)
+            {
+                var itemname = @items.FirstName;
+                var itemId = @items.UserId.ToString();
+                orderVM.Approver.Add(new AddApprover { Value = @itemId, FirstName = @itemId, SecondName = @itemname });
+            }
+
+           
+            ViewBag.selectlist = new SelectList(allusers, "ClaimId", "FirstName");
+
+            return PartialView("AddApprover", new SopTemplate());
         }
 
         [HttpGet]
@@ -377,6 +572,11 @@ namespace sopman.Controllers
             var comp = (from i in _context.CompanyClaim
                         where i.UserId == getu
                         select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var top = (from i in _context.SOPTopTemplates
                        where i.CompanyId == comp
@@ -389,8 +589,7 @@ namespace sopman.Controllers
             var getid = (from i in _context.SOPSectionCreate
                          where i.TopTempId == top
                          select new { i.valuematch, i.SectionText }).ToList();
-
-
+            
             var getsin = (from i in _context.SingleLinkText
                           join p in _context.SOPSectionCreate on i.valuematch equals p.valuematch
                           select new LineChild { SingleLinkTextBlock = i.SingleLinkTextBlock, valuematch = p.valuematch }).ToList();
@@ -414,7 +613,7 @@ namespace sopman.Controllers
 
 
         [HttpPost]
-        public ActionResult NewTemplate([Bind("TempName,SOPCode,TopTempId,ExpireDate")]ApplicationDbContext.SOPTemplate soptemp, [Bind("SingleLinkTextBlock,valuematch")]ApplicationDbContext.EntSingleLinkTextSec GetSingle,[Bind(Prefix = "NewColumn")]IEnumerable<AddTable> tablecol,[Bind(Prefix = "AddTableRow")]IEnumerable<AddTableRow> tablerow)
+        public ActionResult NewTemplate([Bind("TempName,SOPCode,TopTempId,ExpireDate,LiveStatus,TheCreateDae")]ApplicationDbContext.SOPTemplate soptemp, [Bind("SingleLinkTextBlock,valuematch")]ApplicationDbContext.EntSingleLinkTextSec GetSingle, [Bind(Prefix = "Approver")]IEnumerable<AddApprover> approver, [Bind(Prefix = "NewColumn")]IEnumerable<AddTable> tablecol,[Bind(Prefix = "AddTableRow")]IEnumerable<AddTableRow> tablerow)
         {
             var getuser = _userManager.GetUserId(User);
 
@@ -431,6 +630,16 @@ namespace sopman.Controllers
             var comp = (from i in _context.CompanyClaim
                         where i.UserId == getu
                         select i.CompanyId).Single();
+            
+            var allusers = (from u in _context.CompanyClaim
+                            where u.CompanyId == comp
+                            select new SopTemplate { FirstName = u.FirstName, SecondName = u.SecondName, ClaimId = u.ClaimId }).ToList();
+            ViewBag.allusers = allusers;
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var top = (from i in _context.SOPTopTemplates
                        where i.CompanyId == comp
@@ -465,140 +674,221 @@ namespace sopman.Controllers
 
             ViewBag.GetTabs = gettabs;
 
+            var getsopcode = (from i in _context.SOPNumberProcess
+                              where i.CompanyId == comp
+                              select new SOPCodeBuilder { InputValue = i.InputValue, SOPNumberingId = i.SOPNumberingId }).ToList();
+            ViewBag.getsopcode = getsopcode;
+            var orderVM = new SopTemplate();
+            orderVM.Approver = new List<AddApprover>();
+
+            foreach (var items in allusers)
+            {
+                var itemname = @items.FirstName;
+                var itemId = @items.UserId.ToString();
+                orderVM.Approver.Add(new AddApprover { Value = @itemId, FirstName = @itemId, SecondName = @itemname });
+            }
+
+            ViewBag.selectlist = new SelectList(allusers, "ClaimId", "FirstName");
+
             if (ModelState.IsValid)
             {
-                soptemp.TopTempId = topid;
+                    soptemp.TopTempId = topid;
+                    
+                    List<string> code = new List<string>();
 
+                    soptemp.TheCreateDae = DateTime.Now;
 
-                _context.Add(soptemp);
-                _context.SaveChanges();
-                foreach(var item in (ViewBag.Secs)){
-                    foreach (var subitem in (ViewBag.GetSin))
+                    soptemp.LiveStatus = "Draft";
+                    foreach (var item in getsopcode)
                     {
-                        if(item.valuematch == subitem.valuematch){
-                            ApplicationDbContext.EntSingleLinkTextSec sinline = new ApplicationDbContext.EntSingleLinkTextSec();
-
-                            var getform = Request.Form["TempName"];
-                            var gettopid = (from y in _context.SOPNewTemplate
-                                         where y.TempName == getform
-                                         select y.SOPTemplateID).Single();
-
-                            sinline.NewTempId = gettopid;
-
-                            _context.UsedSingleLinkText.Select(u => u.SingleLinkTextBlock);
-                            _context.UsedSingleLinkText.Select(u => u.valuematch);
-
-                            var textval = subitem.SingleLinkTextBlock;
-
-                            var nospace = subitem.SingleLinkTextBlock.Replace(" ", "");
-                            var newval = Request.Form["SingleLinkTextBlock-"+ nospace];
-
-                            Console.WriteLine(newval);
-                            sinline.SingleLinkTextBlock = newval;
-
-                            var valuem = subitem.valuematch;
-                            sinline.valuematch = valuem;
-
-                            _context.Add(sinline);
-                        }
+                        var getcodes = Request.Form["InputValue-" + item.SOPNumberingId];
+                        Console.WriteLine(getcodes);
+                        code.Add(getcodes);
                     }
-                    foreach(var subitem in (ViewBag.GetMul)){
-                        if (item.valuematch == subitem.valuematch)
-                        {
-                            ApplicationDbContext.EntMultilinkTextSec mulline = new ApplicationDbContext.EntMultilinkTextSec();
 
-                            var getform = Request.Form["TempName"];
-                            var gettopid = (from y in _context.SOPNewTemplate
-                                            where y.TempName == getform
-                                            select y.SOPTemplateID).Single();
+                    string templatename = Request.Form["TempName"];
 
-                            mulline.NewTempId = gettopid;
-
-                            _context.UsedMultilineText.Select(u => u.MultilineTextBlock);
-                            _context.UsedMultilineText.Select(u => u.valuematch);
-
-                            var textval = subitem.MultilineTextBlock;
-
-                            var nospace = subitem.MultilineTextBlock.Replace(" ", "");
-                            var newval = Request.Form["MultilineTextBlock-" + nospace];
-
-                            mulline.MultilineTextBlock = newval;
-
-                            var valuem = subitem.valuematch;
-                            mulline.valuematch = valuem;
-
-                            _context.Add(mulline);
-                        }
+                    if(String.IsNullOrEmpty(templatename)){
+                        soptemp.TempName = " ";
+                        soptemp.LiveStatus = "Draft";
+                    }if(!String.IsNullOrEmpty(templatename)){
+                        soptemp.TempName = templatename; 
                     }
-                    foreach (var subitem in (ViewBag.GetTabs))
+
+                    string expiredate = Request.Form["ExpireDate"];
+
+                    if (String.IsNullOrEmpty(expiredate))
                     {
-                        if (item.valuematch == subitem.valuematch)
+                        soptemp.TempName = " ";
+                        soptemp.LiveStatus = "Draft";
+                    }
+                    if (!String.IsNullOrEmpty(expiredate))
+                    {
+                        soptemp.TempName = templatename;
+                    }
+
+                    var sopcodelist = string.Join("", code);
+                    Console.WriteLine("Code:");
+                    Console.WriteLine(sopcodelist);
+                    soptemp.SOPCode = sopcodelist;
+
+                    _context.Add(soptemp);
+                    _context.SaveChanges();
+
+                foreach(var item in approver){
+                    ApplicationDbContext.Approvers approve = new ApplicationDbContext.Approvers();
+
+                    approve.ApproverStatus = "Pending";
+
+                    var thedrop = item.UserId;
+
+                    approve.UserId = thedrop;
+                    Console.WriteLine("Dropdown value:");
+                    Console.WriteLine(thedrop);
+
+                    var getname = Request.Form["TempName"];
+                    var getexeid = (from y in _context.SOPNewTemplate
+                                    where y.TempName == getname
+                                    select y.SOPTemplateID).Single();
+                    approve.InstanceId = getexeid;
+                    _context.Add(approve);
+                    _context.SaveChanges();
+                }
+                    
+
+                    foreach (var item in (ViewBag.Secs))
+                    {
+                        foreach (var subitem in (ViewBag.GetSin))
                         {
-                            ApplicationDbContext.EntTableSec table = new ApplicationDbContext.EntTableSec();
+                            if (item.valuematch == subitem.valuematch)
+                            {
+                                ApplicationDbContext.EntSingleLinkTextSec sinline = new ApplicationDbContext.EntSingleLinkTextSec();
 
-                            var getform = Request.Form["TempName"];
-                            var gettopid = (from y in _context.SOPNewTemplate
-                                            where y.TempName == getform
-                                            select y.SOPTemplateID).Single();
-
-                            table.NewTempId = gettopid;
-
-                            _context.UsedMultilineText.Select(u => u.MultilineTextBlock);
-                            _context.UsedMultilineText.Select(u => u.valuematch);
-
-                            var textval = subitem.TableHTML;
-
-                            var nospace = subitem.TableHTML.Replace(" ", "");
-                            var newval = Request.Form["TableHTML-" + nospace];
-
-                            table.TableHTML = newval;
-
-                            var valuem = subitem.valuematch;
-                            table.valuematch = valuem;
-
-                            foreach(var tab in tablecol){
-                                ApplicationDbContext.EntTableSecCols cols = new ApplicationDbContext.EntTableSecCols();
-
-                                var subgetform = Request.Form["TempName"];
-                                var subgettopid = (from y in _context.SOPNewTemplate
-                                                   where y.TempName == subgetform
+                                var getform = Request.Form["TempName"];
+                                var gettopid = (from y in _context.SOPNewTemplate
+                                                where y.TempName == getform
                                                 select y.SOPTemplateID).Single();
 
-                                cols.NewTempId = subgettopid;
+                                sinline.NewTempId = gettopid;
 
-                                var coltext = tab.RowText;
-                                cols.ColText = coltext;
+                                _context.UsedSingleLinkText.Select(u => u.SingleLinkTextBlock);
+                                _context.UsedSingleLinkText.Select(u => u.valuematch);
 
-                                var theval = subitem.valuematch;
-                                cols.tableval = theval;
+                                var textval = subitem.SingleLinkTextBlock;
 
-                                _context.Add(cols);
+                                var nospace = subitem.SingleLinkTextBlock.Replace(" ", "");
+                                var newval = Request.Form["SingleLinkTextBlock-" + nospace];
+
+                                Console.WriteLine(newval);
+                                sinline.SingleLinkTextBlock = newval;
+
+                                var valuem = subitem.valuematch;
+                                sinline.valuematch = valuem;
+
+                                _context.Add(sinline);
                             }
-                            foreach(var tabrows in tablerow){
-                                Console.WriteLine(tabrows.RowText);
-                                ApplicationDbContext.EntTableSecRows therows = new ApplicationDbContext.EntTableSecRows();
-
-                                var subgetform = Request.Form["TempName"];
-                                var subgettopid = (from y in _context.SOPNewTemplate
-                                                   where y.TempName == subgetform
-                                                   select y.SOPTemplateID).Single();
-
-                                therows.NewTempId = subgettopid;
-
-                                var gettext = tabrows.RowText;
-                                therows.RowText = gettext;
-
-                                var theval = subitem.valuematch;
-                                therows.tableval = theval;
-
-                                _context.Add(therows);
-                            }
-                            _context.Add(table);
                         }
-                    }
+                        foreach (var subitem in (ViewBag.GetMul))
+                        {
+                            if (item.valuematch == subitem.valuematch)
+                            {
+                                ApplicationDbContext.EntMultilinkTextSec mulline = new ApplicationDbContext.EntMultilinkTextSec();
+
+                                var getform = Request.Form["TempName"];
+                                var gettopid = (from y in _context.SOPNewTemplate
+                                                where y.TempName == getform
+                                                select y.SOPTemplateID).Single();
+
+                                mulline.NewTempId = gettopid;
+
+                                _context.UsedMultilineText.Select(u => u.MultilineTextBlock);
+                                _context.UsedMultilineText.Select(u => u.valuematch);
+
+                                var textval = subitem.MultilineTextBlock;
+
+                                var nospace = subitem.MultilineTextBlock.Replace(" ", "");
+                                var newval = Request.Form["MultilineTextBlock-" + nospace];
+
+                                mulline.MultilineTextBlock = newval;
+
+                                var valuem = subitem.valuematch;
+                                mulline.valuematch = valuem;
+
+                                _context.Add(mulline);
+                            }
+                        }
+                        foreach (var subitem in (ViewBag.GetTabs))
+                        {
+                            if (item.valuematch == subitem.valuematch)
+                            {
+                                ApplicationDbContext.EntTableSec table = new ApplicationDbContext.EntTableSec();
+
+                                var getform = Request.Form["TempName"];
+                                var gettopid = (from y in _context.SOPNewTemplate
+                                                where y.TempName == getform
+                                                select y.SOPTemplateID).Single();
+
+                                table.NewTempId = gettopid;
+
+                                _context.UsedMultilineText.Select(u => u.MultilineTextBlock);
+                                _context.UsedMultilineText.Select(u => u.valuematch);
+
+                                var textval = subitem.TableHTML;
+
+                                var nospace = subitem.TableHTML.Replace(" ", "");
+                                var newval = Request.Form["TableHTML-" + nospace];
+
+                                table.TableHTML = newval;
+
+                                var valuem = subitem.valuematch;
+                                table.valuematch = valuem;
+
+                                foreach (var tab in tablecol)
+                                {
+                                    ApplicationDbContext.EntTableSecCols cols = new ApplicationDbContext.EntTableSecCols();
+
+                                    var subgetform = Request.Form["TempName"];
+                                    var subgettopid = (from y in _context.SOPNewTemplate
+                                                       where y.TempName == subgetform
+                                                       select y.SOPTemplateID).Single();
+
+                                    cols.NewTempId = subgettopid;
+
+                                    var coltext = tab.RowText;
+                                    cols.ColText = coltext;
+
+                                    var theval = subitem.valuematch;
+                                    cols.tableval = theval;
+
+                                    _context.Add(cols);
+                                }
+                                foreach (var tabrows in tablerow)
+                                {
+                                    Console.WriteLine(tabrows.RowText);
+                                    ApplicationDbContext.EntTableSecRows therows = new ApplicationDbContext.EntTableSecRows();
+
+                                    var subgetform = Request.Form["TempName"];
+                                    var subgettopid = (from y in _context.SOPNewTemplate
+                                                       where y.TempName == subgetform
+                                                       select y.SOPTemplateID).Single();
+
+                                    therows.NewTempId = subgettopid;
+
+                                    var gettext = tabrows.RowText;
+                                    therows.RowText = gettext;
+
+                                    var theval = subitem.valuematch;
+                                    therows.tableval = theval;
+
+                                    _context.Add(therows);
+                                }
+                                _context.Add(table);
+                            }
+                        }
                 }
-                _context.SaveChanges();
+                  
             }
+            _context.SaveChanges();
             var recname = Request.Form["TempName"];
             var getexe = (from y in _context.SOPNewTemplate
                           where y.TempName == recname
@@ -773,6 +1063,16 @@ namespace sopman.Controllers
 
             ViewBag.sopid = SOPTemplateID;
 
+            var getu = _userManager.GetUserId(User);
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getu
+                        select i.CompanyId).Single();
+            ViewBag.comp = comp;
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
             return View(model);
         }
 
@@ -781,6 +1081,14 @@ namespace sopman.Controllers
         {
             var getuser = _userManager.GetUserId(User);
 
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getuser
+                        select i.CompanyId).Single();
+            ViewBag.comp = comp;
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var getsop = SOPTemplateID;
             Console.WriteLine("SOPID");
@@ -928,6 +1236,14 @@ namespace sopman.Controllers
         {
             var orderVM = new RegisterSOPUserViewModel();
             var getuser = _userManager.GetUserId(User);
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getuser
+                        select i.CompanyId).Single();
+            ViewBag.comp = comp;
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
@@ -988,6 +1304,10 @@ namespace sopman.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
 
+            var getu = _userManager.GetUserId(User);
+
+
+
             var firstName = (from i in _context.CompanyClaim
                         where i.UserId == id
                          select i.FirstName).Single();
@@ -999,6 +1319,11 @@ namespace sopman.Controllers
             var comp = (from i in _context.CompanyClaim
                         where i.UserId == id
                         select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var department = (from i in _context.Departments
                               where i.CompanyId == comp
@@ -1047,6 +1372,16 @@ namespace sopman.Controllers
         [HttpPost]
         public async Task<IActionResult> OrgStructure(IFormFile file)
         {
+            var getu = _userManager.GetUserId(User);
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getu
+                        select i.CompanyId).Single();
+            ViewBag.comp = comp;
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
             if (file == null || file.Length == 0)
             {
                 return View();
@@ -1059,7 +1394,7 @@ namespace sopman.Controllers
                     "Uploads/CSV",
                     userId + "-" + file.FileName); */
                 var path = Path.Combine(
-                    "~/uploads/CSV",
+                    "D:/home/site/wwwroot/uploads/CSV",
                     userId + "-" + file.FileName);
                 Console.WriteLine("CHRIS");
                 Console.WriteLine(path, file.FileName);
@@ -1075,6 +1410,16 @@ namespace sopman.Controllers
         [HttpGet]
         public ActionResult CSVMap()
         {
+            var getu = _userManager.GetUserId(User);
+            var comp = (from i in _context.CompanyClaim
+                        where i.UserId == getu
+                        select i.CompanyId).Single();
+            ViewBag.comp = comp;
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
             var filePath = Request.Query["file"];
             /* var path = Path.Combine(
                     Directory.GetCurrentDirectory(),
@@ -1082,6 +1427,7 @@ namespace sopman.Controllers
                     filePath); */
             var path = Path.Combine(
                 "~/uploads/CSV",
+                "D:/home/site/wwwroot/uploads/CSV",
                 filePath);
 
             int failed = 0;
@@ -1127,10 +1473,16 @@ namespace sopman.Controllers
             var modules = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
+
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == modules
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
             var filePath = Request.Query["file"];
             var path = Path.Combine(
-                   Directory.GetCurrentDirectory(),
-                   "Uploads/CSV",
+                "D:/home/site/wwwroot/uploads/CSV",
                    filePath);
 
             int failed = 0;
@@ -1219,9 +1571,10 @@ namespace sopman.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SubmitCSV(RegisterSopCreatorViewModel model, [Bind("ClaimId,FirstName,SecondName,CompanyId")] ApplicationDbContext.ClaimComp compclaim)
+        public async Task<IActionResult> SubmitCSV(RegisterSopCreatorViewModel model, [Bind("ClaimId,FirstName,SecondName,CompanyId")] ApplicationDbContext.ClaimComp compclaim, [Bind("DepartmentName,CompanyId")] ApplicationDbContext.DepartmentTable departments, [Bind("JobTitleId,JobTitle,DepartmentId,CompanyId")] ApplicationDbContext.JobTitlesTable jobtitle )
         {
             ViewBag.File = Request.Query["file"];
+
 
 
             var currentuser = await _userManager.GetUserAsync(User);
@@ -1229,10 +1582,16 @@ namespace sopman.Controllers
             var modules = (from i in _context.CompanyClaim
                            where i.UserId == user_id
                            select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == modules
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
             var filePath = Request.Query["file"];
             var path = Path.Combine(
                    Directory.GetCurrentDirectory(),
-                   "Uploads/CSV",
+                "D:/home/site/wwwroot/uploads/CSV",
                    filePath);
 
             int failed = 0;
@@ -1270,24 +1629,114 @@ namespace sopman.Controllers
             {
                 var user = new ApplicationUser { UserName = row.Email, Email = row.Email };
                 // await _userManager.AddToRoleAsync(user, "SOPCreator");
-                var result = await _userManager.CreateAsync(user, Extensions.Password.Generate(32, 12));
+
+                var pw = Extensions.Password.Generate(32, 12);
+                var result = await _userManager.CreateAsync(user, pw);
+
+                await _context.SaveChangesAsync();
+
+                ApplicationDbContext.ClaimComp claims = new ApplicationDbContext.ClaimComp();
 
                 _context.CompanyClaim.Select(u => u.UserId);
+                var getnewuser = (from u in _context.Users
+                                  where u.Email == row.Email
+                                  select u.Id).FirstOrDefault();
                 var newuserid = user.Id;
-                compclaim.UserId = newuserid;
+                claims.UserId = getnewuser;
 
-                _context.CompanyClaim.Select(u => u.DepartmentId);
-                var selected = Request.Form["DepartmentId"];
-                compclaim.DepartmentId = selected;
 
-                _context.CompanyClaim.Select(u => u.JobTitleId);
-                var seljob = Request.Form["JobTitleId"];
-                compclaim.JobTitleId = seljob;
+                var checkdeps = (from x in _context.Departments
+                                 where x.DepartmentName == row.Department
+                                 select x.DepartmentName).FirstOrDefault();
+
+                var checkdepscomp = (from x in _context.Departments
+                                 where x.DepartmentName == row.Department
+                                 select x.CompanyId).FirstOrDefault();
+
+                var writedep = row.Department;
+                ViewBag.writedep = writedep;
+
+                if(writedep != checkdeps){
+                    if(modules != checkdepscomp){
+                        ApplicationDbContext.DepartmentTable deps = new ApplicationDbContext.DepartmentTable();
+                        _context.Departments.Select(u => u.DepartmentName);
+                        deps.DepartmentName = row.Department;
+                        deps.CompanyId = modules;
+
+                        _context.Add(deps);
+                        await _context.SaveChangesAsync();
+                    }
+                }if (writedep == checkdeps)
+                {
+                    if (modules != checkdepscomp)
+                    {
+                        ApplicationDbContext.DepartmentTable deps = new ApplicationDbContext.DepartmentTable();
+                        _context.Departments.Select(u => u.DepartmentName);
+                        deps.DepartmentName = row.Department;
+                        deps.CompanyId = modules;
+
+                        _context.Add(deps);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+
+                var getdepid = (from i in _context.Departments
+                                where i.DepartmentName == row.Department
+                                select i.DepartmentId).FirstOrDefault();
+
+                claims.DepartmentId = getdepid;
+
+                var checkjobs = (from x in _context.JobTitles
+                                 where x.JobTitle == row.JobTitle
+                                 select x.JobTitle).FirstOrDefault();
+                @ViewBag.checkjobs = row.JobTitle;
+
+                var checkjobscomp = (from x in _context.JobTitles
+                                 where x.JobTitle == row.JobTitle
+                                 select x.CompanyId).FirstOrDefault();
+
+                var writejob = row.JobTitle;
+
+                if(writejob != checkjobs){
+                    if(modules != checkjobscomp){
+                        ApplicationDbContext.JobTitlesTable jobs = new ApplicationDbContext.JobTitlesTable();
+                        _context.CompanyClaim.Select(u => u.JobTitleId);
+                        jobs.JobTitle = row.JobTitle;
+                        jobs.DepartmentId = getdepid;
+                        jobs.CompanyId = modules;
+
+                        _context.Add(jobs);
+                        await _context.SaveChangesAsync();
+                    }
+                }if (writejob == checkjobs)
+                {
+                    if (modules != checkjobscomp)
+                    {
+                        ApplicationDbContext.JobTitlesTable jobs = new ApplicationDbContext.JobTitlesTable();
+                        _context.CompanyClaim.Select(u => u.JobTitleId);
+                        jobs.JobTitle = row.JobTitle;
+                        jobs.DepartmentId = getdepid;
+                        jobs.CompanyId = modules;
+
+                        _context.Add(jobs);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                var getjobid = (from j in _context.JobTitles
+                                where j.DepartmentId == getdepid
+                                select j.JobTitleId).FirstOrDefault();
+
+                claims.JobTitleId = getjobid;
+
+                claims.FirstName = row.FirstName;
+                claims.SecondName = row.SecondName;
 
                 _context.CompanyClaim.Select(u => u.CompanyId);
-                compclaim.CompanyId = modules;
+                claims.CompanyId = modules;
 
-                _context.Add(compclaim);
+                _context.Add(claims);
 
                 // If we got this far, the process succeeded
                 var apiKey = _configuration.GetSection("SENDGRID_API_KEY").Value;
@@ -1295,12 +1744,11 @@ namespace sopman.Controllers
 
                 var client = new SendGridClient(apiKey);
 
-
                 var loggedInEmail = _userManager.GetUserName(User);
-                var newUserEmail = model.Email;
-                var newUserPassword = model.Password;
-                var firstName = Request.Form["FirstName"];
-                var secondName = Request.Form["SecondName"];
+                var newUserEmail = row.Email;
+                var newUserPassword = pw;
+                var firstName = row.FirstName;
+                var secondName = row.SecondName;
 
                 var msg = new SendGridMessage()
                 {
@@ -1317,12 +1765,8 @@ namespace sopman.Controllers
                 await _context.SaveChangesAsync();
 
             }
-
-
-
-
-
-            return View();
+            string url1 = Url.Content("/Setup/SetupIndex");
+            return new RedirectResult(url1);
         }
     }  
 }

@@ -9,14 +9,14 @@
     int documentsProcesses = 1;
 }
 <div class="container body-content">
-@using (Html.BeginForm()) {
+    <form action="" method="post" enctype="multipart/form-data">
     <div class="container sop-builder">
         <div class="row header-dark-grey">
             <div class="col-12 col-md-8">
-                <p>@ViewBag.instref <span class="faded">Executed by: </span>@foreach(var name in (ViewBag.userinfo)){<span>@name.FirstName </span> <span> @name.SecondName</span> }</p>
+                <p>@ViewBag.thecode @ViewBag.instref <span class="faded">Executed by: </span>@foreach(var name in (ViewBag.userinfo)){<span>@name.FirstName </span> <span> @name.SecondName</span> }</p>
             </div>
             <div class="col-12 col-md-4 text-right">
-                <p>Expiry Date: @ViewBag.expire</p>
+                <p>Review Date: @ViewBag.expire</p>
             </div>
             <hr class="white-divider"/>
             <div class="col-12 col-md-7">
@@ -44,11 +44,13 @@
                 <h5 class="mx-auto">@ViewBag.percentageComplete%<br /><span class="h6 text-muted">Complete</span></h5>
             </div>
             <div class="col-12 col-md-2 text-right">
-                <input type="submit" class="btn white-btn mod-btn" value="Save" />
                 <a class="btn white-btn mod-btn" href="/Manage/EditSOP?=@ViewBag.exeid">Modify</a>
                 <div class="my-1 lower-btn">
                     <a class="btn white-btn mod-btn status-btn @ViewBag.sopstatus" href="/Manage/ArchiveInstance?=@ViewBag.exeid">Archive</a>
-                </div>    
+                    <div class="lower-btn">
+                        <a class="btn blue-btns mod-btn status-btn @ViewBag.sopstatus" href="/Manage/ArchiveInstance?=@ViewBag.exeid">Archive</a>
+                    </div>    
+                </div>
             </div>
             <hr class="invisible-divider"/>
             <div class="col-12">
@@ -76,7 +78,6 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="overview" role="tabpanel">
                         @foreach(var subitem in (ViewBag.thesecs)){
-
                             sectioncount++;
                             tasks++;
                         
@@ -158,8 +159,7 @@
                                 int accCount = 1;
                                 int conCount = 1;
                                 int infCount = 1;
-                            
-                                <div class="card section-count container @protype process-@value">
+                                <div class="card section-count process-count status-is-@item.processStatus container @protype process-@value">
                                     <div class="card-header row" role="tab" id="headingOne">
                                         <div class="col-12 col-md-1 count-col">
                                             <div class="number"><h3 class="h5">@number</h3></div>
@@ -176,6 +176,31 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12 status-row">
+                                                @if(item.processStatus == "Complete"){
+                                                    <div class="row complete-status">
+                                                        <div class="col-12  col-md-1">
+                                                        </div>
+                                                        <div class="col-11">
+                                                            <p>Completed on: @item.completedDate.ToString("dd/MM/yyyy")</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else {
+                                                    <div class="row pending-status">
+                                                        <div class="col-12 col-md-1">
+                                                        </div>
+                                                        <div class="col-11 status-is-pending">
+                                                            @foreach(var date in (ViewBag.instpocess)){
+                                                                if((date.valuematch == item.valuematch) && (date.SOPTemplateID == @ViewBag.getinstanceid)){
+                                                                    <p class="the-due-date">Due: @date.DueDate</p>
+                                                                }
+                                                            }
+                                                            <p class="the-proc-status">@item.processStatus</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                        </div>
                                     </div>
                                     <div id="collapse-@nameshort" class="container collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                                         <div class="card-body sops-raci-info row">
@@ -188,8 +213,8 @@
                                                         <h4>Responsible</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.res)){
-                                                        if(sub.valuematch == item.valuematch){
-                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
+                                                            <div class="col-12 col-md-12 res-row-@item.valuematch no-pad grey-bg">
                                                                 <div class="row">
                                                                 <!-- Getting the first and second name from users -->
                                                                 @foreach(var name in (ViewBag.allusers)){
@@ -218,8 +243,8 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
-                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
+                                                                                <div class="complete user-@sub.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal user-@sub.UserId rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
 
                                                                               </div>
                                                                             </div>
@@ -253,7 +278,7 @@
                                                                                     </button>
                                                                                   </div>
                                                                                   <div class="modal-body">
-                                                                                    <p>Add signature</p>
+                                                                                    <p>You are about to recuse yourself from this task. Are you sure you want to continue?</p>
                                                                                     <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
                                                                                   </div>
                                                                                   <div class="modal-footer">
@@ -269,6 +294,17 @@
                                                             </div>
                                                         }
                                                     }
+                                                    <script>
+                                                        $(document).ready(function() {
+                                                            var nlenth = $('.res-row-@item.valuematch').length;
+                                                            if($(".res-row-@item.valuematch").length > 1){
+                                                               console.log(nlenth);
+                                                                $(".res-row-@item.valuematch:nth-child(3n)").addClass("hide-this");
+                                                            }
+                                                            $(".row-Recused.res-row-@item.valuematch").next('.res-row-@item.valuematch').addClass('show-div').removeClass("hide-this");
+                                                            $(".row-Recused.res-row-@item.valuematch").addClass("hide-this");
+                                                        });
+                                                    </script>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-12">
@@ -277,8 +313,8 @@
                                                         <h4>Accountable</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.acc)){
-                                                        if(sub.valuematch == item.valuematch){
-                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
+                                                            <div class="col-12 col-md-12 acc-row-@item.valuematch row-@sub.Status no-pad grey-bg">
                                                                 <div class="row">
                                                                 <!-- Getting the first and second name from users -->
                                                                 @foreach(var name in (ViewBag.allusers)){
@@ -307,8 +343,8 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
-                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
+                                                                                <div class="complete user-@sub.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal user-@sub.UserId rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
                                                                               </div>
                                                                             </div>
                                                                         </div>
@@ -341,7 +377,7 @@
                                                                                     </button>
                                                                                   </div>
                                                                                   <div class="modal-body">
-                                                                                    <p>Add signature</p>
+                                                                                    <p>You are about to recuse yourself from this task. Are you sure you want to continue?</p>
                                                                                     <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
                                                                                   </div>
                                                                                   <div class="modal-footer">
@@ -355,9 +391,20 @@
                                                                  }
                                                                  </div>
                                                             </div>
+
                                                         }
                                                     }
-
+                                                    <script>
+                                                        $(document).ready(function() {
+                                                            var nlenth = $('.acc-row-@item.valuematch').length;
+                                                            if($(".acc-row-@item.valuematch").length > 1){
+                                                               console.log(nlenth);
+                                                                $(".acc-row-@item.valuematch:nth-child(3n)").addClass("hide-this");
+                                                            }
+                                                            $(".row-Recused.acc-row-@item.valuematch").next('.acc-row-@item.valuematch').addClass('show-div').removeClass("hide-this");
+                                                            $(".row-Recused.acc-row-@item.valuematch").addClass("hide-this");
+                                                        });
+                                                    </script>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-12">
@@ -366,8 +413,8 @@
                                                         <h4>Consulted</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.cons)){
-                                                        if(sub.valuematch == item.valuematch){
-                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
+                                                            <div class="col-12 col-md-12 con-row-@item.valuematch no-pad grey-bg">
                                                                 <div class="row">
                                                                 <!-- Getting the first and second name from users -->
                                                                 @foreach(var name in (ViewBag.allusers)){
@@ -396,8 +443,8 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
-                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
+                                                                                <div class="complete user-@sub.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal user-@sub.UserId rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
                                                                               </div>
                                                                             </div>
                                                                         </div>
@@ -430,7 +477,7 @@
                                                                                     </button>
                                                                                   </div>
                                                                                   <div class="modal-body">
-                                                                                    <p>Add signature</p>
+                                                                                    <p>You are about to recuse yourself from this task. Are you sure you want to continue?</p>
                                                                                     <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
                                                                                   </div>
                                                                                   <div class="modal-footer">
@@ -446,7 +493,17 @@
                                                             </div>
                                                         }
                                                     }
-                                                
+                                                    <script>
+                                                        $(document).ready(function() {
+                                                            var nlenth = $('.con-row-@item.valuematch').length;
+                                                            if($(".con-row-@item.valuematch").length > 1){
+                                                               console.log(nlenth);
+                                                                $(".con-row-@item.valuematch:nth-child(3n)").addClass("hide-this");
+                                                            }
+                                                            $(".row-Recused.con-row-@item.valuematch").next('.con-row-@item.valuematch').addClass('show-div').removeClass("hide-this");
+                                                            $(".row-Recused.con-row-@item.valuematch").addClass("hide-this");
+                                                        });
+                                                    </script>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-12">
@@ -455,8 +512,8 @@
                                                         <h4>Informed</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.infi)){
-                                                        if(sub.valuematch == item.valuematch){
-                                                            <div class="col-12 col-md-12 no-pad grey-bg">
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
+                                                            <div class="col-12 col-md-12 infi-row-@item.valuematch no-pad grey-bg">
                                                                 <div class="row">
                                                                 <!-- Getting the first and second name from users -->
                                                                 @foreach(var name in (ViewBag.allusers)){
@@ -485,8 +542,8 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
-                                                                                <div class="recusal rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
+                                                                                <div class="complete user-@sub.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@namenospace"><p>Complete Task</p></div>
+                                                                                <div class="recusal user-@sub.UserId rec-@namenospace" data-toggle="modal" data-target="#rec-@namenospace"><p>Request recusal</p></div>
                                                                               </div>
                                                                             </div>
                                                                         </div>
@@ -519,7 +576,7 @@
                                                                                     </button>
                                                                                   </div>
                                                                                   <div class="modal-body">
-                                                                                    <p>Add signature</p>
+                                                                                    <p>You are about to recuse yourself from this task. Are you sure you want to continue?</p>
                                                                                     <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
                                                                                   </div>
                                                                                   <div class="modal-footer">
@@ -535,14 +592,30 @@
                                                             </div>
                                                         }
                                                     }
-                                                
+                                                    <script>
+                                                        $(document).ready(function() {
+                                                            var nlenth = $('.infi-row-@item.valuematch').length;
+                                                            if($(".infi-row-@item.valuematch").length > 1){
+                                                               console.log(nlenth);
+                                                                $(".infi-row-@item.valuematch:nth-child(3n)").addClass("hide-this");
+                                                            }
+                                                            $(".row-Recused.infi-row-@item.valuematch").next('.infi-row-@item.valuematch').addClass('show-div').removeClass("hide-this");
+                                                            $(".row-Recused.infi-row-@item.valuematch").addClass("hide-this");    
+                                                        });
+                                                    </script>
                                                 </div>
                                             </div>
-
-                                        
                                         </div>
                                     </div>
                                 </div>
+                                <script>
+                                    $(document).ready(function() {    
+                                        if ($(".process-@value").is(".status-active")){
+                                            $(".sops-raci-info.process-@value").addClass("status-active");
+                                            $(".status-active.process-@value .status-row .pending-status .status-is-pending p.the-proc-status").text("ACTIVE");
+                                        }
+                                     });
+                                </script>
                             }
                         </div>
                     </div>
@@ -550,16 +623,26 @@
                         <div class="row">
                             <div class="col-12 col-md-9">
                                   @foreach(var item in (ViewBag.comments)) {
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <p class="mb-1"><small class="text-muted">@item.PostTime.ToString("dd MMM yyyy")</small></p>
-                                        @foreach(var name in (ViewBag.allusers)){
-                                                    if(item.UserId == name.ClaimId){
-                                                    <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;posted a comment</p>
-                                        }}
+                                        <div class="card commentcard row">
+                                            <div class="card-header col-12">
+                                                <div class="row card-row">
+                                                    <div class="col-4 comment-bubble col-md-1">
+                                                        <img src="/images/comment.png">
+                                                    </div>
+                                                    <div class="col-8 col-md-11 comment-person">
+                                                        <p class="mb-1 com-date"><small class="text-muted">@item.PostTime.ToString("dd MMM yyyy")</small></p>
+                                                         @foreach(var name in (ViewBag.allusers)){
+                                                            if(item.UserId == name.ClaimId){
+                                                                <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;posted a comment</p>
+                                                            }
+                                                         }
+                                                    </div>
+                                                </div>
+
                                             </div>
-                                            <div class="card-body">
-                                                <p class="mb-1">@item.TheComment</p>
+                                            <div class="card-body row">
+                                                <div class="col-4 col-md-1"></div>
+                                                <div class="col-8 col-md-11"><p class="mb-1">@item.TheComment</p></div>
                                             </div>
                                         </div>
 
@@ -567,16 +650,23 @@
                                 @foreach(var item in (ViewBag.processtmps)){
                                     var pending = "Pending";
                                     foreach(var sub in (ViewBag.res)){
-                                        if(sub.valuematch == item.valuematch){
+                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                             if(sub.Status == "Pending"){
                                             }else {
                                                 foreach(var name in (ViewBag.allusers)){
                                                     if(sub.UserId == name.ClaimId){
-                                                    <div class="card">
-                                                        <div class="card-header">
-                                                            <p class="mb-1"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
-                                                            <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
-                                                        </div>
+                                                    <div class="card commentcard row">
+                                                            <div class="card-header col-12">
+                                                            <div class="row tick-row">
+                                                                <div class="col-4 complete-tick col-md-1">
+                                                                    <img src="/images/completetick.png">
+                                                                </div>
+                                                                <div class="col-8 col-md-11 right-comment">
+                                                                    <p class="mb-1 com-date"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
+                                                                    <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
+                                                                 </div>       
+                                                             </div>
+                                                         </div>
                                                     </div>
                                                     }
                                                 }
@@ -584,16 +674,23 @@
                                         }
                                     }
                                     foreach(var sub in (ViewBag.acc)){
-                                        if(sub.valuematch == item.valuematch){
+                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                             if(sub.Status == "Pending"){
                                             }else {
                                                foreach(var name in (ViewBag.allusers)){
                                                     if(sub.UserId == name.ClaimId){
-                                                        <div class="card">
-                                                        <div class="card-header">
-                                                            <p class="mb-1"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
-                                                            <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
-                                                        </div>
+                                                    <div class="card commentcard row">
+                                                            <div class="card-header col-12">
+                                                            <div class="row tick-row">
+                                                                <div class="col-4 complete-tick col-md-1">
+                                                                    <img src="/images/completetick.png">
+                                                                </div>
+                                                                <div class="col-8 col-md-11 right-comment">
+                                                                    <p class="mb-1 com-date"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
+                                                                    <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
+                                                                 </div>       
+                                                             </div>
+                                                         </div>
                                                     </div>
                                                     }
                                                 }
@@ -601,16 +698,23 @@
                                          }
                                     }
                                     foreach(var sub in (ViewBag.cons)){
-                                        if(sub.valuematch == item.valuematch){
+                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                             if(sub.Status == "Pending"){
                                             }else {
                                                 foreach(var name in (ViewBag.allusers)){
                                                     if(sub.UserId == name.ClaimId){
-                                                        <div class="card">
-                                                        <div class="card-header">
-                                                            <p class="mb-1"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
-                                                            <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
-                                                        </div>
+                                                    <div class="card commentcard row">
+                                                        <div class="card-header col-12">
+                                                            <div class="row tick-row">
+                                                                <div class="col-4 complete-tick col-md-1">
+                                                                    <img src="/images/completetick.png">
+                                                                </div>
+                                                                <div class="col-8 col-md-11 right-comment">
+                                                                    <p class="mb-1 com-date"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
+                                                                    <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
+                                                                 </div>       
+                                                             </div>
+                                                         </div>
                                                     </div>
                                                     }
                                                 }
@@ -618,16 +722,23 @@
                                          }
                                     }
                                     foreach(var sub in (ViewBag.infi)){
-                                        if(sub.valuematch == item.valuematch){
+                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                              if(sub.Status == "Pending"){
                                             }else {
                                                foreach(var name in (ViewBag.allusers)){
                                                     if(sub.UserId == name.ClaimId){
-                                                        <div class="card">
-                                                        <div class="card-header">
-                                                            <p class="mb-1"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
-                                                            <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
-                                                        </div>
+                                                    <div class="card commentcard row">
+                                                            <div class="card-header col-12">
+                                                            <div class="row tick-row">
+                                                                <div class="col-4 complete-tick col-md-1">
+                                                                    <img src="/images/completetick.png">
+                                                                </div>
+                                                                <div class="col-8 col-md-11 right-comment">
+                                                                    <p class="mb-1 com-date"><small class="text-muted">@sub.editDate.ToString("dd MMM yyyy")</small></p>
+                                                                    <p class="mb-1"><b>@name.FirstName @name.SecondName</b>&nbsp;has completed @item.ProcessName</p>
+                                                                 </div>       
+                                                             </div>
+                                                         </div>
                                                     </div>
                                                     }
                                                 }
@@ -642,7 +753,7 @@
                                         <textarea class="w-100 p-2" placeholder="Add a comment" name="newcomment"></textarea>
                                     </div>
                                     <div class="col-12 d-flex flex-row-reverse">
-                                        <button type="submit" value="post" class="btn btn-secondary">POST</button>
+                                        <button type="submit" value="post" class="comment-btn btn btn-secondary">POST</button>
                                     </div>
                                 </div>
                             </div>
@@ -651,7 +762,7 @@
                             </div>
                         </div>
                      </div>
-                    @{
+                     @{
                         sectioncount = tasks;
                     }
                     <div class="tab-pane" id="history" role="tabpanel">
@@ -674,6 +785,7 @@
                                     number = sectioncount.ToString();
                                     subsectioncount = 1;
                                 }
+
                                 <div class="card sops-raci-info section-count container @protype process-@value">
                                     <div class="card-header row" role="tab" id="headingOne">
                                         <div class="col-12 col-md-1 count-col">
@@ -691,6 +803,31 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12 status-row">
+                                                @if(item.processStatus == "Complete"){
+                                                    <div class="row complete-status">
+                                                        <div class="col-12  col-md-1">
+                                                        </div>
+                                                        <div class="col-11">
+                                                            <p>Completed on: @item.completedDate.ToString("dd/MM/yyyy")</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else {
+                                                    <div class="row pending-status">
+                                                        <div class="col-12 col-md-1">
+                                                        </div>
+                                                        <div class="col-11 status-is-pending">
+                                                            @foreach(var date in (ViewBag.instpocess)){
+                                                                if((date.valuematch == item.valuematch) && (date.SOPTemplateID == @ViewBag.getinstanceid)){
+                                                                    <p class="the-due-date">Due: @date.DueDate</p>
+                                                                }
+                                                            }
+                                                            <p class="the-proc-status">@item.processStatus</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                        </div>
                                     </div>
                                     <div id="collapse-tab-@nameshort" class="container collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion-history">
                                         <div class="card-body row">
@@ -700,11 +837,15 @@
                                             <div class="col-12 col-md-12">
                                                 <div class="row">
                                                     @foreach(var sub in (ViewBag.res)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                                                 <!-- Getting the first and second name from users -->
                                                                 foreach(var name in (ViewBag.allusers)){
                                                                     if(sub.UserId == name.ClaimId && sub.UserId == ViewBag.loggedin){
                                                                         var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIResChosenID + item.valuematch;
+                                                                        var mynamenospace = "mytasksresp" + name.FirstName + name.SecondName + sub.RACIResChosenID + item.valuematch;
+                                                                        <div class="col-12 raci-info">
+                                                                            <h4>Responsible</h4>
+                                                                        </div>
                                                                         <div class="col-12 col-md-12 no-pad grey-bg">
                                                                             <div class="row">
                                                                                 <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
@@ -726,24 +867,16 @@
                                                                             </div>
                                                                             <div class="col-12 col-md-2 sop-buttons">
                                                                                 <div class="dropdown h-100">
-                                                                                  <button class="btn btn-secondary h-100 w-100" type="button" id="@namenospace" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                    <i class="material-icons">menu</i>
-                                                                                  </button>
-                                                                                  <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                    <div class="complete comp-@namenospace">
-                                                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comp-@namenospace">
-                                                                                         Complete Task
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    <div class="recusal rec-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rec-@namenospace">
-                                                                                     Request recusal
+                                                                                    <button class="btn btn-secondary h-100 w-100" type="button" id="@namenospace" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                        <i class="material-icons">menu</i>
                                                                                     </button>
-                                                                                </div>
-                                                                                  </div>
+                                                                                    <div class="dropdown-menu" aria-labelledby="@namenospace">
+                                                                                        <div class="complete user-@sub.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@mynamenospace"><p>Complete Task</p></div>
+                                                                                        <div class="recusal user-@sub.UserId rec-@namenospace" data-toggle="modal" data-target="#rec-@mynamenospace"><p>Request recusal</p></div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="modal fade" id="comp-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                            <div class="modal fade" id="comp-@mynamenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                                 <div class="modal-dialog" role="document">
                                                                                     <div class="modal-content">
                                                                                       <div class="modal-header">
@@ -762,7 +895,7 @@
                                                                                     </div>
                                                                                   </div>
                                                                             </div>
-                                                                            <div class="modal fade" id="rec-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                            <div class="modal fade" id="rec-@mynamenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                                 <div class="modal-dialog" role="document">
                                                                                     <div class="modal-content">
                                                                                       <div class="modal-header">
@@ -772,7 +905,7 @@
                                                                                         </button>
                                                                                       </div>
                                                                                       <div class="modal-body">
-                                                                                        <p>Add signature</p>
+                                                                                        <p>You are about to recuse yourself from this task. Are you sure you want to continue?</p>
                                                                                         <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
                                                                                       </div>
                                                                                       <div class="modal-footer">
@@ -792,16 +925,17 @@
                                             </div>
                                             <div class="col-12 col-md-12">
                                                 <div class="row">
-                                                    <div class="col-12 raci-info">
-                                                        <h4>Accountable</h4>
-                                                    </div>
                                                     @foreach(var sub in (ViewBag.acc)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                                                 <!-- Getting the first and second name from users -->
                                                                 foreach(var name in (ViewBag.allusers)){
                                                                     if(sub.UserId == name.ClaimId && sub.UserId == ViewBag.loggedin){
-                                                                        var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIAccChosenID + item.valuematch;
-                                                                       <div class="col-12 col-md-12 no-pad grey-bg">
+                                                                        var namenospace = "acc" + name.FirstName + name.SecondName + sub.RACIAccChosenID + item.valuematch;
+                                                                        var mynamenospace = "mytasksacc" + name.FirstName + name.SecondName + sub.RACIResChosenID + item.valuematch;
+                                                                        <div class="col-12 raci-info">
+                                                                            <h4>Accountable</h4>
+                                                                        </div>
+                                                                        <div class="col-12 col-md-12 no-pad grey-bg">
                                                                             <div class="row">
                                                                                 <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
                                                                                     <h3></h3>
@@ -826,20 +960,12 @@
                                                                                     <i class="material-icons">menu</i>
                                                                                   </button>
                                                                                   <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                    <div class="complete comp-@namenospace">
-                                                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comp-@namenospace">
-                                                                                         Complete Task
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    <div class="recusal rec-@namenospace">
-                                                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rec-@namenospace">
-                                                                                         Request recusal
-                                                                                        </button>
-                                                                                    </div>
-                                                                                  </div>
+                                                                                        <div class="complete user-@sub.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@mynamenospace"><p>Complete Task</p></div>
+                                                                                        <div class="recusal user-@sub.UserId rec-@namenospace" data-toggle="modal" data-target="#rec-@mynamenospace"><p>Request recusal</p></div>
+                                                                                   </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="modal fade" id="comp-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                            <div class="modal fade" id="comp-@mynamenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                                 <div class="modal-dialog" role="document">
                                                                                     <div class="modal-content">
                                                                                       <div class="modal-header">
@@ -858,7 +984,7 @@
                                                                                     </div>
                                                                                   </div>
                                                                             </div>
-                                                                            <div class="modal fade" id="rec-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                            <div class="modal fade" id="rec-@mynamenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                                 <div class="modal-dialog" role="document">
                                                                                     <div class="modal-content">
                                                                                       <div class="modal-header">
@@ -868,7 +994,7 @@
                                                                                         </button>
                                                                                       </div>
                                                                                       <div class="modal-body">
-                                                                                        <p>Add signature</p>
+                                                                                        <p>You are about to recuse yourself from this task. Are you sure you want to continue?</p>
                                                                                         <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
                                                                                       </div>
                                                                                       <div class="modal-footer">
@@ -888,15 +1014,16 @@
                                             </div>
                                             <div class="col-12 col-md-12">
                                                 <div class="row">
-                                                    <div class="col-12 raci-info">
-                                                        <h4>Consulted</h4>
-                                                    </div>
                                                     @foreach(var sub in (ViewBag.cons)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                                                 <!-- Getting the first and second name from users -->
                                                                 foreach(var name in (ViewBag.allusers)){
                                                                     if(sub.UserId == name.ClaimId && sub.UserId == ViewBag.loggedin){
-                                                                        var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIConChosenID + item.valuematch;
+                                                                        var namenospace = "cons" + name.FirstName + name.SecondName + sub.RACIConChosenID + item.valuematch;
+                                                                        var mynamenospace = "mytaskscons" + name.FirstName + name.SecondName + sub.RACIResChosenID + item.valuematch;
+                                                                        <div class="col-12 raci-info">
+                                                                            <h4>Consulted</h4>
+                                                                        </div>
                                                                         <div class="col-12 col-md-12 no-pad grey-bg">
                                                                          <div class="row">
                                                                         <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
@@ -922,20 +1049,12 @@
                                                                                 <i class="material-icons">menu</i>
                                                                               </button>
                                                                               <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                <div class="complete comp-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comp-@namenospace">
-                                                                                     Complete Task
-                                                                                    </button>
-                                                                                </div>
-                                                                               <div class="recusal rec-@namenospace">
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rec-@namenospace">
-                                                                                     Request recusal
-                                                                                    </button>
-                                                                                </div>
-                                                                              </div>
+                                                                                        <div class="complete user-@sub.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@mynamenospace"><p>Complete Task</p></div>
+                                                                                        <div class="recusal user-@sub.UserId rec-@namenospace" data-toggle="modal" data-target="#rec-@mynamenospace"><p>Request recusal</p></div>
+                                                                                   </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="modal fade" id="comp-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                        <div class="modal fade" id="comp-@mynamenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                             <div class="modal-dialog" role="document">
                                                                                 <div class="modal-content">
                                                                                   <div class="modal-header">
@@ -954,7 +1073,7 @@
                                                                                 </div>
                                                                               </div>
                                                                         </div>
-                                                                        <div class="modal fade" id="rec-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                        <div class="modal fade" id="rec-@mynamenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                             <div class="modal-dialog" role="document">
                                                                                 <div class="modal-content">
                                                                                   <div class="modal-header">
@@ -964,7 +1083,7 @@
                                                                                     </button>
                                                                                   </div>
                                                                                   <div class="modal-body">
-                                                                                    <p>Add signature</p>
+                                                                                    <p>You are about to recuse yourself from this task. Are you sure you want to continue?</p>
                                                                                     <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
                                                                                   </div>
                                                                                   <div class="modal-footer">
@@ -985,15 +1104,16 @@
                                             </div>
                                             <div class="col-12 col-md-12">
                                                 <div class="row">
-                                                    <div class="col-12 raci-info">
-                                                        <h4>Informed</h4>
-                                                    </div>
                                                     @foreach(var sub in (ViewBag.infi)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                                                 <!-- Getting the first and second name from users -->
                                                                 foreach(var name in (ViewBag.allusers)){
                                                                     if(sub.UserId == name.ClaimId  && sub.UserId == ViewBag.loggedin){
-                                                                        var namenospace = "resp" + name.FirstName + name.SecondName + sub.RACIInfChosenID + item.valuematch;
+                                                                        var namenospace = "infi" + name.FirstName + name.SecondName + sub.RACIInfChosenID + item.valuematch;
+                                                                        var mynamenospace = "mytasksinfi" + name.FirstName + name.SecondName + sub.RACIResChosenID + item.valuematch;
+                                                                        <div class="col-12 raci-info">
+                                                                            <h4>Informed</h4>
+                                                                        </div>
                                                                         <div class="col-12 col-md-12 no-pad grey-bg">
                                                                             <div class="row">
                                                                                 <div class="col-12 col-md-1 sop-number sop-number-@item.valuematch">
@@ -1019,20 +1139,12 @@
                                                                                         <i class="material-icons">menu</i>
                                                                                       </button>
                                                                                       <div class="dropdown-menu" aria-labelledby="@namenospace">
-                                                                                        <div class="complete comp-@namenospace">
-                                                                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comp-@namenospace">
-                                                                                             Complete Task
-                                                                                            </button>
-                                                                                        </div>
-                                                                                       <div class="recusal rec-@namenospace">
-                                                                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rec-@namenospace">
-                                                                                             Request recusal
-                                                                                            </button>
-                                                                                        </div>
+                                                                                        <div class="complete user-@sub.UserId comp-@namenospace" data-toggle="modal" data-target="#comp-@mynamenospace"><p>Complete Task</p></div>
+                                                                                        <div class="recusal user-@sub.UserId rec-@namenospace" data-toggle="modal" data-target="#rec-@mynamenospace"><p>Request recusal</p></div>
                                                                                       </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="modal fade" id="comp-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                                <div class="modal fade" id="comp-@mynamenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                                     <div class="modal-dialog" role="document">
                                                                                         <div class="modal-content">
                                                                                           <div class="modal-header">
@@ -1051,24 +1163,24 @@
                                                                                         </div>
                                                                                       </div>
                                                                                 </div>
-                                                                                <div class="modal fade" id="rec-@namenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                                <div class="modal fade" id="rec-@mynamenospace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                                     <div class="modal-dialog" role="document">
                                                                                         <div class="modal-content">
-                                                                                          <div class="modal-header">
-                                                                                            <h5 class="modal-title">Request Recusal</h5>
-                                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                              <span aria-hidden="true">&times;</span>
-                                                                                            </button>
-                                                                                          </div>
-                                                                                          <div class="modal-body">
-                                                                                            <p>Add signature</p>
-                                                                                            <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
-                                                                                          </div>
-                                                                                          <div class="modal-footer">
-                                                                                            <input type="submit" class="btn" value="Request Recusal" />
-                                                                                          </div>
+                                                                                            <div class="modal-header">
+                                                                                                <h5 class="modal-title">Request Recusal</h5>
+                                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="modal-body">
+                                                                                                <p>You are about to recuse yourself from this task. Are you sure you want to continue?</p>
+                                                                                                <input type="text" name="recuse-@namenospace" placeholder="please type your name" class="signature">
+                                                                                            </div>
+                                                                                            <div class="modal-footer">
+                                                                                                <input type="submit" class="btn" value="Request Recusal" />
+                                                                                            </div>
                                                                                         </div>
-                                                                                      </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1078,8 +1190,6 @@
                                                     }
                                                 </div>
                                             </div>
-
-                                        
                                         </div>
                                     </div>
                                 </div>
@@ -1087,47 +1197,35 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="docs" role="tabpanel">
-                            
-                                @foreach(var item in (ViewBag.files)){
-                                    int docCount = 1;
-
-
-                                    <div class="row">
-                                        <div class="col-12 col-md-1 header-left">
-                                            <div class="number">
-                                                <h3>@documentsProcesses</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-11 header-right">
-                                            <h2>@item.ProcessName</h2>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="row">
-                                        
-                                            @foreach(var img in item.ProcessFiles){
-
-                                                <div class="col-6 col-sm-3 col-md-2 mt-3">
-                                                    <a href="@img" download="@item.ProcessName-@docCount">
-                                                        <img src="~/images/docIcon.png"/>
-                                                    </a>
-                                                </div>
-
-                                                docCount++;
-                                            }
-
-
-                                            </div>
-                                        </div>
+                         <div class="row">
+                            <div class="col-12 col-md-7"></div>
+                            <div class="col-12 col-md-3 files-upload">
+                                <input type="file" name="files" multiple="multiple"> 
+                            </div>
+                            <div class="col-12 col-md-2 files-upload">
+                                <input type="submit" class="btn blue-btn" value="Add Files" />
+                            </div>
+                        </div>
+                        @foreach(var item in (ViewBag.files)){
+                            <div class="row">
+                                @foreach(var img in item.ProcessFiles){
+                                    <div class="col-6 col-sm-3 col-md-1 mt-3">
+                                        <a href="@img" download="">
+                                            <img src="~/images/docIcon.png"/>
+                                        </a>
                                     </div>
-                                    documentsProcesses++;
-                                }
-                            
+                                 }
+                            </div>
+                        }
                     </div>
-                 </div>
+
+                    
+                </div>
             </div>
         </div>
+        
     </div>
-}
+   </form>
 </div>
 <script>
     $(document).ready(function () {
@@ -1190,8 +1288,29 @@
         });
     
     });
+    $(document).ready(function() {
+        $(".complete").not(".user-@ViewBag.loggedin").addClass("notlive");
+        $(".recusal").not(".user-@ViewBag.loggedin").addClass("notlive");
+    });
 
+    var countsections = $(".process-count").length;
+    console.log(countsections);
+
+    if($(".process-count").length > 1){
+       $(".process-count:nth-child(2n)").addClass("fade-this");
+    }
+
+    var activelcass = "Active";
     
-</script>
+    $(".process-count:nth-child(1)").addClass("status-active");
+    $(".process-count.status-is-Complete").next(".process-count").addClass("status-active");
 
+    if($(".process-count").hasClass(".status-active")){
+        $("this").children(".status-row").css("color", "blue");
+    }
+    if ($(".process-count").is(".status-active")){
+        $(".process-count.status-active .status-row .pending-status .status-is-pending p.the-proc-status").text("ACTIVE");
+    }
+
+</script>
 

@@ -3,50 +3,70 @@
 @{
     ViewData["Title"] = "SOPS";
 }
+
 <div class="container body-content">
     <div class="container sop-builder">
+        <a asp-area="" asp-controller="Setup" asp-action="NewTemplate" class="add-new-sop">CREATE NEW SOP</a>
          <div class="row header-dark-grey pb-4">
-        <div class="dropdown d-none">
-  <button class="btn btn-secondary d-flex" type="button" id="active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Active<i class="material-icons ml-5">menu</i>
-  </button>
-  <div class="dropdown-menu" aria-labelledby="active">
-                    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-  </div>
-</div>
+                <div class="dropdown ml-3">
+              <button class="btn btn-secondary d-flex" type="button" id="active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Active<i class="material-icons ml-5">menu</i>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="active">
+                <a class="dropdown-item show-all-sop" href="#">All</a>                
+                <a class="dropdown-item active-sop" href="#">Active</a>
+                <a class="dropdown-item archive" href="#">Archive</a>
+              </div></div>
             </div>
         <div class="row header-white">
             <div class="col-12 col-md-6">
             </div>
             <div class="col-12 col-md-6 text-right">
-                <a asp-area="" asp-controller="Setup" asp-action="NewTemplate">New SOP</a>
+                
             </div>
-            <div class="col-12">
-                <table id="temp-table" class="table list-table">
+            <div class="col-12 templates-table">
+                <table id="temp-table" class="table list-table ">
                     <thead>
                         <tr>
                             <th>SOP Name</th>
                             <th>Code</th>
-                            <th>Expire Date</th>
+                            <th>Create Date</th>
+                            <th>Review Date</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     @foreach(var item in Model){
-                        <tr>
-                            <th>@Html.DisplayFor(modelItem => item.TempName)</th>
+                        string isarchived = "";
+                        foreach(var arc in (ViewBag.getarchive)){
+                             if(arc.SOPTemplateId == item.SOPTemplateID){ 
+                                 isarchived = "archived";
+                             }else {
+                                 isarchived = "active";
+                             }
+                        }
+                        <tr class="tablerow @isarchived">
+                            <th><a href="/Manage/ViewSOP?=@item.SOPTemplateID">@Html.DisplayFor(modelItem => item.TempName)</a></th>
                             <th>@Html.DisplayFor(modelItem => item.SOPCode)</th>
+                            <th>@item.TheCreateDae.ToString("dd-MM-yyyy")</th>
                             <th>@Html.DisplayFor(modelItem => item.ExpireDate)</th>
                             <th>
                                 <button class="btn btn-secondary position-relative h-100 w-100" type="button" id="list-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   <i class="material-icons">menu</i>
                                 </button>
                                 <div class="dropdown-menu px-1" aria-labelledby="list-menu">
-                                    <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/CreateInstance?=@item.SOPTemplateID">Create instance</a></div>       
-                                    <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/EditMainSOP?=@item.SOPTemplateID">Edit SOP</a></div>       
-                                    <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/ArchiveSOP?=@item.SOPTemplateID">Archive SOP</a></div>       
+                                    @if(item.LiveStatus == "Draft")
+                                    {
+                                        <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/ViewSOP?=@item.SOPTemplateID">View SOP</a></div>
+                                        <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/EditMainSOP?=@item.SOPTemplateID">Edit SOP</a></div>       
+                                        <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/ArchiveSOP?=@item.SOPTemplateID">Archive SOP</a></div>
+                                    }
+                                    else {
+                                        <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/ViewSOP?=@item.SOPTemplateID">View SOP</a></div>
+                                        <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/CreateInstance?=@item.SOPTemplateID">Create instance</a></div>       
+                                        <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/EditMainSOP?=@item.SOPTemplateID">Edit SOP</a></div>       
+                                        <div class="complete comp-" data-toggle="modal" data-target="#comp-"><a href="/Manage/ArchiveSOP?=@item.SOPTemplateID">Archive SOP</a></div>  
+                                    } 
                                 </div>
 
                             </th>
@@ -67,6 +87,21 @@
             "columnDefs": [
                 { "orderable": false, "targets": 3 }
             ]
+        });
+     });
+     $(document).ready(function() {
+     $("tr.tablerow").not(".active").hide();
+    });
+    
+     $(document).ready(function() {
+        $( ".archive" ).click(function() {
+            $("tr.tablerow").not(".archived").hide();
+        });
+        $( ".active-sop" ).click(function() {
+            $("tr.tablerow").not(".active").hide();
+        });
+        $( ".show-all-sop" ).click(function() {
+            $("tr.tablerow").show();
         });
      });
 </script>

@@ -264,8 +264,20 @@ namespace sopman.Data
             public string SOPCode { get; set; }
 
             public string ExpireDate { get; set; }
+            public string LiveStatus { get; set; }
+            public DateTime TheCreateDae { get; set; }
         }
         public DbSet<SOPTemplate> SOPNewTemplate { get; set; }
+
+        public class Approvers {
+            [Key]
+            public int ApproverId { get; set; }
+
+            public int UserId { get; set; }
+            public string InstanceId { get; set; }
+            public string ApproverStatus { get; set; }
+        }
+        public DbSet<Approvers> InstanceApprovers { get; set; }
 
         public class SOPTemplateProcess
         {
@@ -301,6 +313,7 @@ namespace sopman.Data
             public string InstanceExpire { get; set; }
 
             public string ProjectId { get; set; }
+            public string LiveStatus { get; set; }
 
         }
         public DbSet<SOPNewInstance> NewInstance { get; set; }
@@ -349,8 +362,19 @@ namespace sopman.Data
             public string valuematch { get; set; }
 
             public string processStatus { get; set; }
+
+            public DateTime completedDate { get; set; }
         }
         public DbSet<SOPTemplateProcesses> SOPProcessTempls { get; set; }
+
+        public class SOPNumbering {
+            [Key]
+            public int SOPNumberingId { get; set; }
+
+            public string InputValue { get; set; }
+            public int CompanyId { get; set; }
+        }
+        public DbSet<SOPNumbering> SOPNumberProcess { get; set; }
 
         public class EditedSop
         {
@@ -383,6 +407,7 @@ namespace sopman.Data
             public string valuematch { get; set; }
             public string DueDate { get; set; }
             public string ExternalDocument { get; set; }
+            public string InstanceId { get; set; }
         }
         public DbSet<SOPInstanceProcess> SOPInstanceProcesses { get; set; }
 

@@ -2,23 +2,36 @@
 @using HtmlHelpers.BeginCollectionItemCore
 @using (Html.BeginCollectionItem("RACIConsulted"))
 {
-    <div class="single-line-row row">
+    <div class="single-line-row row con-@ViewData["ContainerNoNum"]">
          @Html.HiddenFor(m => m.RACIConId, new { @class="id" })
          <div class="col-12 col-md-12 sin-textbox">
             <div class="con-hide">
                 @Html.TextBoxFor(m => m.valuematch, new {@class = "form-control"})
             </div>
-            <div class="row">
+            <div class="row a-person-row">
                 <div class="col-12 col-md-6">
                     @Html.DropDownListFor(m => m.DepartmentId,
                          new SelectList(Model.Departments, "DepartmentId", "DepartmentName"), "Select Department", new { @class = "form-control" })
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-5">
                     @Html.DropDownListFor(m => m.JobTitleId,
                                      new SelectList(Model.JobTitles, "JobTitleId", "JobTitle"), "Select Job Title", new { @class = "form-control" })
+                </div>
+                <div class="col-12 col-md-1">
+                    <button class="btn btn-secondary position-relative h-100 w-100" type="button" id="list-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="material-icons">menu</i>
+                    </button>
+                    <div class="dropdown-menu px-1" aria-labelledby="list-menu">
+                        <div class="remove-item remove-@ViewData["ContainerNoNum"]" data-toggle="modal" data-target="#comp-">Remove User</div>       
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 }
-
+<script>
+    $('.remove-@ViewData["ContainerNoNum"]').on('click', function () {
+                $('.con-@ViewData["ContainerNoNum"]').remove();
+    });
+</script>

@@ -128,6 +128,22 @@ namespace sopman.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("sopman.Data.ApplicationDbContext+Approvers", b =>
+                {
+                    b.Property<int>("ApproverId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApproverStatus");
+
+                    b.Property<string>("InstanceId");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("ApproverId");
+
+                    b.ToTable("InstanceApprovers");
+                });
+
             modelBuilder.Entity("sopman.Data.ApplicationDbContext+Archived", b =>
                 {
                     b.Property<int>("ArchiveId")
@@ -839,6 +855,8 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("ExternalDocument");
 
+                    b.Property<string>("InstanceId");
+
                     b.Property<string>("SOPTemplateID");
 
                     b.Property<string>("valuematch");
@@ -873,6 +891,8 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("InstanceRef");
 
+                    b.Property<string>("LiveStatus");
+
                     b.Property<string>("ProjectId");
 
                     b.Property<string>("SOPTemplateID");
@@ -880,6 +900,20 @@ namespace sopman.Data.Migrations
                     b.HasKey("InstanceId");
 
                     b.ToTable("NewInstance");
+                });
+
+            modelBuilder.Entity("sopman.Data.ApplicationDbContext+SOPNumbering", b =>
+                {
+                    b.Property<int>("SOPNumberingId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<string>("InputValue");
+
+                    b.HasKey("SOPNumberingId");
+
+                    b.ToTable("SOPNumberProcess");
                 });
 
             modelBuilder.Entity("sopman.Data.ApplicationDbContext+SOPProcessFiles", b =>
@@ -921,9 +955,13 @@ namespace sopman.Data.Migrations
 
                     b.Property<string>("ExpireDate");
 
+                    b.Property<string>("LiveStatus");
+
                     b.Property<string>("SOPCode");
 
                     b.Property<string>("TempName");
+
+                    b.Property<DateTime>("TheCreateDae");
 
                     b.Property<int>("TopTempId");
 
@@ -972,6 +1010,8 @@ namespace sopman.Data.Migrations
                     b.Property<string>("ProcessType");
 
                     b.Property<string>("SOPTemplateID");
+
+                    b.Property<DateTime>("completedDate");
 
                     b.Property<string>("processStatus");
 

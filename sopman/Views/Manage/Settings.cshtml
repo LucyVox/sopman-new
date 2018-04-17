@@ -34,15 +34,15 @@
             <div class="col-12">
                 <div class="tab-content">
                     <div class="tab-pane active row" id="overview" role="tabpanel">
-                        <form action="/Manage/@ViewBag.newurl" enctype="multipart/form-data" method="post">
+                        <form action="/Manage/Settings" enctype="multipart/form-data" method="post">
                             <div class="col-12 logo-change">
                                 <div class="row setting-row">
                                     <div class="col-12 col-md-6">
                                         <h2>Logo</h2>
                                         <input type="file" name="file" />
                                     </div>
-                                    <div class="col-12 col-md-6">
-                                       <img src="@ViewBag.path">
+                                    <div class="col-12 col-md-6 logo-right">
+                                       <img src="https://sopman.blob.core.windows.net/logos/@ViewBag.logostring">
                                     </div>
                                 </div>
                                 <hr />
@@ -67,7 +67,7 @@
                         </form>
                     </div>
                     <div class="tab-pane " id="process" role="tabpanel">
-                        <form action="/Manage/@ViewBag.newurl" enctype="multipart/form-data" method="post">
+                        <form action="/Manage/Settings" enctype="multipart/form-data" method="post">
                             <div class="row sop-form">
                                 <div class="col-12">
                                    <h3>Warning</h3>
@@ -82,34 +82,6 @@
                                         </div>
                                         <div class="col-12 col-md-2">
                                             @Html.TextBoxFor(model => model.SOPNameLimit, new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                    <hr>
-                                </div>
-                                <div class="col-12">
-                                    <h4>SOP Code</h4>
-                                    <div class="row inner-form-row">
-                                        <div class="col-12 col-md-2">
-                                            <label>Prefix:</label>
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            @Html.TextBoxFor(model => model.SOPCodePrefix, new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                    <div class="row inner-form-row">
-                                        <div class="col-12 col-md-2">
-                                            <label>Suffix:</label>
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            @Html.TextBoxFor(model => model.SOPCodeSuffix, new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                    <div class="row inner-form-row">
-                                        <div class="col-12 col-md-3">
-                                            <label>Limit User defined characters:</label>
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            @Html.TextBoxFor(model => model.SOPAllowCodeLimit, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <hr>

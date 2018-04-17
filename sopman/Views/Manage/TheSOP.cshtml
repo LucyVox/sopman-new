@@ -69,7 +69,7 @@
                                                     <div class="table sop-table">
                                                         <div class="col-count">
                                                         @foreach(var col in (ViewBag.gettabscols)){
-                                                            if((col.tableval == subitem.valuematch) && (col.NewTempId == ViewBag.gettopid)){
+                                                            if((col.tableval == subitem.valuematch) && (col.NewTempId == ViewBag.getinstanceid)){
                                                                 <div class="inner-cols">
                                                                     <h3>@col.ColText</h3>
                                                                 </div>
@@ -78,7 +78,7 @@
                                                         </div>
                                                         <div class="row-count">
                                                         @foreach(var col in (ViewBag.gettabsrows)){
-                                                            if((col.tableval == subitem.valuematch) && (col.NewTempId == ViewBag.gettopid)){
+                                                            if((col.tableval == subitem.valuematch) && (col.NewTempId == ViewBag.getinstanceid)){
                                                                 <div class="inner-rows">
                                                                     <h3>@col.RowText</h3>
                                                                 </div>
@@ -157,7 +157,7 @@
                                                         <h4>Responsible</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.res)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getid)){
                                                             <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
                                                                 if(sub.UserId == name.ClaimId){
@@ -205,7 +205,7 @@
                                                         <h4>Accountable</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.acc)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getid)){
                                                             <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
                                                                 if(sub.UserId == name.ClaimId){
@@ -253,7 +253,7 @@
                                                         <h4>Consulted</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.cons)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getid)){
                                                              <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
                                                                 if(sub.UserId == name.ClaimId){
@@ -300,7 +300,7 @@
                                                         <h4>Informed</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.infi)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getid)){
                                                             <!-- Getting the first and second name from users -->
                                                             foreach(var name in (ViewBag.allusers)){
                                                                 if(sub.UserId == name.ClaimId){
@@ -351,44 +351,47 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="docs" role="tabpanel">
-                            
-                                @foreach(var item in (ViewBag.files)){
-                                    int docCount = 1;
-
-
-                                    <div class="row">
-                                        <div class="col-12 col-md-1 header-left">
-                                            <div class="number">
-                                                <h3>@documentsProcesses</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-11 header-right">
-                                            <h2>@item.ProcessName</h2>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="row">
-                                        
-                                            @foreach(var img in item.ProcessFiles){
-
-                                                <div class="col-6 col-sm-3 col-md-2 mt-3">
-                                                    <a href="@img" download="@item.ProcessName-@docCount">
-                                                        <img src="~/images/docIcon.png"/>
-                                                    </a>
-                                                </div>
-
-                                                docCount++;
-                                            }
-
-
-                                            </div>
-                                        </div>
+                        @foreach(var item in (ViewBag.files)){
+                            <div class="row">
+                                @foreach(var img in item.ProcessFiles){
+                                    <div class="col-6 col-sm-3 col-md-1 mt-3">
+                                        <a href="@img" download="">
+                                            <img src="~/images/docIcon.png"/>
+                                        </a>
                                     </div>
-                                    documentsProcesses++;
-                                }
-                            
-                    </div>
+                                 }
+                            </div>
+                        }
+                    </div> 
                     <div class="tab-pane" id="history" role="tabpanel">
-                        <h3>There is currently no version history</h3>
+                        <div class="col-12" id="history-info">
+                            @foreach(var item in (@ViewBag.gethistory)){
+                                    <!--  Name of sop section. -->
+                                    foreach(var subitem in (ViewBag.thesecs)){
+                                        if(subitem.valuematch == item.ValuematchEdited){
+
+                                            <div class="card">
+                                                <div class="card-header">New Edit</div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">@subitem.SectionText edited</h5>
+
+                                                    <h6 class="card-subtitle mb-2 text-muted">Edited by
+                                                        <!--  Name of user who edited.. -->
+                                                            @foreach(var name in (ViewBag.resiuser)){
+                                                                if(name.UserId == item.UserId){
+                                                                    <span>@name.FirstName&nbsp;@name.SecondName</span>
+                                                                }
+                                                            }
+                                                    on @item.EditDate.ToString("dd/MM/yyyy")</h6>
+                                                    <p class="card-text">@item.TextEdited</p>
+                                                </div>
+                                            </div>
+
+                            
+                                        }
+                                    }
+                                }
+                            </div>
                     </div>
                 </div>
             </div>
@@ -460,7 +463,11 @@ $(document).ready(function() {
         });
     
     });
-
+    $(document).ready(function() {
+        if ($("#history-info").children().length == 0){
+            $("#history-info").append("<h3>There is no history</h3>");
+        };
+    });
 
 </script>
 

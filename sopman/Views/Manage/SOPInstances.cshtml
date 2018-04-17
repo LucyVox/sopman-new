@@ -18,7 +18,8 @@
     Active<i class="material-icons ml-5">menu</i>
   </button>
   <div class="dropdown-menu" aria-labelledby="active">
-    <a class="dropdown-item active" href="#">Active</a>
+    <a class="dropdown-item show-all-sop" href="#">All</a>                
+    <a class="dropdown-item active-sop" href="#">Active</a>
     <a class="dropdown-item archive" href="#">Archive</a>
   </div>
 </div>
@@ -26,33 +27,33 @@
     <div class="row">
         <div class="col-12">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 instance-table">
                     <table id="sop-table" class="table list-table">
                         <thead>
                             <tr>
                                 <th>SOP Name</th>
                                 <th>SOP Instance</th>
                                 <th>Project</th>
-                                <th>Expire Date</th>
+                                <th>Review Date</th>
                                 <th>Progress</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody>       
                         @foreach(var item in (@ViewBag.newtemps)){
+                            string isarchived = "";
                             foreach(var sub in (@ViewBag.getexe)){
                                 foreach(var ist in (@ViewBag.getinst)){
                                     if(ist.SOPTemplateID == item.SOPTemplateID){
                                         if(sub.SectionId == ist.InstanceId){
-                                            foreach(var arc in (ViewBag.getarchive)){if(arc.InstancedId == sub.ExecuteSopID){ 
-                                                    <script>
-                                                        $(document).ready(function() {
-                                                            $( "tr.tablerow user-@sub.UserId" ).addClass( "archived" );
-                                                       });
-                                                    </script>
-                                                    <input class="archived" type="hidden" name="archived-@sub.UserId" value="archived">
+                                            foreach(var arc in (ViewBag.getarchive)){
+                                                if(arc.InstancedId == sub.ExecuteSopID){ 
+                                                    isarchived = "archived";
+                                                }else {
+                                                    isarchived = "active";
                                                 }
                                             }
-                                            <tr class="tablerow row-@sub.ExecuteSopID user-@sub.UserId">
+                                            <tr class="tablerow @isarchived row-@sub.ExecuteSopID user-@sub.UserId">
+                                                
                                                 <th><a href="/Manage/SOPs?=@sub.ExecuteSopID">@item.TempName</a></th>
                                                 <th>@ist.InstanceRef - @item.SOPCode</th>
                                                 @foreach(var proj in (ViewBag.theprojects)){
@@ -167,9 +168,15 @@
             $("tr.tablerow").not(".user-@ViewBag.loggedinuser").hide();
         });
         $( ".archive" ).click(function() {
-            $("tr.tablerow input").not(".active").hide();
+            $("tr.tablerow").not(".archived").hide();
+        });
+        $( ".active-sop" ).click(function() {
+            $("tr.tablerow").not(".active").hide();
         });
         $( ".all-instances" ).click(function() {
+            $("tr.tablerow").show();
+        });
+        $( ".show-all-sop" ).click(function() {
             $("tr.tablerow").show();
         });
      });

@@ -160,7 +160,7 @@
                                                         <h4>Responsible</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.res)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                                             <div class="col-12 col-md-12 no-pad grey-bg">
                                                                 <div class="row">
                                                                 <!-- Getting the first and second name from users -->
@@ -255,7 +255,7 @@
                                                         <h4>Accountable</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.acc)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                                             <div class="col-12 col-md-12 no-pad grey-bg">
                                                                 <div class="row">
                                                                 <!-- Getting the first and second name from users -->
@@ -344,7 +344,7 @@
                                                         <h4>Consulted</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.cons)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                                             <div class="col-12 col-md-12 no-pad grey-bg">
                                                                 <div class="row">
                                                                 <!-- Getting the first and second name from users -->
@@ -433,7 +433,7 @@
                                                         <h4>Informed</h4>
                                                     </div>
                                                     @foreach(var sub in (ViewBag.infi)){
-                                                        if(sub.valuematch == item.valuematch){
+                                                        if((sub.valuematch == item.valuematch) && (sub.InstanceId == ViewBag.getinstanceid)){
                                                             <div class="col-12 col-md-12 no-pad grey-bg">
                                                                 <div class="row">
                                                                 <!-- Getting the first and second name from users -->

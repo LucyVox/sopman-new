@@ -49,5 +49,7 @@ namespace sopman.Models.ManageViewModels
         public string NewTempId { get; set; }
         public string StatusRecusal { get; set; }
         public string InstanceID { get; set; }
+        public DateTime completedDate { get; set; }
+        public string ApproverStatus { get; set; }
     }
 }

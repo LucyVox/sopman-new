@@ -328,6 +328,7 @@ namespace sopman.Controllers
         public async Task<IActionResult> RegisterUser(RegisterViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
@@ -342,9 +343,11 @@ namespace sopman.Controllers
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
+                    return RedirectToAction("SetupIndex", "Setup");
                 }
-                return RedirectToAction("SetupIndex", "Setup");
+                AddErrors(result);
             }
+
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -359,6 +362,11 @@ namespace sopman.Controllers
             var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
+            
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == compid
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var getdep = (from m in _context.Departments
                           where m.CompanyId == compid
@@ -404,6 +412,11 @@ namespace sopman.Controllers
             var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == compid
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var getdep = (from m in _context.Departments
                           where m.CompanyId == compid
@@ -514,6 +527,11 @@ namespace sopman.Controllers
                           where i.UserId == getuser
                           select i.CompanyId).Single();
 
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == compid
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
             var getdep = (from m in _context.Departments
                           where m.CompanyId == compid
                           select new { m.DepartmentId, m.DepartmentName }).ToList();
@@ -560,6 +578,11 @@ namespace sopman.Controllers
             var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == compid
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var getdep = (from m in _context.Departments
                           where m.CompanyId == compid
@@ -677,6 +700,12 @@ namespace sopman.Controllers
                            where i.UserId == user_id
                            select i.CompanyId).Single();
 
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == modules
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
+
+
             if (ModelState.IsValid)
             {
                 _context.Departments.Select(u => u.CompanyId);
@@ -702,6 +731,11 @@ namespace sopman.Controllers
             var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == compid
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var getdep = (from m in _context.Departments
                           where m.CompanyId == compid
@@ -735,6 +769,11 @@ namespace sopman.Controllers
             var compid = (from i in _context.CompanyClaim
                           where i.UserId == getuser
                           select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == compid
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var getdep = (from m in _context.Departments
                           where m.CompanyId == compid
@@ -915,6 +954,11 @@ namespace sopman.Controllers
             var comp = (from i in _context.CompanyClaim
                         where i.UserId == getu
                         select i.CompanyId).Single();
+
+            var logostring = (from i in _context.TheCompanyInfo
+                              where i.CompanyId == comp
+                              select i.Logo).Single();
+            ViewBag.logostring = logostring;
 
             var top = (from i in _context.SOPTopTemplates
                        where i.CompanyId == comp

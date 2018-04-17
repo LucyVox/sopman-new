@@ -1,0 +1,17 @@
+﻿@model sopman.Models.SetupViewModels.SopTemplate
+@using HtmlHelpers.BeginCollectionItemCore
+<div class="row approver-div">
+    <div class="col-12 col-md-6">
+    @using (Html.BeginCollectionItem("Approver"))
+    {
+        @Html.HiddenFor(m => m.ApproverId, new { @class="id" })
+        
+        @Html.DropDownListFor(m => m.UserId, ViewBag.selectlist as SelectList, "Select Approver", new { @class = "form-control" })
+    }
+    </div>  
+    <div class="col-12 col-md-6">
+    </div>
+</div>
+
+
+

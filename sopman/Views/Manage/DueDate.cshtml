@@ -4,15 +4,37 @@
 {
     <div class="col-12 value-top pad-top">
         <input class="hidden-value" value="" name="SectionInfo[@ViewData["ContainerNoNum"]].valuematch">
-        <h3>Due Date</h3>
-        @Html.EditorFor(m => m.DueDate)
+        <div class="row">
+            <div class="col-12">
+                <div class="inline-sec">
+                    <h3>Due Date</h3>
+                    <button type="button" class="btn btn-secondary builder-tooltip" data-toggle="tooltip" data-placement="right" title="You must enter a due date for each process step">
+                        <i class="material-icons">help</i>
+                    </button>
+                </div>
+                @Html.EditorFor(m => m.DueDate)
+            </div>
+        </div>
+       
     </div>
-    <div class="col-12 pad-top">
+    <div class="col-12 file-section pad-top">
         <h3>Add files</h3>
-        <input type="file" name="files" multiple="multiple">
+        <input type="file" id="thefiles" class="files-@ViewData["ContainerNoNum"]" name="files" multiple="multiple">
     </div>
     <div class="col-12 pad-top">
         <h3>External Document Link</h3>
         @Html.TextBoxFor(m => m.ExternalDocument)
     </div>
+
+<script>
+    $(function() {
+        var btnUpload=$('.files-@ViewData["ContainerNoNum"]');
+    });
+    $(document).ready(function() {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    });
+</script>
 }
+

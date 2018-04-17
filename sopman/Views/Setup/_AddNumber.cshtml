@@ -1,0 +1,8 @@
+﻿@model sopman.Models.SetupViewModels.SOPCodeBuilder
+@using HtmlHelpers.BeginCollectionItemCore
+@using (Html.BeginCollectionItem("SOPCode"))
+{
+    <input type="text" class="form-control add-a-number limit-form" name="SOPCode[@ViewData["ContainerNoNum"]].InputValue" value="0" placeholder="0">
+   
+}
+

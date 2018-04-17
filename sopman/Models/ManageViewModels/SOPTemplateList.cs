@@ -20,5 +20,8 @@ namespace sopman.Models.ManageViewModels
         public string InstancedId { get; set; }
         public int countnum { get; set; }
         public DateTime creationdate { get; set; }
+        public string SOPTemplateId { get; set; }
+        public DateTime TheCreateDae { get; set; }
+        public string LiveStatus { get; set; } 
     }
 }

@@ -11,7 +11,7 @@ namespace sopman.Models.SetupViewModels
 {
     public class SopTemplate
     {
-        [Required]
+        
         [Display(Name = "SOP Name")]
         public string TempName { get; set; }
 
@@ -20,8 +20,7 @@ namespace sopman.Models.SetupViewModels
 
         public int TopTempId { get; set; }
 
-        [Required]
-        [Display(Name = "Expiry Date")]
+        [Display(Name = "Review Date")]
         [DataType(DataType.Date)]
         public string ExpireDate { get; set; }
         public string SectionText { get; set; }
@@ -30,7 +29,18 @@ namespace sopman.Models.SetupViewModels
         public string valuematch { get; set; }
         public string TableHTML { get; set; }
 
+        public string InputValue { get; set; }
+
         public List<LineChild> ChildLine { get; set; }
+
+        public int UserId { get; set; }
+        public string InstanceId { get; set; }
+        public string ApproverStatus { get; set; }
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
+        public int ClaimId { get; set; }
+        public int ApproverId { get; set; }
+        public List<AddApprover> Approver { get; set; }
     }
     public class LineChild
     {
@@ -80,4 +90,15 @@ namespace sopman.Models.SetupViewModels
         public sopman.Models.SetupViewModels.SopTemplate SopTemplate { get; set; }
     }
 
+    public class AddApprover {
+        public int UserId { get; set; }
+        public string InstanceId { get; set; }
+        public string ApproverStatus { get; set; }
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
+        public int ClaimId { get; set; }
+        public string Value { get; set; }
+        public int ApproverId { get; set; }
+        public string DepartmentId { get; set; }
+    }
 }
